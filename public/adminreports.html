@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manage Reports</title>
+</head>
+<body>
+<h2>Manage Reports</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Reporting User</th>
+        <th>Reported User</th>
+        <th>Reason</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+            $conn = Database::getConnection();
+            $sql = "SELECT * FROM reports";
+            $result = mysqli_query($conn, $sql);
+
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+    echo "<td>{$row['reporting_user_id']}</td>";
+    echo "<td>{$row['reported_user_id']}</td>";
+    echo "<td>{$row['reason']}</td>";
+    echo "<td>{$row['created_at']}</td>";
+    echo "<td><a href='admin_action.php?action=delete&report_id={$row['id']}'>Delete</a> | <a href='admin_action.php?action=block&user_id={$row['reported_user_id']}'>Block User</a></td>";
+    echo "</tr>";
+    }
+    ?>
+    </tbody>
+</table>
+</body>
+</html>
+?>

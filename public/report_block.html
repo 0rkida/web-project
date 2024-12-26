@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report/Block User</title>
+</head>
+<body>
+<h2>Report or Block User</h2>
+<form action="report_block.php" method="post">
+    <input type="hidden" name="reported_user_id" value="<?php echo $_GET['user_id']; ?>">
+    <label for="action">Action:</label>
+    <select id="action" name="action" required>
+        <option value="report">Report</option>
+        <option value="block">Block</option>
+    </select>
+    <label for="reason">Reason:</label>
+    <textarea id="reason" name="reason" required></textarea>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

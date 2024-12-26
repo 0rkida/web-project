@@ -17,5 +17,20 @@
         <p>Manage all user accounts and reports.</p>
     </section>
 </main>
+<h2>Admin Dashboard</h2>
+<div>
+    <h3>Platform Statistics</h3>
+    <p>New Users This Month: <?php echo Analytics::getNewUsersCount(); ?></p>
+    <p>Total Matches: <?php echo Analytics::getMatchesCount(); ?></p>
+    <p>Total Reports: <?php echo Analytics::getReportsCount(); ?></p>
+    <p>Active Users This Month: <?php echo Analytics::getActiveUsersCount(); ?></p>
+    <h3>Subscription Statistics</h3>
+    <?php
+        $subscriptionStats = Analytics::getSubscriptionStats();
+        foreach ($subscriptionStats as $type => $count) {
+    echo "<p>$type: $count</p>";
+    }
+    ?>
+</div>
 </body>
 </html>
