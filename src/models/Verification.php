@@ -1,8 +1,5 @@
 <?php
-
-class Verification
-{
-
+class Verification {
     public static function verifyEmail($verificationCode) {
         $conn = Database::getConnection();
 
@@ -20,4 +17,3 @@ class Verification
         }
     }
 }
-?>
