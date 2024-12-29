@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #f57760; /* Background color */
+    display: ruby-text;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    height: 100vh;
+    margin: 0;
+    padding: 20px 0; /* Added padding for space at the top and bottom */
+    overflow: auto;
+}
+
+h1 {
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #322525; /* Dark text color */
+}
+
+p {
+    margin-top: 1px;
+    margin-bottom: 10px;
+}
+
+form {
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px; /* Reduced max-width */
+    padding: 20px 30px; /* Reduced padding */
+    border-radius: 12px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    margin-top: 20px;
+    overflow: hidden;
+    height: auto; /* Allow form height to adjust */
+}
+
+input {
+    background-color: #eee;
+    border: none;
+    padding: 14px 16px;
+    margin: 12px 0;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+}
+
+input:focus {
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 75, 43, 0.5);
+}
+
+button {
+    border-radius: 20px;
+    border: 1px solid #FF4B2B;
+    background-color: #ff334b; /* Main button color */
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 14px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    width: 100%;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button:focus {
+    outline: none;
+}
+
+button.ghost {
+    background-color: transparent;
+    color: #ff334b;
+    border-color: #ff334b;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 500px;
+    min-height: 600px;  /* Adjusted to ensure everything fits */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.logo-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+    border-radius: 30px;
+    object-fit: cover;
+}
+
+.footer {
+    background-color: #322525; /* Dark footer background */
+    color: #fff;
+    font-size: 14px;
+    position: fixed;
+    bottom: 20px; /* Added space at the bottom */
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 999;
+    padding: 20px; /* Increased padding for more space */
+}
+
+footer p {
+    margin: 0;
+}
+
+footer i {
+    color: red;
+}
+
+footer a {
+    color: #f57760; /* Footer link color */
+    text-decoration: none;
+}
+
+/* Style for the Sign Up/Sign In Buttons */
+.overlay-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.overlay-panel h1 {
+    font-size: 24px;
+    color: #322525; /* Dark text color */
+    margin-bottom: 10px;
+}
+
+.overlay-panel p {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.overlay-panel .ghost {
+    background-color: transparent;
+    color: #ff334b; /* Button color */
+    border-color: #ff334b;
+    font-size: 14px;
+    padding: 10px 40px;
+    margin-top: 10px;
+    width: auto;
+}

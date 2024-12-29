@@ -1,24 +1,34 @@
-<!-- login.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Logimi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<header>
-    <h1>Login</h1>
-</header>
-<main>
-    <form action="login_process.php" method="POST">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Login</button>
-    </form>
-</main>
+<div class="container login-container">
+    <div class="form-container sign-in-container">
+        <form action="#">
+            <!-- Logo Section -->
+            <div class="logo-container">
+                <img src="assets/img/logo.png" height="200" width="200" alt="logo"/>
+            </div>
+            <div class="overlay-panel overlay-left">
+                <h1>Mirë se vini!</h1>
+                <p>Nuk keni ende një llogari ? Krijojeni tani. </p>
+                <a href="register.html"><button class="ghost"> Regjistrohu </button></a>
+            </div> <br>
+            <h1>Logohuni</h1>
+            <span>përdorni llogarinë tuaj.</span>
+            <input type="email" placeholder="Emaili" required />
+            <input type="password" placeholder="Password" required />
+            <a href="#">Nuk e mbani mend password-in?</a>
+            <button>Logohu</button>
+        </form>
+    </div>
+</div>
+<script src="js/main.js"></script>
 </body>
 </html>

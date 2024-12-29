@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Regjistrimi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 <div class="container registration-container">
@@ -13,33 +13,31 @@
         <form action="#">
             <!-- Logo Section -->
             <div class="logo-container">
-                <img src="logo.png" alt="Logo" class="logo">
+                <img src="assets/img/logo.png" height="200" width="200" alt="logo"/>
             </div>
-            <h1>Create Account</h1>
-            <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+            <div class="overlay-panel overlay-right">
+                <h1>Përshendetje !</h1>
+                <p>Keni një llogari tek ne ?</p>
+                <a href="login.html">
+                    <button class="ghost">Logohu</button>
+                </a>
             </div>
-            <span>or use your email for registration</span>
+                <br>
+                <h1>Le të krijojmë një llogari së bashku !</h1> <p> përdorni e-mailin tuaj për regjistrim </p>
             <!-- Existing fields -->
-            <input type="text" placeholder="Name" required />
-            <input type="email" placeholder="Email" required />
+            <input type="text" placeholder="Emri juaj" required />
+            <input type="email" placeholder="Emaili" required />
             <input type="password" placeholder="Password" required />
 
             <!-- New fields -->
-            <input type="date" placeholder="Birthday" required />
-            <input type="text" placeholder="Location" required />
-            <input type="text" placeholder="Hobby" required />
+            <input type="date" placeholder="Ditëlindja" required />
+            <input type="text" placeholder="Vendndodhja" required />
+            <input type="text" placeholder="Hobi juaj" required />
 
-            <button>Sign Up</button>
+            <button>Regjistrohu</button>
         </form>
     </div>
-    <div class="overlay-panel overlay-right">
-        <h1>Hello, Friend!</h1>
-        <p>Enter your personal details and start your journey with us</p>
-        <a href="login.html"><button class="ghost">Sign In</button></a>
-    </div>
 </div>
+<script src="js/main.js"></script>
 </body>
 </html>
