@@ -6,6 +6,23 @@
     <title>Logimi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
+    <style>
+        .ghost {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-decoration: none;
+            color: white;
+            background-color: #007BFF; /* Button color */
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .ghost:hover {
+            background-color: #0056b3; /* Darker hover color */
+        }
+    </style>
 </head>
 <body>
 <div class="container login-container">
@@ -18,8 +35,9 @@
             <div class="overlay-panel overlay-left">
                 <h1>Mirë se vini!</h1>
                 <p>Nuk keni ende një llogari ? Krijojeni tani. </p>
-                <a href="register.html"><button class="ghost"> Regjistrohu </button></a>
-            </div> <br>
+                <a href="register.html" class="ghost">Regjistrohu</a>
+            </div>
+            <br>
             <h1>Logohuni</h1>
             <span>përdorni llogarinë tuaj.</span>
             <input type="email" placeholder="Emaili" required />
