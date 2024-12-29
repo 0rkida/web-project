@@ -4,6 +4,8 @@ require 'User.php';
 require 'EmailVerification.php';
 require 'Verification.php';
 
+include 'database.php';
+
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
