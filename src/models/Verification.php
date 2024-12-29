@@ -17,3 +17,28 @@ class Verification {
         }
     }
 }
+//
+//require 'Database.php';
+//
+//if (isset($_GET['code'])) {
+//    $verificationCode = htmlspecialchars(trim($_GET['code']));
+//    $conn = Database::getConnection();
+//
+//    $stmt = $conn->prepare("SELECT * FROM users WHERE verification_code = ?");
+//    $stmt->bind_param("s", $verificationCode);
+//    $stmt->execute();
+//    $result = $stmt->get_result();
+//
+//    if ($result->num_rows === 1) {
+//        $stmt = $conn->prepare("UPDATE users SET verified = 1 WHERE verification_code = ?");
+//        $stmt->bind_param("s", $verificationCode);
+//        if ($stmt->execute()) {
+//            echo "Email verified successfully!";
+//        } else {
+//            echo "Error verifying email.";
+//        }
+//    } else {
+//        echo "Invalid verification code.";
+//    }
+//}
+//?>

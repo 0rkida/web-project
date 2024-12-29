@@ -1,0 +1,15 @@
+{
+    "name": "web-project/web-project",
+    "description": "A datting app",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Holta Ozuni, Orkida Loku, Selma Konda"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+      "ext-mysqli": "*"
+    }
+}

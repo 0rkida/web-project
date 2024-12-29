@@ -1,44 +1,43 @@
 <?php
-// Start the session
-session_start();
+// Include database connection
+global $conn;
+include '../includes/db.php';
 
-// Include the database connection file
-include '../config/db.php'; // Adjust the path if needed
+// Function to generate a random verification code
+function generateVerificationCode() {
+    return bin2hex(random_bytes(32)); // Generate a 64-character random string
+}
 
-// Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get form inputs
-    $name = $_POST['name'];
+// Handle user registration
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
-}
-// Validate inputs
-if (empty($name) || empty($email) || empty($password)) {
-    die("All fields are required.");
+    $verificationCode = generateVerificationCode();
+
+    // Hash the password (BCRYPT recommended)
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+    // Insert user data along with verification code into the database
+    $stmt = $conn->prepare("INSERT INTO users (email, password, verification_code, is_verified) VALUES (?, ?, ?, 0)");
+    $stmt->bind_param("sss", $email, $hashedPassword, $verificationCode);
+
+    if ($stmt->execute()) {
+        // Send verification email
+        sendVerificationEmail($email, $verificationCode);
+        echo "Registration successful! A verification code has been sent to your email.";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
 }
 
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    die("Invalid email format.");
+// Function to send verification email
+function sendVerificationEmail($email, $verificationCode) {
+    $subject = "Email Verification Code";
+    $message = "Your verification code is: $verificationCode";
+    $headers = "From: no-reply@yourdomain.com";
+
+    mail($email, $subject, $message, $headers);
 }
 
-if (strlen($password) < 6) {
-    die("Password must be at least 6 characters long.");
-}
-// Hash the password
-$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-// Insert into the database
-$conn = null;
-$stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $name, $email, $hashedPassword);
-
-if ($stmt->execute()) {
-    echo "Registration successful!";
-    header("Location: login.php"); // Redirect to login page
-    exit;
-} else {
-    echo "Error: " . $stmt->error;
-}
-?>
-
-?>
