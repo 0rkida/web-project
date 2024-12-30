@@ -6,7 +6,7 @@
 
 body {
     background: #f57760; /* Background color */
-    display: ruby-text;
+    display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Montserrat', sans-serif;
@@ -179,3 +179,14 @@ footer a {
     margin-top: 10px;
     width: auto;
 }
+input[type="checkbox"] {
+    margin-right: 8px;
+    verticat-align: middle;
+}
+label {
+    font-size: 14px;
+    color: #322525; /* Ngjyra e tekstit */
+    display: inline-flex;
+    align-items: center;
+}
+
