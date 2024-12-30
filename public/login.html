@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logimi</title>
+    <title>Regjistrimi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
     <style>
@@ -25,28 +25,49 @@
     </style>
 </head>
 <body>
-<div class="container login-container">
-    <div class="form-container sign-in-container">
-        <form action="#">
+<div class="container registration-container">
+    <div class="form-container sign-up-container">
+        <form action="register.php" method="POST">
             <!-- Logo Section -->
             <div class="logo-container">
                 <img src="assets/img/logo.png" height="200" width="200" alt="logo"/>
             </div>
-            <div class="overlay-panel overlay-left">
-                <h1>Mirë se vini!</h1>
-                <p>Nuk keni ende një llogari ? Krijojeni tani. </p>
-                <a href="register.html" class="ghost">Regjistrohu</a>
+            <div class="overlay-panel overlay-right">
+                <h1>Përshendetje !</h1>
+                <p>Keni një llogari tek ne ?</p>
+                <a href="login.html" class="ghost">Logohu</a>
             </div>
             <br>
-            <h1>Logohuni</h1>
-            <span>përdorni llogarinë tuaj.</span>
+            <h1>Le të krijojmë një llogari së bashku!</h1>
+            <p> Përdorni e-mailin tuaj për regjistrim </p>
+            <input type="text" placeholder="Emri juaj" required />
             <input type="email" placeholder="Emaili" required />
             <input type="password" placeholder="Password" required />
-            <a href="#">Nuk e mbani mend password-in?</a>
-            <button>Logohu</button>
+            <input type="date" placeholder="Ditëlindja" required />
+            <input type="text" placeholder="Vendndodhja" required />
+            <input type="text" placeholder="Hobi juaj" required />
+            <button>Regjistrohu</button>
         </form>
     </div>
 </div>
+<script>
+    // JavaScript Validation Code
+    document.querySelector('form').addEventListener('submit', function(event) {
+        const inputs = document.querySelectorAll('input[required]');
+        let valid = true;
+
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                valid = false;
+                alert(`Ju lutem plotësoni fushën: ${input.placeholder}`);
+            }
+        });
+
+        if (!valid) {
+            event.preventDefault(); // Ndalo dërgimin nëse ka gabime
+        }
+    });
+</script>
 <script src="js/main.js"></script>
 </body>
 </html>

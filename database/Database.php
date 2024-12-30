@@ -27,4 +27,3 @@ class Database {
 // Usage example
 // $conn = Database::getConnection();
 // Database::closeConnection();
-?>
