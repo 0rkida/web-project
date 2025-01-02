@@ -25,4 +25,44 @@ class UserController {
             return ['status' => false, 'message' => 'User registration failed.'];
         }
     }
+
+    public function login($email, $password, $remember_me) {
+        // Check if the email exists in the database
+        $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":email", $email);
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            // Login successful: Start a session
+            session_start();
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['email'] = $user['email'];
+
+            // Handle "Remember Me" functionality
+            if ($remember_me) {
+                // Generate a random token
+                $remember_token = bin2hex(random_bytes(32));
+
+                // Store the token in the database
+                $query = "UPDATE users SET remember_token = :remember_token WHERE id = :id";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(":remember_token", $remember_token);
+                $stmt->bindParam(":id", $user['id']);
+                $stmt->execute();
+
+                // Set the token as a cookie in the user's browser
+                setcookie("remember_me", $remember_token, time() + (86400 * 30), "/"); // Expires in 30 days
+            }
+
+            return ['status' => true, 'message' => 'Login successful.'];
+        } else {
+            return ['status' => false, 'message' => 'Invalid email or password.'];
+        }
+    }
+
+
+
 }

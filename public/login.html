@@ -27,7 +27,7 @@
 <body>
 <div class="container login-container">
     <div class="form-container sign-in-container">
-        <form action="#">
+        <form method = "POST" action="../src/views/auth/login.php">
             <!-- Logo Section -->
             <div class="logo-container">
                 <img src="assets/img/logo.png" height="200" width="200" alt="logo"/>
@@ -42,6 +42,12 @@
             <span>përdorni llogarinë tuaj.</span>
             <input type="email" placeholder="Emaili" required />
             <input type="password" placeholder="Password" required />
+
+            <label for="remember_me" class="remember-label">
+                <input type="checkbox" id="remember_me" name="remember_me">
+                Remember me
+            </label><br>
+
             <a href="#">Nuk e mbani mend password-in?</a>
             <button>Logohu</button>
         </form>

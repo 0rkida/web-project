@@ -172,10 +172,19 @@ footer a {
 
 .overlay-panel .ghost {
     background-color: transparent;
-    color: #ff334b; /* Button color */
+    color: #ff334b;
     border-color: #ff334b;
     font-size: 14px;
     padding: 10px 40px;
     margin-top: 10px;
     width: auto;
 }
+
+.remember-label {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: 5px;
+    font-size: 12px;
+}
+

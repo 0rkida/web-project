@@ -6,6 +6,7 @@ CREATE TABLE users (
     role ENUM('user' , 'admin') DEFAULT 'user',
     verification_code VARCHAR(64) NOT NULL,
     is_verified TINYINT(1) DEFAULT 0,
+    remember_token VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
