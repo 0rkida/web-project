@@ -1,4 +1,6 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 class EmailVerification {
     public static function generateVerificationCode($length = 32) {
         return bin2hex(random_bytes($length / 2));
@@ -33,4 +35,3 @@ class EmailVerification {
         }
     }
 }
-?>

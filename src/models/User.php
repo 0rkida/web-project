@@ -39,3 +39,6 @@ class User {
         return false;
     }
 }
+
+require_once 'Model.php';
+
