@@ -11,6 +11,7 @@
   "minimum-stability": "stable",
   "require": {
     "ext-mysqli": "*",
-    "phpmailer/phpmailer": "^6.9"
+    "phpmailer/phpmailer": "^6.9",
+    "ext-pdo": "*"
   }
 }

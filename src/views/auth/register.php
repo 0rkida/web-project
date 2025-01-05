@@ -1,4 +1,4 @@
-git <?php
+ <?php
 // Include database connection
 global $conn;
 include '../includes/db.php';
