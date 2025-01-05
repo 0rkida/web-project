@@ -1,6 +1,6 @@
 <?php
 global $conn;
-require 'db.php';
+require 'db_connection.php';
 
 if ($conn) {
     echo "Database connection successful!";
