@@ -22,6 +22,12 @@
         .ghost:hover {
             background-color: #0056b3; /* Darker hover color */
         }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -49,12 +55,81 @@
             <input type="text" placeholder="Vendndodhja" required />
             <input type="text" placeholder="Hobi juaj" required />
 
-            <button>Regjistrohu</button>
+            <button type="submit">Regjistrohu</button>
         </form>
 
 
     </div>
 </div>
-<script src="js/main.js"></script>
+<!-- JavaScript for Validation -->
+<script>
+    document.getElementById("registrationForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        let isValid = true;
+
+        // Get input values
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const dob = document.getElementById("dob").value.trim();
+        const location = document.getElementById("location").value.trim();
+        const hobby = document.getElementById("hobby").value.trim();
+
+        // Clear previous error messages
+        document.querySelectorAll(".error").forEach(el => el.remove());
+
+        // Name validation
+        if (name.length < 2) {
+            showError("name", "Emri duhet të ketë të paktën 2 karaktere.");
+            isValid = false;
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showError("email", "Ju lutem futni një email të vlefshëm.");
+            isValid = false;
+        }
+
+        // Password validation
+        if (password.length < 8) {
+            showError("password", "Passwordi duhet të ketë të paktën 8 karaktere.");
+            isValid = false;
+        }
+
+        // Date of Birth validation
+        if (!dob) {
+            showError("dob", "Ju lutem zgjidhni një datë lindjeje.");
+            isValid = false;
+        }
+
+        // Location validation
+        if (location.length < 3) {
+            showError("location", "Vendndodhja duhet të ketë të paktën 3 karaktere.");
+            isValid = false;
+        }
+
+        // Hobby validation
+        if (hobby.length < 3) {
+            showError("hobby", "Hobi duhet të ketë të paktën 3 karaktere.");
+            isValid = false;
+        }
+
+        // Submit if all fields are valid
+        if (isValid) {
+            alert("Regjistrimi u krye me sukses!");
+            this.submit();
+        }
+    });
+
+    function showError(inputId, message) {
+        const inputField = document.getElementById(inputId);
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "error";
+        errorDiv.textContent = message;
+        inputField.parentNode.insertBefore(errorDiv, inputField.nextSibling);
+    }
+</script>
 </body>
 </html>
