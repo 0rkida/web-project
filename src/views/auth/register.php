@@ -1,4 +1,4 @@
-git <?php
+ <?php
 // Include database connection
 global $conn;
 include '../includes/db.php';
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
     // Insert user data along with verification code into the database
-    $stmt = $conn->prepare("INSERT INTO users (email, password, verification_code, is_verified, username) VALUES (?, ?, ?, 0, ?)");
+    $stmt = $conn->prepare("INSERT INTO users (email, password, verification_code, is_verified ) VALUES (?, ?, ?, 0 )");
     $username = ''; // Vendos një vlerë bosh ose një paracaktim
     $stmt->bind_param("ssss", $email, $hashedPassword, $verificationCode, $username);
 

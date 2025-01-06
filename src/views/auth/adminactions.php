@@ -1,5 +1,5 @@
 <?php
-require 'Database.php';
+require 'db.php';
 
 if (isset($_GET['action'])) {
 $action = $_GET['action'];
@@ -17,4 +17,5 @@ mysqli_query($conn, $sql);
 echo "User blocked.";
 }
 }
+
 ?>

@@ -1,9 +1,10 @@
 <?php
-require 'Database.php';
+global $db;
+require 'db.php';
 require 'User.php';
 require 'verify.php';
 
-include 'Database.php';
+include 'db.php';
 
 session_start();
 

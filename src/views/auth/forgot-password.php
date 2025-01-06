@@ -1,6 +1,6 @@
 <?php
-require 'Database.php';
-require 'EmailVerification.php';
+require 'db.php';
+require 'verify.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];

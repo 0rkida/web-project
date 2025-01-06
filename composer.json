@@ -1,17 +1,17 @@
 {
-    "name": "web-project/web-project",
-    "description": "A datting app",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Holta Ozuni, Orkida Loku, Selma Konda"
-        }
-    ],
-    "minimum-stability": "stable",
-    "require": {
-      "ext-mysqli": "*",
-        "phpmailer/phpmailer": "^6.9",
-        "vendor/autoload.php": ""
+  "name": "web-project/web-project",
+  "description": "A dating app",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Holta Ozuni, Orkida Loku, Selma Konda"
     }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "ext-mysqli": "*",
+    "phpmailer/phpmailer": "^6.9",
+    "ext-pdo": "*"
+  }
 }

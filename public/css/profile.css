@@ -107,7 +107,12 @@ input[type=text]{
 input[type=text]::-webkit-input-placeholder { /* WebKit browsers */
     color: #fff;
 }
-
+input[type=text]:-moz-input-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #fff;
+}
+input[type=text]::-moz-input-placeholder { /* Mozilla Firefox 19+ */
+    color: #fff;
+}
 input[type=text]:-ms-input-placeholder { /* Internet Explorer 10+ */
     color: #fff;
 }
@@ -1005,7 +1010,16 @@ END LINE-CHART by @kseso https://codepen.io/Kseso/pen/phiyL
     border-radius: 5px;
     margin: 0 auto;
 }
-
+.progress-bar.downloading {
+    background: -webkit-linear-gradient(left, #11a8ab 81%,#50597b 81%); /* Chrome10+,Safari5.1+ */
+    background: -ms-linear-gradient(left, #11a8ab 81%,#50597b 81%); /* IE10+ */
+    background: linear-gradient(to right, #11a8ab 81%,#50597b 81%); /* W3C */
+}
+.progress-bar.uploading {
+    background: -webkit-linear-gradient(left, #4fc4f6 43%,#50597b 43%); /* Chrome10+,Safari5.1+ */
+    background: -ms-linear-gradient(left, #4fc4f6 43%,#50597b 43%); /* IE10+ */
+    background: linear-gradient(to right, #4fc4f6 43%,#50597b 43%); /* W3C */
+}
 .calendar-day {
     height: 320px;
     background: #3468af;

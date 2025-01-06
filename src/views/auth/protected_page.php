@@ -1,9 +1,8 @@
 <?php
 
-require 'Database.php';
+require 'db.php';
 require 'User.php';
-require 'EmailVerification.php';
-require 'Verification.php';
+require 'verify.php';
 
 // Secure session functions
 function secureSessionStart() {

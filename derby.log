@@ -1,4 +1,4 @@
-Mon Dec 30 20:04:53 UTC 2024 Thread[#31,RMI TCP Connection(3)-127.0.0.1,5,RMI Runtime] Cleanup action starting
+Fri Jan 03 22:20:19 UTC 2025 Thread[#32,RMI TCP Connection(4)-127.0.0.1,5,RMI Runtime] Cleanup action starting
 java.sql.SQLException: Database 'C:/xampp/htdocs/web-project/database/migrations/01_create_users_table.sql' not found.
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(SQLExceptionFactory.java:115)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(SQLExceptionFactory.java:141)

@@ -7,6 +7,7 @@ require 'C:\xampp\htdocs\web-project\vendor\autoload.php';
 if (isset($_POST['register'])) {
     $name = $_POST['name'];
     $email = $_POST['email'];
+    $username = $_POST['username'];
     $password = $_POST['password'];
 
     // Generate verification code
@@ -48,7 +49,7 @@ if (isset($_POST['register'])) {
         }
 
         // Insert user data into database
-        $sql = "INSERT INTO users (name, email, password, verification_code, email_verified_at) VALUES ('$name', '$email', '$encrypted_code', '$verificationCode', NULL)";
+        $sql = "INSERT INTO users (name, email,username, password, verification_code, email_verified_at) VALUES ('$name', '$username' , '$email',  '$encrypted_code', '$verificationCode', NULL)";
 
         if (mysqli_query($conn, $sql)) {
             header("Location: email_verification.php?email=$email&code=$verificationCode");
@@ -66,6 +67,7 @@ if (isset($_POST['register'])) {
     echo '<form method="POST" action="">
         <input type="text" name="name" placeholder="Enter your name" required />
         <input type="email" name="email" placeholder="Enter your email" required />
+        <input type="text" name="username" placeholder="Enter your username" required />
         <input type="password" name="password" placeholder="Enter your password" required />
         <input type="submit" name="register" value="Register" />
     </form>';
