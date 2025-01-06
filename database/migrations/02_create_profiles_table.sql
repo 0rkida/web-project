@@ -6,7 +6,7 @@ CREATE TABLE profile (
     role ENUM('user', 'admin') DEFAULT 'user', -- User role
     profile_picture VARCHAR(255) DEFAULT 'default.png', -- Profile picture path
     age INT,                           -- User's age
-    gender ENUM('male', 'female', 'other'), -- User's gender
+    gender ENUM('male', 'female'), -- User's gender
     location VARCHAR(255),             -- User's location
     match_percentage INT,              -- Match percentage
     self_summary TEXT,                 -- Self-summary
@@ -14,7 +14,6 @@ CREATE TABLE profile (
     doing_with_life TEXT,              -- Activities or goals
     good_at TEXT,                      -- Skills or hobbies
     last_online TIMESTAMP,             -- Last online timestamp
-    orientation VARCHAR(50),           -- Orientation
     ethnicity VARCHAR(50),             -- Ethnicity
     height FLOAT,                      -- Height (in meters or inches)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Creation date
