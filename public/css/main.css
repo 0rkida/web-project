@@ -6,7 +6,7 @@
 
 body {
     background: #f57760; /* Background color */
-    display: flex;
+    display: ruby-text;
     justify-content: center;
     align-items: center;
     font-family: 'Montserrat', sans-serif;
@@ -179,7 +179,6 @@ footer a {
     margin-top: 10px;
     width: auto;
 }
-<<<<<<< HEAD
 
 .remember-label {
     display: inline-flex;
@@ -187,16 +186,18 @@ footer a {
     white-space: nowrap;
     gap: 5px;
     font-size: 12px;
-=======
+
 input[type="checkbox"] {
     margin-right: 8px;
     verticat-align: middle;
 }
+
 label {
     font-size: 14px;
     color: #322525; /* Ngjyra e tekstit */
     display: inline-flex;
     align-items: center;
->>>>>>> b0faa2d56c7b1b7b0183f759d2c7e877e940c4ce
+}
+
 }
 
