@@ -1,4 +1,4 @@
-/* admin.js */
+
 function manageUsers() {
     const deleteUserButtons = document.querySelectorAll('.delete-user');
     deleteUserButtons.forEach((button) => {

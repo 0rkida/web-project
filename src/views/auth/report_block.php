@@ -1,6 +1,6 @@
 <?php
 
-require 'Database.php';
+require 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $reportedUserId = $_POST['reported_user_id'];

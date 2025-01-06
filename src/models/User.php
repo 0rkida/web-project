@@ -40,5 +40,5 @@ class User {
     }
 }
 
-require_once 'Model.php';
+
 

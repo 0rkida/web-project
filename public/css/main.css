@@ -10,7 +10,6 @@ body {
     justify-content: center;
     align-items: center;
     font-family: 'Montserrat', sans-serif;
-    height: 100vh;
     margin: 0;
     padding: 20px 0; /* Added padding for space at the top and bottom */
     overflow: auto;
@@ -93,6 +92,22 @@ button.ghost {
     color: #ff334b;
     border-color: #ff334b;
 }
+ .ghost {
+     display: inline-block;
+     padding: 10px 20px;
+     font-size: 16px;
+     text-decoration: none;
+     color: white;
+     background-color: #007BFF; /* Button color */
+     border-radius: 5px;
+     text-align: center;
+     transition: background-color 0.3s ease;
+ }
+
+.ghost:hover {
+    background-color: #0056b3; /* Darker hover color */
+}
+
 
 .container {
     background-color: #fff;
@@ -179,7 +194,6 @@ footer a {
     margin-top: 10px;
     width: auto;
 }
-<<<<<<< HEAD
 
 .remember-label {
     display: inline-flex;
@@ -187,16 +201,17 @@ footer a {
     white-space: nowrap;
     gap: 5px;
     font-size: 12px;
-=======
-input[type="checkbox"] {
-    margin-right: 8px;
-    verticat-align: middle;
-}
-label {
-    font-size: 14px;
-    color: #322525; /* Ngjyra e tekstit */
-    display: inline-flex;
-    align-items: center;
->>>>>>> b0faa2d56c7b1b7b0183f759d2c7e877e940c4ce
+
+    input[type="checkbox"] {
+        margin-right: 8px;
+        verticat-align: middle;
+    }
+
+    label {
+        font-size: 14px;
+        color: #322525; /* Ngjyra e tekstit */
+        display: inline-flex;
+        align-items: center;
+    }
 }
 

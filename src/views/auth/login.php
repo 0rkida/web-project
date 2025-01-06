@@ -1,6 +1,6 @@
 <?php
 global $db;
-require 'Database.php';
+require 'db.php';
 require 'User.php';
 require 'verify.php';
 
