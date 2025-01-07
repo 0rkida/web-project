@@ -1,81 +1,95 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-class User {
-    private $conn;
-    private $table_name = "users";
 
-    public $id;
-    public $full_name;
-    public $email;
-    public $password;
-    public $role;
-    public $created_at;
+class UserModel {
+    private $dbConnection;
 
-    public function __construct($db) {
-        $this->conn = $db;
+    public function __construct($dbConnection) {
+        $this->dbConnection = $dbConnection;
     }
 
-    function postRegister($data): void {
-        global $conn;
-        require_once 'db.php';
-        $email = $data['email'];
-        $password = $data['password'];
+    // Funksioni për të regjistruar përdoruesin
+    public function registerUser($email, $password) {
         $verificationCode = $this->generateVerificationCode();
-
-        // Hash the password (BCRYPT recommended)
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        // Insert user data along with verification code into the database
-        $stmt = $conn->prepare("INSERT INTO users (email, password, verification_code, is_verified ) VALUES (?, ?, ?, 0 )");
+        // Kontrolloni nëse email-i është i disponueshëm
+        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // Email-i është i zënë
+            return false;
+        }
+
+        // Futni të dhënat e përdoruesit në bazën e të dhënave
+        $stmt = $this->dbConnection->prepare("INSERT INTO users (email, password, verification_code, is_verified) VALUES (?, ?, ?, 0)");
         $stmt->bind_param("sss", $email, $hashedPassword, $verificationCode);
 
         if ($stmt->execute()) {
-            // Send verification email
-            $this->sendVerificationEmail($email, $verificationCode);
-            echo "Registration successful! A verification code has been sent to your email.";
-        } else {
-            echo "Error: " . $stmt->error;
+            // Përdoruesi është regjistruar me sukses
+            return true;
         }
 
-        $stmt->close();
+        return false;
+    }
 
+    // Funksioni për të autentikuar përdoruesin
+    public function authenticateUser($email, $password) {
+        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+
+            // Krahasimi i fjalëkalimit
+            if (password_verify($password, $user['password'])) {
+                // Fjalëkalimi është i saktë, kthe ID-në e përdoruesit
+                return $user['id'];
+            }
         }
-    private function generateVerificationCode(): string {
+
+        return false; // Përdoruesi nuk u gjet ose fjalëkalimi është gabim
+    }
+
+    // Funksioni për të marrë të dhënat e përdoruesit nga ID-ja
+    public function getUserById($userId) {
+        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        }
+
+        return null; // Përdoruesi nuk u gjet
+    }
+
+    // Funksioni për të gjeneruar një kod verifikimi të rastësishëm
+    public function generateVerificationCode() {
         try {
             return bin2hex(random_bytes(32));
         } catch (Exception $e) {
-            die('Could not generate verification code: ' . $e->getMessage());
+            die('Nuk mund të gjenerohet kodi i verifikimit: ' . $e->getMessage());
         }
     }
-    private function sendVerificationEmail($email, $verificationCode): void {
-        $mail = new PHPMailer(true);
 
-        try {
-            //Server settings
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com'; // Përdor serverin e SMTP tuaj
-            $mail->SMTPAuth = true;
-            $mail->Username = 'your-email@yourdomain.com'; // Emaili juaj
-            $mail->Password = 'your-password'; // Fjalëkalimi i emailit tuaj
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+    // Funksioni për të verifikuar përdoruesin duke përdorur kodin e verifikimit
+    public function verifyUser($verificationCode) {
+        $stmt = $this->dbConnection->prepare("UPDATE users SET is_verified = 1 WHERE verification_code = ?");
+        $stmt->bind_param("s", $verificationCode);
+        return $stmt->execute();
+    }
+    public function isUserVerified($email){
+        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        return $stmt->execute();
 
-            //Recipients
-            $mail->setFrom('no-reply@yourdomain.com', 'Your Website');
-            $mail->addAddress($email);
 
-            // Content
-            $mail->isHTML(true);
-            $mail->Subject = 'Email Verification';
-            $mail->Body    = "Please click the link below to verify your email address:<br><a href='http://localhost/web-project/verify.php?code=" . $verificationCode . "'>Verify Email</a>";
 
-            $mail->send();
-            echo 'Verification email has been sent.';
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-        }
     }
 }
-
-
-
