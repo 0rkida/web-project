@@ -1,5 +1,5 @@
 <?php
-require_once '../database/Database.php';
+require_once '../src/db.php';
 require_once '../models/User.php';
 
 
@@ -13,14 +13,14 @@ class UserController {
         $this->user = new User($this->db);
     }
 
-    public function register($data) {
+    public function register($data)  {
         $this->user->full_name = $data['full_name'];
         $this->user->email = $data['email'];
         $this->user->password = password_hash($data['password'], PASSWORD_BCRYPT);
         $this->user->role = 'user';
         $this->user->created_at = date('Y-m-d H:i:s');
 
-        if ($this->user->register()) {
+        if ($this->user->register($data)) {
             return ['status' => true, 'message' => 'User registered successfully.'];
         } else {
             return ['status' => false, 'message' => 'User registration failed.'];
