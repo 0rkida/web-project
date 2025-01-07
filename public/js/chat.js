@@ -1,65 +1,76 @@
 function initChat() {
-    const chatInput = document.querySelector('#chat-input');
-    const chatMessages = document.querySelector('#chat-messages');
-    const sendButton = document.querySelector('#send-button');
+    const chatInput = document.querySelector('main footer textarea');
+    const chatMessages = document.querySelector('#chat');
+    const sendButton = document.querySelector('main footer a');
 
+    // Event listener for the Send button
     sendButton.addEventListener('click', () => {
         const message = chatInput.value.trim();
         if (message) {
-            const messageElement = {
-                sender: "You",
+            const messageData = {
+                sender: "Me",
                 content: message,
-                timestamp: new Date().toLocaleDateString(),
-                status: "unread"
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             };
 
-            displayMessage(messageData, "sent");
-
-            chatInput.value = '';
+            displayMessage(messageData, "me");
+            chatInput.value = ''; // Clear input field
         }
     });
 
+    // Allow sending message by pressing Enter
     chatInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             sendButton.click();
         }
     });
-
-
 }
 
+// Function to display messages dynamically in the chat UI
 function displayMessage(messageData, type) {
-    console.log('Displaying message:', messageData);  // Debugging line
+    const chatMessages = document.querySelector('#chat');
 
-    const chatMessages = document.querySelector('#chat-messages');
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('chat-message', type);
+    const listItem = document.createElement('li');
+    listItem.classList.add(type);
 
-    const senderElement = document.createElement('span');
-    senderElement.classList.add('sender');
-    senderElement.textContent = messageData.sender;
+    const entete = document.createElement('div');
+    entete.classList.add('entete');
 
-    const contentElement = document.createElement('span');
-    contentElement.classList.add('content');
-    contentElement.textContent = messageData.content;
+    const sender = document.createElement('h2');
+    sender.textContent = messageData.sender;
 
-    const timestampElement = document.createElement('span');
-    timestampElement.classList.add('timestamp');
-    timestampElement.textContent = messageData.timestamp;
+    const timestamp = document.createElement('h3');
+    timestamp.textContent = messageData.timestamp;
 
-    const statusElement = document.createElement('span');
-    statusElement.classList.add('status');
-    statusElement.textContent = messageData.status;
+    const statusIndicator = document.createElement('span');
+    statusIndicator.classList.add('status', type === 'me' ? 'blue' : 'green');
 
-    messageElement.appendChild(senderElement);
-    messageElement.appendChild(contentElement);
-    messageElement.appendChild(timestampElement);
-    messageElement.appendChild(statusElement);
+    if (type === 'me') {
+        entete.appendChild(timestamp);
+        entete.appendChild(sender);
+        entete.appendChild(statusIndicator);
+    } else {
+        entete.appendChild(statusIndicator);
+        entete.appendChild(sender);
+        entete.appendChild(timestamp);
+    }
 
-    chatMessages.appendChild(messageElement);
+    const triangle = document.createElement('div');
+    triangle.classList.add('triangle');
+
+    const message = document.createElement('div');
+    message.classList.add('message');
+    message.textContent = messageData.content;
+
+    listItem.appendChild(entete);
+    listItem.appendChild(triangle);
+    listItem.appendChild(message);
+
+    chatMessages.appendChild(listItem);
+
+    // Auto-scroll to the latest message
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
 
 window.addEventListener('DOMContentLoaded', initChat);
