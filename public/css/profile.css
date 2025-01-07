@@ -55,6 +55,7 @@
 
 body {
     background: #1f253d;
+    display: flex;
 }
 
 ul {
@@ -107,15 +108,8 @@ input[type=text]{
 input[type=text]::-webkit-input-placeholder { /* WebKit browsers */
     color: #fff;
 }
-input[type=text]:-moz-input-placeholder { /* Mozilla Firefox 4 to 18 */
-    color: #fff;
-}
-input[type=text]::-moz-input-placeholder { /* Mozilla Firefox 19+ */
-    color: #fff;
-}
-input[type=text]:-ms-input-placeholder { /* Internet Explorer 10+ */
-    color: #fff;
-}
+
+
 input[type=text]:focus {
     outline: none; /* removes the default orange border when focus */
     border: 1px solid #11a8ab;
@@ -233,7 +227,7 @@ input[type=text]:focus {
 .main-container {
     font-family: 'Ubuntu', sans-serif;
     width: 950px;
-    height: 1725px;
+    height: 1000px;
     margin: 6em auto;
 }
 /*********************************************** HEADER ***********************************************/
@@ -249,9 +243,9 @@ header {
     -webkit-transform: translateZ(0); /** To avoid a flash when hover messages **/
 }
 .header-menu-tab {
-    padding: 0 27px;
+    padding: 0 15px;
     display: block;
-    line-height: 74px;
+    line-height: 60px;
     font-size: 17px;
     -webkit-transition: background .3s;
     transition: background .3s;
@@ -492,222 +486,8 @@ END DONUT-CHART by @kseso https://codepen.io/Kseso/pen/phiyL
     height: 200px;
     background: #11a8ab;
 }
-/******************************************
-LINE-CHART by @kseso https://codepen.io/Kseso/pen/phiyL
-******************************************/
-.grafico {
-    padding: 2rem 1rem 1rem;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    color: #fff;
-    font-size: 80%;
-}
-.grafico span {
-    display: block;
-    position: absolute;
-    bottom: 3rem;
-    left: 2rem;
-    height: 0;
-    border-top: 2px solid;
-    -webkit-transform-origin: left center;
-    transform-origin: left center;
-}
-.grafico span > span {
-    left: 100%; bottom: 0;
-}
-[data-valor='25'] {width: 75px; -webkit-transform: rotate(-45deg); transform: rotate(-45deg);}
-[data-valor='8'] {width: 24px; -webkit-transform: rotate(65deg); transform: rotate(65deg);}
-[data-valor='13'] {width: 39px; -webkit-transform: rotate(-45deg); transform: rotate(-45deg);}
-[data-valor='5'] {width: 15px; -webkit-transform: rotate(50deg); transform: rotate(50deg);}
-[data-valor='23'] {width: 69px; -webkit-transform: rotate(-70deg); transform: rotate(-70deg);}
-[data-valor='12'] {width: 36px; -webkit-transform: rotate(75deg); transform: rotate(75deg);}
-[data-valor='15'] {width: 45px; -webkit-transform: rotate(-45deg); transform: rotate(-45deg);}
 
-[data-valor]:before {
-    content: '';
-    position: absolute;
-    display: block;
-    right: -4px;
-    bottom: -3px;
-    padding: 4px;
-    background: #fff;
-    border-radius: 50%;
-}
-[data-valor='23']:after {
-    content: '+' attr(data-valor) '%';
-    position: absolute;
-    right: -2.7rem;
-    top: -1.7rem;
-    padding: .3rem .5rem;
-    background: #50597B;
-    border-radius: .5rem;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-[class^='eje-'] {
-    position: absolute;
-    left: 0;
-    bottom: 0rem;
-    width: 100%;
-    padding: 1rem 1rem 0 2rem;
-    height: 80%;
-}
-.eje-x {
-    height: 2.5rem;
-}
-.eje-y li {
-    height: 25%;
-    border-top: 1px solid #777;
-}
-[data-ejeY]:before {
-    content: attr(data-ejeY);
-    display: inline-block;
-    width: 2rem;
-    text-align: right;
-    line-height: 0;
-    position: relative;
-    left: -2.5rem;
-    top: -.5rem;
-}
-.eje-x li {
-    width: 33%;
-    float: left;
-    text-align: center;
-}
-/******************************************
-END LINE-CHART by @kseso https://codepen.io/Kseso/pen/phiyL
-******************************************/
-.time-lenght {
-    padding-top: 22px;
-    padding-left: 38px;
-}
-.time-lenght-btn {
-    display: block;
-    width: 70px;
-    line-height: 32px;
-    background: #50597b;
-    border-radius: 5px;
-    font-size: 14px;
-    text-align: center;
-    margin-right: 5px;
-    -webkit-transition: background .3s;
-    transition: background .3s;
-}
-.time-lenght-btn:hover {
-    text-decoration: none;
-    background: #e64c65;
-}
-.month-data {
-    padding-top: 28px;
-}
-.month-data p {
-    display: inline-block;
-    margin: 0;
-    padding: 0 25px 15px;
-    font-size: 16px;
-}
-.month-data p:last-child {
-    padding: 0 25px;
-    float: right;
-    font-size: 15px;
-}
-.increment {
-    color: #e64c65;
-}
-.media {
-    height: 216px;
-}
-#media-display {
-    position: relative;
-    height: 180px;
-    background: #787878 url('https://www.fancinema.com.ar/wp-content/uploads/catwoman1.jpg') center top;
-}
-#media-display .play {
-    position: absolute;
-    top: 75px;
-    right: 32px;
-    border: 2px solid #fff;
-    border-radius: 100%;
-    padding: 2px 5px 2px 9px;
-}
-#media-display .play:hover {
-    border: 2px solid #e64c65;
-}
-.media-control-bar {
-    padding: 6px 0 0 15px;
-}
-.media-btn, .time-passed {
-    display: inline-block;
-    margin: 0;
-}
-.media-btn {
-    font-size: 19px;
-}
-.media-btn:hover, .media-btn:hover span {
-    text-decoration: none;
-    color: #e64c65;
-}
-.play {
-    margin-right: 100px
-}
-.volume {
-    margin-left: 30px;
-}
-.resize {
-    margin-left: 12px;
-}
-.left-container .social {
-    height: 110px;
-}
-.left-container .social li {
-    width: 75px;
-    height: 110px;
-}
-.left-container .social li .icon {
-    text-align: center;
-    font-size: 20px;
-    margin: 0;
-    line-height: 75px;
-}
-.left-container .social li .number {
-    text-align: center;
-    margin: 0;
-    line-height: 34px;
-}
-.left-container .social .facebook {
-    background: #3468af;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-.left-container .social .facebook .number {
-    background: #1a4e95;
-    border-bottom-left-radius: 5px;
-}
-.left-container .social .twitter {
-    background: #4fc4f6;
-}
-.left-container .social .twitter .icon {
-    font-size: 18px;
-}
-.left-container .social .twitter .number {
-    background: #35aadc;
-}
-.left-container .social .googleplus {
-    background: #e64c65;
-}
-.left-container .social .googleplus .number{
-    background: #cc324b;
-}
-.left-container .social .mailbox {
-    background: #50597b;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-.left-container .social .mailbox .number {
-    background: #363f61;
-    border-bottom-right-radius: 5px;
-}
+
 /************************************************** MIDDLE CONTAINER **********************************/
 .middle-container {
     margin: 0 25px;
@@ -780,159 +560,10 @@ END LINE-CHART by @kseso https://codepen.io/Kseso/pen/phiyL
 .profile-options .likes {
     border-top: 4px solid #e64c65;
 }
-.weather {
-    height: 555px;
-}
-.weather .titular {
-    background: #cc324b;
-}
-.weather .titular .icon {
-    padding-right: 15px;
-    font-size: 26px;
-}
-.weather .current-day {
-    height: 135px;
-    background: #e64c65;
-}
-.weather .current-day p {
-    margin: 0;
-    padding-left: 50px;
-}
-.current-day-date {
-    font-size: 16px;
-    padding-top: 16px;
-}
-.current-day-temperature {
-    font-size: 70px;
-}
-.current-day-temperature .icon-cloudy {
-    padding-left: 20px;
-}
-.weather .next-days{}
-.weather .next-days p {
-    margin: 0;
-    display: inline-block;
-    font-size: 16px;
-}
-.weather .next-days a {
-    display: block;
-    line-height: 58px;
-    border-bottom: 1px solid #1f253d;
-    -webkit-transition: background .3s;
-    transition: background .3s;
-}
-.weather .next-days a:hover {
-    background: #50597b;
-}
-.weather .next-days a:hover .day {
-    color: #e64c65;
-}
-.weather .next-days-date {
-    padding-left: 20px;
-}
-.weather .next-days-temperature {
-    float: right;
-    padding-right: 20px;
-}
-.weather .next-days-temperature .icon {
-    padding-left: 10px;
-}
-.tweets {
-    height: 375px;
-}
-.tweets .titular {
-    background: #35aadc;
-}
-.tweets .titular .icon {
-    font-size: 18px;
-    padding-right: 20px;
-}
-.tweet.first {
-    height: 150px;
-    border-bottom: 1px solid #1f253d;
-}
-.tweet p:first-child {
-    margin: 0;
-    padding: 30px 30px 0;
-}
-.tweet p:last-child {
-    margin: 0;
-    padding: 15px 30px 0;
-}
-.tweet-link {
-    color: #4fc4f6;
-}
-.middle-container .social {
-    height: 205px;
-    background: #1f253d;
-}
-.middle-container .social li {
-    margin-bottom: 12px;
-}
-.middle-container .social a {
-    line-height: 60px;
-}
-.middle-container .social a:hover {
-    text-decoration: none;
-}
-.middle-container .social .titular {
-    border-radius: 5px;
-}
-.middle-container .social .facebook {
-    background: #3468af;
-    -webkit-transition: background .3s;
-    transition: background .3s;
-}
-.middle-container .social a:hover .facebook {
-    background: #1a4e95;
-}
-.middle-container .social a:hover .icon.facebook {
-    background: #3468af;
-}
-.middle-container .social .twitter {
-    background: #4fc4f6;
-    -webkit-transition: background .3s;
-    transition: background .3s;
-}
-.middle-container .social a:hover .twitter {
-    background: #35aadc;
-}
-.middle-container .social a:hover .icon.twitter {
-    background: #4fc4f6;
-}
-.middle-container .social .googleplus {
-    background: #e64c65;
-    -webkit-transition: background .3s;
-    transition: background .3s;
-}
-.middle-container .social a:hover .googleplus {
-    background: #cc324b;
-}
-.middle-container .social a:hover .icon.googleplus {
-    background: #e64c65;
-}
-.middle-container .social .icon {
-    float: left;
-    width: 60px;
-    height: 60px;
-    text-align: center;
-    font-size: 20px;
-    border-bottom-left-radius: 5px;
-    border-top-left-radius: 5px;
-}
-.middle-container .social .icon.facebook {
-    background: #1a4e95;
-}
-.middle-container .social .icon.twitter {
-    background: #35aadc;
-}
-.middle-container .social .icon.googleplus {
-    background: #cc324b;
-}
 /********************************************* RIGHT CONTAINER ****************************************/
 .right-container {}
 .join-newsletter {
-    height: 230px;
+    height: 500px;
 }
 .join-newsletter .titular {
     padding-top: 10px;
@@ -943,131 +574,4 @@ END LINE-CHART by @kseso https://codepen.io/Kseso/pen/phiyL
 }
 .subscribe.button:hover {
     background: #0F9295;
-}
-.account {
-    height: 390px;
-}
-.account .titular {
-    padding: 10px 0;
-}
-.sign-in.button {
-    background: #e64c65;
-    margin: 10px auto;
-}
-.sign-in.button:hover {
-    background: #cc324b;
-}
-.account p {
-    text-align: center;
-}
-.fb-sign-in {
-    margin-top: 28px;
-    display: block;
-    line-height: 50px;
-    background: #3468af;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    -webkit-transition: background .3s;
-    transition: background .3s;
-}
-.fb-sign-in:hover {
-    background: #1a4e95;
-    text-decoration: none;
-}
-.fb-sign-in .icon {
-    line-height: 20px;
-    font-size: 12px;
-    padding-right: 3px;
-}
-.fb-border {
-    display: inline-block;
-    width: 23px;
-    line-height: 20px;
-    border: 2px solid #fff;
-    border-radius: 100%;
-    margin-right: 10px;
-}
-.loading {
-    height: 200px;
-    padding-top: 35px;
-}
-.loading p {
-    display: inline-block;
-    padding-left: 30px;
-    margin: 5px 0 20px;
-}
-.loading .icon {
-    padding-right: 15px;
-}
-.loading .percentage {
-    float: right;
-    padding: 6px 35px 0 0;
-}
-.loading .progress-bar {
-    width: 250px;
-    height: 20px;
-    background: #50597b;
-    border-radius: 5px;
-    margin: 0 auto;
-}
-.progress-bar.downloading {
-    background: -webkit-linear-gradient(left, #11a8ab 81%,#50597b 81%); /* Chrome10+,Safari5.1+ */
-    background: -ms-linear-gradient(left, #11a8ab 81%,#50597b 81%); /* IE10+ */
-    background: linear-gradient(to right, #11a8ab 81%,#50597b 81%); /* W3C */
-}
-.progress-bar.uploading {
-    background: -webkit-linear-gradient(left, #4fc4f6 43%,#50597b 43%); /* Chrome10+,Safari5.1+ */
-    background: -ms-linear-gradient(left, #4fc4f6 43%,#50597b 43%); /* IE10+ */
-    background: linear-gradient(to right, #4fc4f6 43%,#50597b 43%); /* W3C */
-}
-.calendar-day {
-    height: 320px;
-    background: #3468af;
-}
-.calendar-day .titular {
-    background: #1a4e95;
-}
-.calendar-day .arrow-btn:hover {
-    background: #16417E;
-}
-.calendar-day .the-day {
-    margin: 0;
-    text-align: center;
-    font-size: 146px;
-}
-.add-event.button {
-    background: #4fc4f6;
-}
-.add-event.button:hover {
-    background: #35aadc;
-}
-.calendar-month {
-    height: 380px;
-}
-.calendar-month .titular {
-    background: #3468af;
-}
-.calendar-month .arrow-btn:hover {
-    background: #1a4e95;
-}
-.calendar {
-    margin: 22px 15px;
-    text-align: center;
-}
-.calendar a {
-    font-size: 17px;
-}
-.calendar td, .calendar th {
-    width: 40px;
-    height: 38px;
-}
-.calendar .days-week {
-    color: #4fc4f6;
-}
-.calendar .today {
-    display: block;
-    width: 34px;
-    line-height: 34px;
-    background: #e64c65;
-    border-radius: 100%;
 }
