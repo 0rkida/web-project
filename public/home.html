@@ -2,9 +2,91 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dating App - Swipe for Love</title>
+    
+    <script src="scripts.js" defer></script>
+    <link rel="stylesheet" href="css/home.css"> <!-- Link to your JavaScript file -->
 </head>
 <body>
+<header class="main-header">
+    <div class="container">
+        <h1>Welcome to LoveConnect</h1>
+        <p>Swipe to find your perfect match!</p>
+    </div>
+</header>
 
+<main class="swipe-container">
+    <div class="profile-card" id="profile-card">
+       <img src="assets/img/default-avatar.jpeg" height="300" width="300" class="profile-picture" alt="profile-pic"/>
+        <h3 class="profile-name">Jane Doe</h3>
+        <p class="profile-bio">Loves hiking, cooking, and exploring new places. Let’s connect!</p>
+    </div>
+
+    <div class="swipe-buttons">
+        <button id="dislike-btn" class="btn dislike">&#10060; No</button>
+        <button id="like-btn" class="btn like">&#10084; Yes</button>
+    </div>
+</main>
+
+<footer class="main-footer">
+    <div class="container">
+        <p>&copy; 2025 LoveConnect. All rights reserved.</p>
+        <nav>
+            <a href="about.html">About Us</a> |
+            <a href="privacy.html">Privacy Policy</a> |
+            <a href="contact.html">Contact</a>
+        </nav>
+    </div>
+</footer>
+
+<script>
+    const profileCard = document.getElementById('profile-card');
+    const dislikeBtn = document.getElementById('dislike-btn');
+    const likeBtn = document.getElementById('like-btn');
+
+    const profiles = [
+        {
+            name: 'Jane Doe',
+            bio: 'Loves hiking, cooking, and exploring new places. Let’s connect!',
+            photo: 'default-profile.jpg'
+        },
+        {
+            name: 'John Smith',
+            bio: 'Avid traveler and photographer. Looking for my partner-in-crime!',
+            photo: 'profile-john.jpg'
+        },
+        {
+            name: 'Emily Johnson',
+            bio: 'Bookworm and coffee enthusiast. Let’s write our story together.',
+            photo: 'profile-emily.jpg'
+        }
+    ];
+
+    let currentIndex = 0;
+
+    function updateProfile() {
+        const profile = profiles[currentIndex];
+        profileCard.querySelector('.profile-photo').src = profile.photo;
+        profileCard.querySelector('.profile-name').textContent = profile.name;
+        profileCard.querySelector('.profile-bio').textContent = profile.bio;
+    }
+
+    function handleSwipe(isLiked) {
+        if (isLiked) {
+            console.log(`You liked ${profiles[currentIndex].name}!`);
+        } else {
+            console.log(`You disliked ${profiles[currentIndex].name}.`);
+        }
+
+        currentIndex = (currentIndex + 1) % profiles.length;
+        updateProfile();
+    }
+
+    dislikeBtn.addEventListener('click', () => handleSwipe(false));
+    likeBtn.addEventListener('click', () => handleSwipe(true));
+
+    updateProfile();
+</script>
 </body>
 </html>
