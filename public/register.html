@@ -11,7 +11,7 @@
 <body>
 <div class="container registration-container">
     <div class="form-container sign-up-container">
-        <form action="register.php" method="POST">
+        <form action="/register" method="POST">
 
             <div class="logo-container">
                 <img src="assets/img/logo.png" height="200" width="200" alt="logo"/>
@@ -25,10 +25,10 @@
                 <h1>Le të krijojmë një llogari së bashku !</h1> <p> përdorni e-mailin tuaj për regjistrim </p>
 
 
-            <input type="text" placeholder="Emri juaj" required />
-            <input type="email" placeholder="Emaili" required />
-            <input type="text" placeholder="Username" required />
-            <input type="password" placeholder="Password" required />
+            <input type="text" name="name" placeholder="Emri juaj" required />
+            <input type="email" name="email" placeholder="Emaili" required />
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="password" name="password" placeholder="Password" required />
 
 
             <input type="date" placeholder="Ditëlindja" required />
