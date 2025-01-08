@@ -103,3 +103,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 
     mysqli_close($conn);
 }
+
+header("Location: login.php");
+exit();
+
