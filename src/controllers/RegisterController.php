@@ -2,75 +2,91 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-session_start(); // Sigurohuni që seancat janë të nisin në fillim
+session_start(); // Make sure sessions are started
 require_once 'C:\xampp\htdocs\web-project\vendor\autoload.php';
-require_once 'C:\xampp\htdocs\web-project\src\models\User.php'; // Rruga për te UserModel
+require_once 'C:\xampp\htdocs\web-project\src\models\User.php'; // Path to UserModel
 
 class RegisterController {
     public UserModel $userModel;
     private $mailer;
 
-    // Konstruktor që merr lidhjen me bazën e të dhënave dhe shërbimin e postës
-    public function __construct($dbConnection, $mailer) {
+    // Constructor that accepts DB connection and mailer service
+    public function __construct($dbConnection) {
         $this->userModel = new UserModel($dbConnection);
-        $this->mailer = $mailer;
+        $this->mailer = $this->setupMailer(); // Initialize PHPMailer with Mailtrap settings
     }
 
-    // Funksioni për të shfaqur faqen e regjistrimit
+    // Function to display the registration page
     public function getView(): void {
-        require_once 'C:\xampp\htdocs\web-project\public\register.html'; // Vendosni rrugën e saktë për skedarin register.html
+        require_once 'C:\xampp\htdocs\web-project\public\register.html'; // Path to your register.html
     }
 
-    // Funksioni për të trajtuar POST request për regjistrim
+    // Function to handle POST request for registration
     public function postRegister($data): void {
         $email = $data['email'];
         $password = $data['password'];
 
-        // Provoni të regjistroni përdoruesin
+        // Try registering the user
         if ($this->userModel->registerUser($email, $password)) {
-            // Dërgo kodin e verifikimit në email
+            // Generate verification code for email
             $verificationCode = $this->userModel->generateVerificationCode();
 
-            // Dërgo email për verifikim
+            // Send verification email
             if ($this->sendVerificationEmail($email, $verificationCode)) {
-                echo "Regjistrimi ishte i suksesshëm! Një kod verifikimi u dërgua në email-in tuaj.";
+                echo "Registration was successful! A verification code has been sent to your email.";
             } else {
-                echo "Ka ndodhur një gabim gjatë dërgimit të email-it për verifikim.";
+                echo "An error occurred while sending the verification email.";
             }
         } else {
-            echo "Email-i është i zënë ose ka ndodhur një gabim gjatë regjistrimit!";
+            echo "The email is already taken or there was an issue with the registration!";
         }
     }
 
-    // Funksioni për dërgimin e email-it me kodin e verifikimit
+    // Function to send the verification email with the generated code
     private function sendVerificationEmail($email, $verificationCode): bool {
-        $subject = 'Verifikimi i Përdoruesit';
-        $message = "Për të verifikuar llogarinë tuaj, klikoni në këtë link:\n";
+        $subject = 'User Verification';
+        $message = "To verify your account, click the following link:\n";
         $message .= "http://yourdomain.com/verify.php?code=" . $verificationCode;
-        $headers = 'From: no-reply@yourdomain.com';
 
-        // Përdorim PHPMailer për dërgimin e email-it
+        // Set up the email headers
+        $this->mailer->setFrom('no-reply@yourdomain.com');
+        $this->mailer->addAddress($email);
+        $this->mailer->Subject = $subject;
+        $this->mailer->Body = $message;
+
+        // Send the email using PHPMailer
         try {
-            $this->mailer->addAddress($email);
-            $this->mailer->Subject = $subject;
-            $this->mailer->Body = $message;
-
             if ($this->mailer->send()) {
                 return true;
             }
         } catch (Exception $e) {
-            echo 'Gabim gjatë dërgimit të email-it: ' . $e->getMessage();
+            echo 'Error sending email: ' . $e->getMessage();
         }
 
         return false;
     }
 
-    // Funksioni për të verifikuar përdoruesin
+    // Function to verify the user with the verification code
     public function verifyUser($verificationCode): void {
         if ($this->userModel->verifyUser($verificationCode)) {
-            echo "Përdoruesi u verifikua me sukses!";
+            echo "User verified successfully!";
         } else {
-            echo "Gabim! Kodi i verifikimit nuk është i saktë.";
+            echo "Error! The verification code is incorrect.";
         }
+    }
+
+    // Function to set up Mailtrap with PHPMailer
+    private function setupMailer(): PHPMailer {
+        $mailer = new PHPMailer();
+
+        // Mailtrap SMTP configuration
+        $mailer->isSMTP();
+        $mailer->Host = 'sandbox.smtp.mailtrap.io';
+        $mailer->SMTPAuth = true;
+        $mailer->Port = 2525;
+        $mailer->Username = '0ec3624c7f0622'; // Replace with your Mailtrap username
+        $mailer->Password = '********9327'; // Replace with your Mailtrap password
+
+        return $mailer;
     }
 }
