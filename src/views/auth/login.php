@@ -1,10 +1,10 @@
 <?php
 global $db;
-require 'db.php';
-require 'User.php';
+require 'src/db.php';
+require 'src/models/User.php';
 require 'verify.php';
 
-include 'db.php';
+include 'src/views/includes/db.php';
 
 session_start();
 
