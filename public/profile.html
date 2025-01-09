@@ -1,4 +1,3 @@
-<!-- profile.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mish&Thu Profili</title>
     <link rel="stylesheet" href="css/profile.css">
-
 </head>
 <body>
+
+<!-- Notification container -->
+<div id="notification-container"></div>
 
 <div class="main-container">
 
@@ -39,7 +40,7 @@
 
     <!-- LEFT-CONTAINER -->
     <div class="left-container container">
-        <div class="menu-box block"> <!-- MENU BOX (LEFT-CONTAINER) -->
+        <div class="menu-box block">
             <h2 class="titular">MENU BOX</h2>
             <ul class="menu-box-menu">
                 <li>
@@ -56,41 +57,21 @@
                 </li>
             </ul>
         </div>
-        <div class="donut-chart-block block"> <!-- DONUT CHART BLOCK (LEFT-CONTAINER) -->
+        <div class="donut-chart-block block">
             <h2 class="titular">OS AUDIENCE STATS</h2>
             <div class="donut-chart">
-                <!-- DONUT-CHART by @kseso https://codepen.io/Kseso/pen/phiyL -->
                 <div id="porcion1" class="recorte"><div class="quesito ios" data-rel="21"></div></div>
                 <div id="porcion2" class="recorte"><div class="quesito mac" data-rel="39"></div></div>
                 <div id="porcion3" class="recorte"><div class="quesito win" data-rel="31"></div></div>
                 <div id="porcionFin" class="recorte"><div class="quesito linux" data-rel="9"></div></div>
-                <!-- END DONUT-CHART by @kseso https://codepen.io/Kseso/pen/phiyL -->
                 <p class="center-date">JUNE<br><span class="scnd-font-color">2013</span></p>
             </div>
-            <ul class="os-percentages horizontal-list">
-                <li>
-                    <p class="ios os scnd-font-color">iOS</p>
-                    <p class="os-percentage">21<sup>%</sup></p>
-                </li>
-                <li>
-                    <p class="mac os scnd-font-color">Mac</p>
-                    <p class="os-percentage">48<sup>%</sup></p>
-                </li>
-                <li>
-                    <p class="linux os scnd-font-color">Linux</p>
-                    <p class="os-percentage">9<sup>%</sup></p>
-                </li>
-                <li>
-                    <p class="win os scnd-font-color">Win</p>
-                    <p class="os-percentage">32<sup>%</sup></p>
-                </li>
-            </ul>
         </div>
     </div>
 
     <!-- MIDDLE-CONTAINER -->
     <div class="middle-container container">
-        <div class="profile block"> <!-- PROFILE (MIDDLE-CONTAINER) -->
+        <div class="profile block">
             <a class="add-button" href="#28"><span class="icon entypo-plus scnd-font-color"></span></a>
             <div class="profile-picture big-profile-picture clear">
                 <img width="150px" alt="Anne Hathaway picture" src="http://upload.wikimedia.org/wikipedia/commons/e/e1/Anne_Hathaway_Face.jpg" >
@@ -104,12 +85,14 @@
                 <li><a class="views" href="#41"><p><span class="icon fontawesome-eye-open scnd-font-color"></span>841</li></p></a>
                 <li><a class="likes" href="#42"><p><span class="icon fontawesome-heart-empty scnd-font-color"></span>49</li></p></a>
             </ul>
+            <!-- Like Button (example) -->
+            <button id="like-btn" class="btn like">&#10084; Like</button>
         </div>
     </div>
 
     <!-- RIGHT-CONTAINER -->
     <div class="right-container container">
-        <div class="join-newsletter block"> <!-- JOIN NEWSLETTER (RIGHT-CONTAINER) -->
+        <div class="join-newsletter block">
             <h2 class="titular">JOIN THE NEWSLETTER</h2>
             <div class="input-container">
                 <input type="text" placeholder="yourname@gmail.com" class="email text-input">
@@ -119,5 +102,16 @@
         </div>
     </div> <!-- end right-container -->
 </div> <!-- end main-container -->
+
+<script src="notification.js"></script> <!-- Include the notification script -->
+
+<script>
+    // Example of triggering a notification when the like button is clicked
+    document.getElementById('like-btn').addEventListener('click', function() {
+        // Triggering the notification (you can customize the user ID and message)
+        Notification.displayNotification('Anne Hathaway', 'This user liked your photo!');
+    });
+</script>
+
 </body>
 </html>

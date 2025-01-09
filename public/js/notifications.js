@@ -1,32 +1,29 @@
-/* notifications.js */
-function initNotifications() {
-    const notificationBell = document.querySelector('#notification-bell');
-    const notificationList = document.querySelector('#notification-list');
-
-    notificationBell.addEventListener('click', () => {
-        if (notificationList.classList.contains('hidden')) {
-            notificationList.classList.remove('hidden');
-        } else {
-            notificationList.classList.add('hidden');
-        }
-    });
-
-    // Mock notifications for demonstration purposes
-    function loadNotifications() {
-        const notifications = [
-            'New message from Jane',
-            'Your profile was liked!',
-            'Admin approved your photo',
-        ];
-
-        notifications.forEach((notification) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = notification;
-            notificationList.appendChild(listItem);
-        });
+class Notification {
+    constructor(userId, message) {
+        this.userId = userId; // ID of the user receiving the notification
+        this.message = message; // Message to be displayed
+        this.timestamp = new Date(); // Time the notification was created
     }
 
-    loadNotifications();
-}
+    // Method to display the notification on the webpage
+    static displayNotification(userId, message) {
+        const notificationContainer = document.getElementById('notification-container');
+        const notification = new Notification(userId, message);
+        const notificationElement = document.createElement('div');
+        notificationElement.classList.add('notification');
 
-window.addEventListener('DOMContentLoaded', initNotifications);
+        // Set the content of the notification
+        notificationElement.innerHTML = `
+            <p>${notification.message}</p>
+            <span class="timestamp">${notification.timestamp.toLocaleString()}</span>
+        `;
+
+        // Add the notification to the notification container
+        notificationContainer.appendChild(notificationElement);
+
+        // Optional: Automatically remove notification after 5 seconds
+        setTimeout(() => {
+            notificationElement.remove();
+        }, 5000);
+    }
+}

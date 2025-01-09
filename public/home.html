@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dating App - Swipe for Love</title>
-    
+    <title>Dating App - Find your Love</title>
+
     <script src="scripts.js" defer></script>
     <link rel="stylesheet" href="css/home.css"> <!-- Link to your JavaScript file -->
 </head>
@@ -12,13 +12,14 @@
 <header class="main-header">
     <div class="container">
         <h1>Welcome to Mish&Thu</h1>
-        <p>Swipe to find your perfect match!</p>
+        <p>Explore to find your perfect match!</p>
+        <a href="profile.html" class="btn profile-btn">My Profile</a> <!-- MyProfile button -->
     </div>
 </header>
 
 <main class="swipe-container">
     <div class="profile-card" id="profile-card">
-       <img src="assets/img/default-avatar.jpeg" height="300" width="300" class="profile-picture" alt="profile-pic"/>
+        <img src="assets/img/default-avatar.jpeg" height="300" width="300" class="profile-picture" alt="profile-pic"/>
         <h3 class="profile-name">Jane Doe</h3>
         <p class="profile-bio">Loves hiking, cooking, and exploring new places. Let’s connect!</p>
     </div>
@@ -31,7 +32,7 @@
 
 <footer class="main-footer">
     <div class="container">
-        <p>&copy; 2025 LoveConnect. All rights reserved.</p>
+        <p>&copy; 2025 Mish&Thu. All rights reserved.</p>
         <nav>
             <a href="about.html">About Us</a> |
             <a href="privacy.html">Privacy Policy</a> |
@@ -49,17 +50,17 @@
         {
             name: 'Jane Doe',
             bio: 'Loves hiking, cooking, and exploring new places. Let’s connect!',
-            photo: 'default-profile.jpg'
+            photo: 'assets/img/default-avatar.jpeg'
         },
         {
             name: 'John Smith',
             bio: 'Avid traveler and photographer. Looking for my partner-in-crime!',
-            photo: 'profile-john.jpg'
+            photo: 'assets/img/profile-john.jpg'
         },
         {
             name: 'Emily Johnson',
             bio: 'Bookworm and coffee enthusiast. Let’s write our story together.',
-            photo: 'profile-emily.jpg'
+            photo: 'assets/img/profile-emily.jpg'
         }
     ];
 
@@ -67,7 +68,7 @@
 
     function updateProfile() {
         const profile = profiles[currentIndex];
-        profileCard.querySelector('.profile-photo').src = profile.photo;
+        profileCard.querySelector('.profile-picture').src = profile.photo;
         profileCard.querySelector('.profile-name').textContent = profile.name;
         profileCard.querySelector('.profile-bio').textContent = profile.bio;
     }
@@ -79,14 +80,15 @@
             console.log(`You disliked ${profiles[currentIndex].name}.`);
         }
 
+        // Move to the next profile in the array
         currentIndex = (currentIndex + 1) % profiles.length;
         updateProfile();
     }
 
-    dislikeBtn.addEventListener('click', () => handleSwipe(false));
-    likeBtn.addEventListener('click', () => handleSwipe(true));
+    dislikeBtn.addEventListener('click', () => handleSwipe(false));  // Handle Dislike
+    likeBtn.addEventListener('click', () => handleSwipe(true));      // Handle Like
 
-    updateProfile();
+    updateProfile();  // Initialize with the first profile
 </script>
 </body>
 </html>
