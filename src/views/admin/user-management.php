@@ -1,6 +1,8 @@
 <?php
-class User {
-    public static function register($userData) {
+class User
+{
+    public static function register($userData): bool
+    {
         $conn = Database::getConnection();
         $verificationCode = EmailVerification::generateVerificationCode();
         $userEmail = $userData['email'];
@@ -13,5 +15,5 @@ class User {
         // Send verification email
         EmailVerification::sendVerificationEmail($userEmail, $verificationCode);
     }
+
 }
-?>

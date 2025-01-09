@@ -57,4 +57,20 @@ switch ($uri) {
             exit();
         }
         break;
+
+        case '/Verify':
+            require 'controllers/VerifyController.php';
+            $VerifyController = new VerifyController($conn, $mailer);
+            if ($requestMethod === 'GET') {
+                $VerifyController->getView();
+
+            } else if ($requestMethod === 'POST') {
+                $VerifyController->postVerify([
+                    'email' => $_POST['email'],
+                    'password' => $_POST['password']
+
+                ]);
+                header('Location: /login');
+                exit();
+            }
 }

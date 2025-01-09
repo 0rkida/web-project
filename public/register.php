@@ -75,7 +75,7 @@ if (isset($_POST['register'])) {
 
         if (mysqli_query($conn, $sql)) {
             // Redirect to email verification page
-            header("Location: email_verification.php?email=$email&code=$verificationCode");
+            header("Location: verify.php?email=$email&code=$verificationCode");
             exit();
         } else {
             throw new Exception("Database error: " . mysqli_error($conn));
@@ -95,4 +95,3 @@ if (isset($_POST['register'])) {
         <input type="submit" name="register" value="Register" />
     </form>';
 }
-?>

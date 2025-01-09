@@ -7,35 +7,24 @@ class UserModel {
         $this->dbConnection = $dbConnection;
     }
 
-    // Funksioni për të regjistruar përdoruesin
+    // Registers the user in the database
     public function registerUser($email, $password) {
-        $verificationCode = $this->generateVerificationCode();
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-        // Kontrolloni nëse email-i është i disponueshëm
-        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            // Email-i është i zënë
+        // Check if the email already exists
+        if ($this->isEmailTaken($email)) {
             return false;
         }
 
-        // Futni të dhënat e përdoruesit në bazën e të dhënave
+        $verificationCode = $this->generateVerificationCode();
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+        // Insert user data into the database
         $stmt = $this->dbConnection->prepare("INSERT INTO users (email, password, verification_code, is_verified) VALUES (?, ?, ?, 0)");
         $stmt->bind_param("sss", $email, $hashedPassword, $verificationCode);
 
-        if ($stmt->execute()) {
-            // Përdoruesi është regjistruar me sukses
-            return true;
-        }
-
-        return false;
+        return $stmt->execute();
     }
 
-    // Funksioni për të autentikuar përdoruesin
+    // Authenticates the user by checking email and password
     public function authenticateUser($email, $password) {
         $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
@@ -44,52 +33,136 @@ class UserModel {
 
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
-
-            // Krahasimi i fjalëkalimit
+            // Verify the password
             if (password_verify($password, $user['password'])) {
-                // Fjalëkalimi është i saktë, kthe ID-në e përdoruesit
-                return $user['id'];
+                return $user['id']; // User is authenticated
             }
         }
 
-        return false; // Përdoruesi nuk u gjet ose fjalëkalimi është gabim
+        return false; // Invalid email or password
     }
 
-    // Funksioni për të marrë të dhënat e përdoruesit nga ID-ja
+    // Fetches user data by user ID
     public function getUserById($userId) {
         $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            return $result->fetch_assoc();
-        }
-
-        return null; // Përdoruesi nuk u gjet
+        return $result->num_rows > 0 ? $result->fetch_assoc() : null; // Return user data or null
     }
 
-    // Funksioni për të gjeneruar një kod verifikimi të rastësishëm
+    // Generates a random verification code
     public function generateVerificationCode() {
         try {
             return bin2hex(random_bytes(32));
         } catch (Exception $e) {
-            die('Nuk mund të gjenerohet kodi i verifikimit: ' . $e->getMessage());
+            die('Unable to generate verification code: ' . $e->getMessage());
         }
     }
 
-    // Funksioni për të verifikuar përdoruesin duke përdorur kodin e verifikimit
+    // Verifies the user using the verification code
     public function verifyUser($verificationCode) {
         $stmt = $this->dbConnection->prepare("UPDATE users SET is_verified = 1 WHERE verification_code = ?");
         $stmt->bind_param("s", $verificationCode);
         return $stmt->execute();
     }
-    public function isUserVerified($email){
-        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ?");
+
+    // Checks if a user is verified by email
+    public function isUserVerified($email) :bool {
+        $stmt = $this->dbConnection->prepare("SELECT is_verified FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
-        return $stmt->execute();
-
-
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0 && $result->fetch_assoc()['is_verified'] == 1;
 
     }
+
+    // Checks if the verification code matches for the email
+    public function checkVerificationCode($email, $code) :bool{
+        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ? AND verification_code = ?");
+        $stmt->bind_param("ss", $email, $code);
+        $stmt->execute();
+        return $stmt->get_result()->num_rows > 0;
+    }
+
+    // Marks the user as verified using the email
+    public function markUserAsVerified($email) {
+        $stmt = $this->dbConnection->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        return $stmt->execute();
+    }
+
+    // Checks if the email is already taken
+    private function isEmailTaken($email) :bool {
+        $stmt = $this->dbConnection->prepare("SELECT 1 FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        return $stmt->get_result()->num_rows > 0;
+    }
+    public function saveResetToken($email, $token, $expiry) {
+        $stmt = $this->dbConnection->prepare("UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE email = ?");
+        $stmt->bind_param("sss", $token, $expiry, $email);
+        return $stmt->execute();
+    }
+
+    public function verifyResetToken($token) :bool{
+        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE reset_token = ? AND reset_token_expiry > NOW()");
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0;
+    }
+
+    public function updatePassword($token, $hashedPassword) {
+        $stmt = $this->dbConnection->prepare("UPDATE users SET password = ?, reset_token = NULL, reset_token_expiry = NULL WHERE reset_token = ?");
+        $stmt->bind_param("ss", $hashedPassword, $token);
+        return $stmt->execute();
+    }
+
+    // Reset failed login attempts
+    public static function resetFailedAttempts($email) :bool{
+        global $db;
+        $stmt = $db->prepare("UPDATE users SET failed_attempts = 0 WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        return $stmt->execute();
+    }
+
+    // Save Remember Me Token
+    public static function saveRememberMeToken($userId, $token) :bool{
+        global $db;
+        $stmt = $db->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+        $stmt->bind_param("si", $token, $userId);
+        return $stmt->execute();
+    }
+
+    // Increment failed login attempts
+    public static function incrementFailedAttempts($email):bool {
+        global $db;
+        $stmt = $db->prepare("UPDATE users SET failed_attempts = failed_attempts + 1, last_failed_attempt = NOW() WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        return $stmt->execute();
+    }
+
+    // Check if user is blocked
+    public static function isBlocked($email):bool {
+        global $db;
+        $stmt = $db->prepare("SELECT failed_attempts, last_failed_attempt FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            $failedAttempts = $user['failed_attempts'];
+            $lastFailedAttempt = strtotime($user['last_failed_attempt']);
+
+            // Block if there are 7 failed attempts and less than 30 minutes have passed
+            if ($failedAttempts >= 7 && (time() - $lastFailedAttempt) < 1800) {
+                return true;
+            }
+        }
+        return false; // User is not blocked
+    }
+
 }

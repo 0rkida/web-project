@@ -8,6 +8,11 @@ CREATE TABLE users (
     verification_code VARCHAR(64) NOT NULL,
     is_verified TINYINT(1) DEFAULT 0,
     remember_token VARCHAR(255) DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    reset_token VARCHAR(255) DEFAULT NULL,
+    reset_token_expiry DATETIME DEFAULT NULL,
+     failed_attempts INT DEFAULT 0,
+     last_failed_attempt DATETIME DEFAULT NULL
+
 );
 
