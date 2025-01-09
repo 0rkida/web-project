@@ -5,13 +5,41 @@ use PHPMailer\PHPMailer\Exception;
 require 'C:\xampp\htdocs\web-project\vendor\autoload.php';
 
 if (isset($_POST['register'])) {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    // Get the form input values
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    // Input validation
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Invalid email format!";
+        exit();
+    }
+
+    if (strlen($password) < 6) {
+        echo "Password must be at least 6 characters long!";
+        exit();
+    }
+
+    // Database connection
+    $conn = mysqli_connect("localhost", "root", "root", "test");
+
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+
+    // Check if email already exists in the database
+    $checkEmailQuery = "SELECT * FROM users WHERE email = '$email'";
+    $result = mysqli_query($conn, $checkEmailQuery);
+
+    if (mysqli_num_rows($result) > 0) {
+        echo "This email address is already registered. Please use a different one.";
+        exit();
+    }
 
     // Generate verification code
-    $verificationCode = substr(number_format(time() * rand(),0,'',''),0,6);
+    $verificationCode = substr(number_format(time() * rand(), 0, '', ''), 0, 6);
 
     // PHPMailer instance
     $mail = new PHPMailer(true);
@@ -28,30 +56,25 @@ if (isset($_POST['register'])) {
         $mail->Port = 587;
 
         $mail->setFrom('no-reply@yourdomain.com', 'Your Site');
-        $mail->addAddress($email, $name);     // Add user email
+        $mail->addAddress($email, $name); // Add user email
         $mail->addReplyTo('no-reply@yourdomain.com', 'Your Site');
 
         // Set email format to HTML
         $mail->isHTML(true);
         $mail->Subject = "Verification Code";
-        $mail->Body    = "<p>Your verification code is: <b>$verificationCode</b></p>";
+        $mail->Body = "<p>Your verification code is: <b>$verificationCode</b></p>";
 
         $mail->send();
 
         // Hash password before storing it
-        $encrypted_code = password_hash($password, PASSWORD_DEFAULT);
-
-        // Database connection
-        $conn = mysqli_connect("localhost", "root", "root", "test");
-
-        if (!$conn) {
-            die("Connection failed: " . mysqli_connect_error());
-        }
+        $encrypted_password = password_hash($password, PASSWORD_DEFAULT);
 
         // Insert user data into database
-        $sql = "INSERT INTO users (name, email,username, password, verification_code, email_verified_at) VALUES ('$name', '$username' , '$email',  '$encrypted_code', '$verificationCode', NULL)";
+        $sql = "INSERT INTO users (name, email, username, password, verification_code, email_verified_at) 
+                VALUES ('$name', '$email', '$username', '$encrypted_password', '$verificationCode', NULL)";
 
         if (mysqli_query($conn, $sql)) {
+            // Redirect to email verification page
             header("Location: email_verification.php?email=$email&code=$verificationCode");
             exit();
         } else {
@@ -72,34 +95,4 @@ if (isset($_POST['register'])) {
         <input type="submit" name="register" value="Register" />
     </form>';
 }
-
-
-if (isset($_GET['email']) && isset($_GET['code'])) {
-    $email = $_GET['email'];
-    $verificationCode = $_GET['code'];
-
-    // Database connection
-    $conn = mysqli_connect("localhost", "root", "root", "test");
-
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
-
-    // Check if verification code matches in database
-    $query = "SELECT * FROM users WHERE email = '$email' AND verification_code = '$verificationCode' AND email_verified_at IS NULL";
-    $result = mysqli_query($conn, $query);
-
-    if (mysqli_num_rows($result) > 0) {
-        // Verification successful
-        $updateQuery = "UPDATE users SET email_verified_at = NOW() WHERE email = '$email'";
-        if (mysqli_query($conn, $updateQuery)) {
-            echo "Email verified successfully!";
-        } else {
-            echo "Error updating record: " . mysqli_error($conn);
-        }
-    } else {
-        echo "Invalid verification code or email.";
-    }
-
-    mysqli_close($conn);
-}
+?>

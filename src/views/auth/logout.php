@@ -15,7 +15,7 @@ if (isset($_COOKIE['remember_me'])) {
 }
 
 // Clear the token from the database
-require_once '../src/config/Database.php';
+require_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
