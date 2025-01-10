@@ -1,7 +1,8 @@
 <?php
 session_start();
 require_once '../../db.php';  // Assuming db.php contains the database connection
-require_once '../../models/User.php';  // Assuming User.php contains your User model
+require_once '../../models/User.php';
+require_once '../../services/LoginService.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
