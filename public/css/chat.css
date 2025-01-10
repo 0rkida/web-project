@@ -1,226 +1,276 @@
-*{
-    box-sizing:border-box;
-}
-body{
-    background-color:#abd9e9;
-    font-family:Arial;
-}
-#container{
-    width:750px;
-    height:800px;
-    background:#eff3f7;
-    margin:0 auto;
-    font-size:0;
-    border-radius:5px;
-    overflow:hidden;
-}
-aside{
-    width:260px;
-    height:800px;
-    background-color:#3b3e49;
-    display:inline-block;
-    font-size:15px;
-    vertical-align:top;
-}
-main{
-    width:490px;
-    height:800px;
-    display:inline-block;
-    font-size:15px;
-    vertical-align:top;
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+* {
+    box-sizing: border-box;
 }
 
-aside header{
-    padding:30px 20px;
-}
-aside input{
-    width:100%;
-    height:50px;
-    line-height:50px;
-    padding:0 50px 0 20px;
-    background-color:#5e616a;
-    border:none;
-    border-radius:3px;
-    color:#fff;
-    background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_search.png);
-    background-repeat:no-repeat;
-    background-position:170px;
-    background-size:40px;
-}
-aside input::placeholder{
-    color:#fff;
-}
-aside ul{
-    padding-left:0;
-    margin:0;
-    list-style-type:none;
-    overflow-y:scroll;
-    height:690px;
-}
-aside li{
-    padding:10px 0;
-}
-aside li:hover{
-    background-color:#5e616a;
-}
-h2,h3{
-    margin:0;
-}
-aside li img{
-    border-radius:50%;
-    margin-left:20px;
-    margin-right:8px;
-}
-aside li div{
-    display:inline-block;
-    vertical-align:top;
-    margin-top:12px;
-}
-aside li h2{
-    font-size:14px;
-    color:#fff;
-    font-weight:normal;
-    margin-bottom:5px;
-}
-aside li h3{
-    font-size:12px;
-    color:#7e818a;
-    font-weight:normal;
+body {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background-color: rgba(251, 180, 183, 0.78);
+    font-family: 'Montserrat', sans-serif;
 }
 
-.status{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    display:inline-block;
-    margin-right:7px;
-}
-.green{
-    background-color:#58b666;
-}
-.orange{
-    background-color:#ff725d;
-}
-.blue{
-    background-color:#6fbced;
-    margin-right:0;
-    margin-left:7px;
+header {
+    text-align: center;
 }
 
-main header{
-    height:110px;
-    padding:30px 20px 30px 40px;
-}
-main header > *{
-    display:inline-block;
-    vertical-align:top;
-}
-main header img:first-child{
-    border-radius:50%;
-}
-main header img:last-child{
-    width:24px;
-    margin-top:8px;
-}
-main header div{
-    margin-left:10px;
-    margin-right:145px;
-}
-main header h2{
-    font-size:16px;
-    margin-bottom:5px;
-}
-main header h3{
-    font-size:14px;
-    font-weight:normal;
-    color:#7e818a;
+/* Container Styling */
+#container {
+    display: flex;
+    width: 900px;
+    height: 800px;
+    background: #f0f4fa;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-#chat{
-    padding-left:0;
-    margin:0;
-    list-style-type:none;
-    overflow-y:scroll;
-    height:535px;
-    border-top:2px solid #fff;
-    border-bottom:2px solid #fff;
-}
-#chat li{
-    padding:10px 30px;
-}
-#chat h2,#chat h3{
-    display:inline-block;
-    font-size:13px;
-    font-weight:normal;
-}
-#chat h3{
-    color:#bbb;
-}
-#chat .entete{
-    margin-bottom:5px;
-}
-#chat .message{
-    padding:20px;
-    color:#fff;
-    line-height:25px;
-    max-width:90%;
-    display:inline-block;
-    text-align:left;
-    border-radius:5px;
-}
-#chat .me{
-    text-align:right;
-}
-#chat .you .message{
-    background-color:#58b666;
-}
-#chat .me .message{
-    background-color:#6fbced;
-}
-#chat .triangle{
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 10px 10px 10px;
-}
-#chat .you .triangle{
-    border-color: transparent transparent #58b666 transparent;
-    margin-left:15px;
-}
-#chat .me .triangle{
-    border-color: transparent transparent #6fbced transparent;
-    margin-left:375px;
+/* Sidebar Styling */
+aside {
+    width: 260px;
+    background-color: #d5013d;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
 }
 
-main footer{
-    height:155px;
-    padding:20px 30px 10px 20px;
+aside header {
+    padding: 20px;
 }
-main footer textarea{
-    resize:none;
-    border:none;
-    display:block;
-    width:100%;
-    height:80px;
-    border-radius:3px;
-    padding:20px;
-    font-size:13px;
-    margin-bottom:13px;
+
+aside input {
+    width: 100%;
+    height: 40px;
+    padding: 0 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #6c1a3b;
+    color: #fff;
+    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_search.png);
+    background-repeat: no-repeat;
+    background-position: 95%;
+    background-size: 20px;
 }
-main footer textarea::placeholder{
-    color:#ddd;
+
+aside input::placeholder {
+    color: #ddd;
 }
-main footer img{
-    height:30px;
-    cursor:pointer;
+
+aside ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    flex: 1;
 }
-main footer a{
-    text-decoration:none;
-    text-transform:uppercase;
-    font-weight:bold;
-    color:#6fbced;
-    vertical-align:top;
-    margin-left:333px;
-    margin-top:5px;
-    display:inline-block;
+
+aside li {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+aside li:hover {
+    background-color: #b71c4b;
+}
+
+aside li img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+aside li div {
+    flex-grow: 1;
+}
+
+aside li h2 {
+    margin: 0;
+    font-size: 14px;
+}
+
+aside li h3 {
+    margin: 0;
+    font-size: 12px;
+    color: #ddd;
+}
+
+.status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.green {
+    background-color: #58b666;
+}
+
+.orange {
+    background-color: #ff725d;
+}
+
+/* Main Section Styling */
+main {
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+main header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+main header img:first-child {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+main header div {
+    margin-left: 15px;
+    flex: 1;
+}
+
+main header h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+main header h3 {
+    margin: 0;
+    font-size: 12px;
+    color: #888;
+}
+
+/* Chat Section Styling */
+#chat {
+    flex: 1;
+    padding: 15px;
+    overflow-y: scroll;
+    background: rgba(251, 180, 183, 0.78);
+}
+
+#chat li {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column; /* Stack the sender info above the message */
+    align-items: flex-start; /* Align the content to the left (for "you") and right (for "me") */
+}
+
+#chat .you {
+    justify-content: flex-start;
+}
+
+#chat .me {
+    justify-content: flex-end;
+    align-items: flex-end; /* Align content to the right for "me" */
+}
+
+#chat .entete {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 9px; /* Increased the font size */
+    color: #aaa;
+}
+
+#chat .entete h2 {
+    margin: 0;
+    font-size: 12px; /* Slightly bigger font for the sender's name */
+}
+
+#chat .entete h3 {
+    margin: 0;
+    font-size: 12px;
+    color: #888; /* Lighter color for the timestamp */
+    margin-left: 10px; /* Space between time and name */
+}
+
+#chat .status {
+    width: 10px; /* Adjusted size of the status dot */
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px; /* Space between dot and name/time */
+    display: inline-block;
+}
+
+#chat .you .message {
+    background-color: #fa0404;
+    color: #fff;
+}
+
+#chat .me .message {
+    background-color: #fa9797;
+    color: #fff;
+}
+
+#chat .message {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 12px;
+    line-height: 1.5;
+    margin-top: 5px;
+}
+
+
+/* Footer Section Styling */
+main footer {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+main footer textarea {
+    width: 100%;
+    height: 80px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+}
+
+main footer textarea::placeholder {
+    color: #aaa;
+}
+
+main footer div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+main footer a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px 16px;
+    background-color: #d5013d;
+    border-radius: 12px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0px 5px 10px rgba(255, 0, 0, 0.5);
+    margin-top: 10px;
+}
+
+main footer a:hover {
+    background-color: #b71c4b;
+    box-shadow: 0px 8px 15px rgba(255, 0, 0, 0.7);
 }
