@@ -8,10 +8,11 @@ require_once 'C:\xampp\htdocs\web-project\src\models\User.php'; // Rruga për te
 
 class RegisterController {
     public UserModel $userModel;
-    private $mailer;
+    private PHPMailer $mailer;
 
     // Konstruktor që merr lidhjen me bazën e të dhënave dhe shërbimin e postës
-    public function __construct($dbConnection, $mailer) {
+    public function __construct($dbConnection, $mailerailer) {
+        global $mailer;
         $this->userModel = new UserModel($dbConnection);
         $this->mailer = $mailer;
     }

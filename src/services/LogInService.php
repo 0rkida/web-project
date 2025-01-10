@@ -1,38 +1,25 @@
 <?php
-
-require_once 'LogInService.php';
+global $conn;
+include '../db.php';
 
 class LogInService {
-    private $LogInService;
+    private $dbConnection;
 
     public function __construct($dbConnection) {
-        $this->LogInService = new LogInService($dbConnection);
+        $this->dbConnection = $dbConnection;
     }
 
-    public function getView(): void {
-        require_once 'login.html';
-    }
+    // Authenticate user by email and password
+    public function authenticateUser($email, $password) {
+        // Query database to find user by email and validate password
+        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    public function postLogin($data): void {
-        $email = $data['email'] ?? '';
-        $password = $data['password'] ?? '';
-
-        if (empty($email) || empty($password)) {
-            echo "Email dhe fjalëkalimi janë të detyrueshëm.";
-            return;
+        if ($user && password_verify($password, $user['password'])) {
+            return $user; // Return user data if authentication is successful
         }
 
-        $user = $this->LogInService->authenticateUser($email, $password);
-
-        if ($user) {
-            session_start();
-            $_SESSION['user_id'] = $user['id']; // Create session for the user
-            header("Location: home.php"); // Redirect to the home page
-            exit();
-        } else {
-            echo "Email ose fjalëkalimi janë të pasakta.";
-        }
+        return null; // Return null if authentication fails
     }
-
-
 }

@@ -1,4 +1,6 @@
 <?php
+
+use App\Controllers\LogInController;
 use PHPMailer\PHPMailer\PHPMailer;
 
 $uri = $_SERVER['REQUEST_URI'];
