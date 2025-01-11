@@ -1,21 +1,122 @@
-<!-- notifications.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,800">
   <title>Notifications</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f57760;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .notifications-container {
+      max-width: 800px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    h2 {
+      font-size: 28px;
+      color:#322525;;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .notification-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      background: rgba(251, 180, 183, 0.78);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .notification-type {
+      font-size: 14px;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 16px;
+      color: #fff;
+    }
+    .joined { background-color: #e63946; }
+    .message { background-color: #f4a261; }
+    .comment { background-color: #8e44ad; }
+    .connect { background-color: #3498db; }
+    .notification-content {
+      flex-grow: 1;
+      margin-left: 10px;
+    }
+    .notification-title {
+      font-weight: bold;
+      margin: 0;
+      color: #264653;
+    }
+    .notification-message {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #6c757d;
+    }
+    .notification-meta {
+      font-size: 12px;
+      color: #555;
+    }
+    .close-btn {
+      background-color: #e63946;
+      border: none;
+      color: white;
+      font-size: 18px;
+      padding: 0 8px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .close-btn:hover {
+      background-color: #c0392b;
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>Notifications</h1>
-</header>
-<main>
-  <section>
-    <h2>Recent Updates</h2>
-    <p>Stay updated with real-time notifications.</p>
-  </section>
-</main>
+
+<div class="notifications-container">
+  <h2>Notifications</h2>
+  <div class="notification-item">
+    <span class="notification-type joined">Joined</span>
+    <div class="notification-content">
+      <p class="notification-title">New Registration: Finibus Bonorum et Malorum</p>
+      <p class="notification-message">Welcome to our platform!</p>
+      <span class="notification-meta">Allen Deu &middot; Just now</span>
+    </div>
+    <button class="close-btn">&times;</button>
+  </div>
+
+  <div class="notification-item">
+    <span class="notification-type message">Message</span>
+    <div class="notification-content">
+      <p class="notification-title">Darren Smith sent you a message</p>
+      <p class="notification-message">Hey there! How are you?</p>
+      <span class="notification-meta">Darren &middot; 2 minutes ago</span>
+    </div>
+    <button class="close-btn">&times;</button>
+  </div>
+
+  <div class="notification-item">
+    <span class="notification-type comment">Comment</span>
+    <div class="notification-content">
+      <p class="notification-title">Arin Ganshiram commented on your post</p>
+      <p class="notification-message">Great work on your recent project!</p>
+      <span class="notification-meta">Arin &middot; 10 minutes ago</span>
+    </div>
+    <button class="close-btn">&times;</button>
+  </div>
+</div>
+
 </body>
 </html>
