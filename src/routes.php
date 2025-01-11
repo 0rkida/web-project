@@ -97,7 +97,7 @@ switch ($uri) {
         }
         break;
 
-        case '/Profile':
+        case '/profileviews':
             require 'controllers/ProfileController.php';
             $ProfileController = new ProfileController($conn);
             if ($requestMethod === 'GET') {

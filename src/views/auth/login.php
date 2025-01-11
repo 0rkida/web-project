@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../../db.php';  // Assuming db.php contains the database connection
-require_once '../../models/User.php';
+require_once 'C:\xampp\htdocs\web-project\src\models\User.php';
 require_once '../../services/LoginService.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

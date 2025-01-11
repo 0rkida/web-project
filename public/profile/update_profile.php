@@ -49,7 +49,7 @@ if ($password) {
 $sql .= " WHERE id='$user_id'";
 
 if ($conn->query($sql) === TRUE) {
-    echo "Profile updated successfully!";
+    echo "profileviews updated successfully!";
 } else {
     echo "Error: " . $conn->error;
 }

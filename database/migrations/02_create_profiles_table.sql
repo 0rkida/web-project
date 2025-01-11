@@ -4,7 +4,7 @@ CREATE TABLE profile (
     email VARCHAR(255) NOT NULL UNIQUE, -- User's email (unique)
     password VARCHAR(255) NOT NULL,    -- User's password (hashed)
     role ENUM('user', 'admin') DEFAULT 'user', -- User role
-    profile_picture VARCHAR(255) DEFAULT 'default.png', -- Profile picture path
+    profile_picture VARCHAR(255) DEFAULT 'default.png', -- profileviews picture path
     age INT,                           -- User's age
     gender ENUM('male', 'female'), -- User's gender
     location VARCHAR(255),             -- User's location
