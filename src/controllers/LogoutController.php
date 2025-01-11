@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Controllers;
+namespace App\controllers;
 
 use JetBrains\PhpStorm\NoReturn;
 
 session_start();
 
-class LogOutController{
+class LogoutController{
 
     #[NoReturn] public function logout(): void
     {

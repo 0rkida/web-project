@@ -1,7 +1,12 @@
 <?php
 
 use App\Controllers\LogInController;
-use App\Controllers\LogOutController;
+use App\Controllers\LogoutController;
+use App\controllers\MatchController;
+use App\controllers\MessageController;
+use App\controllers\ProfileController;
+use App\controllers\RegisterController;
+use App\controllers\VerifyController;
 use PHPMailer\PHPMailer\PHPMailer;
 
 $uri = $_SERVER['REQUEST_URI'];
@@ -82,9 +87,9 @@ switch ($uri) {
         require_once 'controllers/LogoutController.php';
 
         // Check if the controller class exists
-        if (class_exists('\App\Controllers\LogOutController')) {
+        if (class_exists('\App\Controllers\LogoutController')) {
             // Create an instance of the LogOutController and call the logout method
-            $logOutController = new LogOutController();
+            $logOutController = new LogoutController();
             $logOutController->logout();
         } else {
             // Handle error if the class doesn't exist
@@ -122,4 +127,16 @@ switch ($uri) {
             exit();
         }
         break;
+    case '/Matches':
+        require 'controllers/MatchController.php';
+        $MatchController = new MatchController($conn);
+        if ($requestMethod === 'GET') {
+            $MatchController->getView();  // Display the match view
+        } else if ($requestMethod === 'POST') {
+            $MatchController->handlePostRequest();  // Handle the form submission (create, update, delete matches)
+            header('Location: /chat');  // Redirect to another page after handling the post request
+            exit();
+        }
+        break;
+
 }

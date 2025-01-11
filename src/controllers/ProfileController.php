@@ -1,10 +1,14 @@
 <?php
+namespace App\controllers;
+use AllowDynamicProperties;
+use App\models\Profile;
+
 session_start();
-class ProfileController {
-public ProfileModel $profileModel;
+#[AllowDynamicProperties] class ProfileController {
+public Profile $profile;
 
 public function __construct($dbConnection) {
-$this->profileModel = new ProfileModel($dbConnection);
+$this->profile = new Profile($dbConnection);
 }
 
 public function getView(): void {
@@ -14,10 +18,13 @@ exit();
 }
 
 $userId = $_SESSION['userId'];
-$userProfile = $this->profileModel->getProfileData($userId);
+$userProfile = $this->profile->getProfileData($userId);
+$userProfile = $this->profile->getUserProfile($userId);
+$userProfile = $this->profile->getupdateProfileData($userId, $userProfile);
+$userProfile = $this->profile->getupdateUserProfile($userId, $userProfile);
 
 if ($userProfile) {
-require "path/to/profile/view.php";
+require "C:\xampp\htdocs\web-project\public\profile";
 } else {
 echo "Profile not found.";
 }
@@ -30,7 +37,9 @@ exit();
 }
 
 $userId = $_SESSION['userId'];
-$updated = $this->profileModel->updateProfileData($userId, $data);
+$this->profile->getupdateProfileData($userId, $data);
+$updated = $this->profile->getupdateUserProfile($userId, $data);
+
 
 if ($updated) {
 echo "Profile updated successfully!";
@@ -39,4 +48,5 @@ header('Location: /profile');
 echo "Error updating profile.";
 }
 }
+
 }

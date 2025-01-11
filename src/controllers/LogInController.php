@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Controllers;
+namespace App\controllers;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use UserModel;
+use App\models\User;
 use JetBrains\PhpStorm\NoReturn;
 
 session_start();
 
 class LogInController {
-    public UserModel $userModel;
-    private $mailer;
+    public User $user;
+    private PHPMailer $mailer;
 
     public function __construct($dbConnection) {
 
-        $this->userModel = new UserModel($dbConnection);
+        $this->user = new User($dbConnection);
         $this->mailer = new PHPMailer(true);
+        return $this->mailer;
 
     }
 
@@ -36,10 +37,10 @@ class LogInController {
             return;
         }
 
-        $userId = $this->userModel->authenticateUser($email, $password);
+        $userId = $this->user->authenticateUser($email, $password);
 
         if ($userId) {
-            if (!$this->userModel->isUserVerified($userId)) {
+            if (!$this->user->isUserVerified($userId)) {
                 echo "Përdoruesi nuk është verifikuar ende. Kontrolloni email-in tuaj.";
                 return;
             }
@@ -59,7 +60,7 @@ class LogInController {
         return isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === true;
     }
 
-    #[NoReturn] public function logout(): void {
+    #[NoReturn] public function Logout(): void {
         session_unset();
         session_destroy();
         header('Location: /login');

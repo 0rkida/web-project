@@ -1,26 +1,25 @@
 <?php
+namespace App\models;
 
-
-class MessageModel
+class Message
 {
-    private $db;
+    private $dbConnection;
 
     public function __construct($dbConnection)
     {
-        $this->db = $dbConnection;
+        $this->dbConnection = $dbConnection;
     }
 
     // Save message to the database
     public function saveMessage($userId, $message): bool
     {
-        $query = "INSERT INTO messages (user_id, message, created_at) VALUES (:user_id, :message, NOW())";
+        $query = "INSERT INTO messages (user_id, message, created_at) VALUES (?, ?, NOW())";
 
         // Prepare the SQL statement
-        $stmt = $this->db->prepare($query);
+        $stmt = $this->dbConnection->prepare($query);
 
         // Bind parameters
-        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-        $stmt->bindParam(':message', $message, PDO::PARAM_STR);
+        $stmt->bind_param('is', $userId, $message);
 
         // Execute the query
         if ($stmt->execute()) {
@@ -36,12 +35,13 @@ class MessageModel
         $query = "SELECT m.message, m.created_at, u.username 
                   FROM messages m 
                   JOIN users u ON m.user_id = u.id 
-                  ORDER BY m.created_at ASC";
+                  ORDER BY m.created_at ";
 
-        $stmt = $this->db->prepare($query);
+        $stmt = $this->dbConnection->prepare($query);
         $stmt->execute();
 
-        // Fetch all results
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Get the result and return it as an associative array
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 }

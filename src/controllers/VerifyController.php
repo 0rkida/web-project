@@ -1,18 +1,20 @@
 <?php
+namespace App\controllers;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use App\models\User;
 
 session_start(); // Sigurohuni që seancat janë të nisin në fillim
 require_once 'C:\xampp\htdocs\web-project\vendor\autoload.php';
 require_once 'C:\xampp\htdocs\web-project\src\models\User.php'; // Rruga për te UserModel
 
 class VerifyController {
-    public UserModel $userModel;
+    public User $user;
     private $mailer;
 
     // Konstruktor që merr lidhjen me bazën e të dhënave dhe shërbimin e postës
     public function __construct($dbConnection, $mailer) {
-        $this->userModel = new UserModel($dbConnection);
+        $this->user = new User($dbConnection);
         $this->mailer = $mailer;
     }
 
@@ -27,8 +29,8 @@ class VerifyController {
         $verificationCode = $data['code'];
 
         // Kontrolloni kodin e verifikimit
-        if ($this->userModel->checkVerificationCode($email, $verificationCode)) {
-            if ($this->userModel->markUserAsVerified($email)) {
+        if ($this->user->checkVerificationCode($email, $verificationCode)) {
+            if ($this->user->markUserAsVerified($email)) {
                 echo "Përdoruesi u verifikua me sukses!";
             } else {
                 echo "Gabim gjatë përditësimit të statusit të verifikimit.";
@@ -40,7 +42,7 @@ class VerifyController {
 
     // Funksion ndihmës për ri-dërgimin e kodit të verifikimit
     public function resendVerificationCode($email): void {
-        $verificationCode = $this->userModel->generateVerificationCode();
+        $verificationCode = $this->user->generateVerificationCode();
 
         // Dërgo email me kodin e ri të verifikimit
         if ($this->sendVerificationEmail($email, $verificationCode)) {

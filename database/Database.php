@@ -22,6 +22,7 @@ class Database {
             self::$conn = null;
         }
     }
+
 }
 
 // Usage example

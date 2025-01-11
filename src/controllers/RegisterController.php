@@ -1,19 +1,21 @@
 <?php
+namespace App\controllers;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use App\models\User;
 
 session_start(); // Sigurohuni që seancat janë të nisin në fillim
 require_once 'C:\xampp\htdocs\web-project\vendor\autoload.php';
 require_once 'C:\xampp\htdocs\web-project\src\models\User.php'; // Rruga për te UserModel
 
 class RegisterController {
-    public UserModel $userModel;
+    public User $user;
     private PHPMailer $mailer;
 
     // Konstruktor që merr lidhjen me bazën e të dhënave dhe shërbimin e postës
     public function __construct($dbConnection, $mailer) {
         global $mailer;
-        $this->userModel = new UserModel($dbConnection);
+        $this->user = new User($dbConnection);
         $this->mailer = $mailer;
     }
 
@@ -28,9 +30,9 @@ class RegisterController {
         $password = $data['password'];
 
         // Provoni të regjistroni përdoruesin
-        if ($this->userModel->registerUser($email, $password)) {
+        if ($this->user->registerUser($email, $password)) {
             // Dërgo kodin e verifikimit në email
-            $verificationCode = $this->userModel->generateVerificationCode();
+            $verificationCode = $this->user->generateVerificationCode();
 
             // Dërgo email për verifikim
             if ($this->sendVerificationEmail($email, $verificationCode)) {
@@ -67,8 +69,8 @@ class RegisterController {
     }
 
     // Funksioni për të verifikuar përdoruesin
-    public function verifyUser($verificationCode): void {
-        if ($this->userModel->verifyUser($verificationCode)) {
+    public function getverifyUser($verificationCode): void {
+        if ($this->user->getverifyUser($verificationCode)) {
             echo "Përdoruesi u verifikua me sukses!";
         } else {
             echo "Gabim! Kodi i verifikimit nuk është i saktë.";

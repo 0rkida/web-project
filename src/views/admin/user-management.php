@@ -14,6 +14,8 @@ class User
 
         // Send verification email
         EmailVerification::sendVerificationEmail($userEmail, $verificationCode);
-    }
+        }
+
+
 
 }
