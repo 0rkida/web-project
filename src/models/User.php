@@ -114,14 +114,14 @@ class UserModel
 
     public function saveResetToken($email, $token, $expiry)
     {
-        $stmt = $this->dbConnection->prepare("UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE email = ?");
+        $stmt = $this->dbConnection->prepare("UPDATE password_resets SET reset_token = ?, reset_token_expiry = ? WHERE user_id = ?");
         $stmt->bind_param("sss", $token, $expiry, $email);
         return $stmt->execute();
     }
 
     public function verifyResetToken($token): bool
     {
-        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE reset_token = ? AND reset_token_expiry > NOW()");
+        $stmt = $this->dbConnection->prepare("SELECT * FROM password_resets where reset_token_expiry =? ");
         $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -130,7 +130,7 @@ class UserModel
 
     public function updatePassword($token, $hashedPassword)
     {
-        $stmt = $this->dbConnection->prepare("UPDATE users SET password = ?, reset_token = NULL, reset_token_expiry = NULL WHERE reset_token = ?");
+        $stmt = $this->dbConnection->prepare("UPDATE password_resets SET   reset_token = NULL, reset_token_expiry = NULL WHERE reset_token = ?");
         $stmt->bind_param("ss", $hashedPassword, $token);
         return $stmt->execute();
     }
@@ -139,7 +139,7 @@ class UserModel
     public static function resetFailedAttempts($email): bool
     {
         global $db;
-        $stmt = $db->prepare("UPDATE users SET failed_attempts = 0 WHERE email = ?");
+        $stmt = $db->prepare("UPDATE login_attempts SET attempt_time = 0 WHERE user_id = ?");
         $stmt->bind_param("s", $email);
         return $stmt->execute();
     }
@@ -148,7 +148,7 @@ class UserModel
     public static function saveRememberMeToken($userId, $token): bool
     {
         global $db;
-        $stmt = $db->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+        $stmt = $db->prepare("UPDATE password_resets SET  reset_token = NULL WHERE id = ?");
         $stmt->bind_param("si", $token, $userId);
         return $stmt->execute();
     }
@@ -157,16 +157,30 @@ class UserModel
     public static function incrementFailedAttempts($email): bool
     {
         global $db;
-        $stmt = $db->prepare("UPDATE users SET failed_attempts = failed_attempts + 1, last_failed_attempt = NOW() WHERE email = ?");
+
+        // Prepare the SQL query to update the last failed attempt for the given email
+        $stmt = $db->prepare("UPDATE login_attempts SET last_failed_attempt = NOW() WHERE user_id = ?");
+
+        if (!$stmt) {
+            throw new Exception("Failed to prepare statement: " . $db->error);
+        }
+
+        // Bind the email parameter (string type)
         $stmt->bind_param("s", $email);
-        return $stmt->execute();
+
+        // Execute the query and return the result
+        if (!$stmt->execute()) {
+            throw new Exception("Failed to execute query: " . $stmt->error);
+        }
+
+        return true;
     }
 
     // Check if user is blocked
     public static function isBlocked($email): bool
     {
         global $db;
-        $stmt = $db->prepare("SELECT failed_attempts, last_failed_attempt FROM users WHERE email = ?");
+        $stmt = $db->prepare("SELECT attempt_time FROM login_attempts WHERE user_id = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -283,6 +297,6 @@ class UserModel
             return null;
         }
     }
-}
+
 
 }

@@ -1,12 +1,19 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use Random\RandomException;
+
 class EmailVerification {
-    public static function generateVerificationCode($length = 32) {
+    /**
+     * @throws RandomException
+     */
+    public static function generateVerificationCode($length = 32): string
+    {
         return bin2hex(random_bytes($length / 2));
     }
 
-    public static function sendVerificationEmail($userEmail, $verificationCode) {
+    public static function sendVerificationEmail($userEmail, $verificationCode): void
+    {
         $mail = new PHPMailer(true);
 
         try {
@@ -24,14 +31,14 @@ class EmailVerification {
             $mail->addAddress($userEmail);
 
             // Content
-            $mail->isHTML(true);
+            $mail->isHTML();
             $mail->Subject = 'Email Verification';
             $mail->Body    = "Please verify your email by clicking the link: <a href='https://yourdomain.com/verify.php?code=$verificationCode'>Verify Email</a>";
 
             $mail->send();
             echo 'Verification email has been sent';
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        } catch (Exception) {
+            echo "Message could not be sent. Mailer Error: $mail->ErrorInfo";
         }
     }
 }
