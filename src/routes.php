@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\LogInController;
+use App\Controllers\LogOutController;
 use PHPMailer\PHPMailer\PHPMailer;
 
 $uri = $_SERVER['REQUEST_URI'];
@@ -75,4 +76,50 @@ switch ($uri) {
                 header('Location: /login');
                 exit();
             }
+            break;
+    case '/Logout':
+        // Include the controller class file
+        require_once 'controllers/LogoutController.php';
+
+        // Check if the controller class exists
+        if (class_exists('\App\Controllers\LogOutController')) {
+            // Create an instance of the LogOutController and call the logout method
+            $logOutController = new LogOutController();
+            $logOutController->logout();
+        } else {
+            // Handle error if the class doesn't exist
+            echo "Error: LogOutController not found.";
+        }
+        break;
+
+        case '/Profile':
+            require 'controllers/ProfileController.php';
+            $ProfileController = new ProfileController($conn);
+            if ($requestMethod === 'GET') {
+                $ProfileController->getView();
+            }else if ($requestMethod === 'POST') {
+                $ProfileController->postProfile([
+                    'firstName' => $_POST['firstName'],
+                    'lastName' => $_POST['lastName'],
+                    'email' => $_POST['email']
+                    ]);
+                header('Location: /profile');
+                exit();
+            }
+            break;
+
+    case '/Messages':
+        require 'controllers/MessageController.php';
+        $MessagesController = new MessageController($conn);
+        if ($requestMethod === 'GET') {
+            $MessagesController->getView();
+        }else if ($requestMethod === 'POST') {
+            $MessagesController->postMessage([
+                'message' => $_POST['message'],
+                'user_id' => $_SESSION['user_id']
+            ]);
+            header('Location: /chat');
+            exit();
+        }
+        break;
 }

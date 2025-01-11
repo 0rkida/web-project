@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use PHPMailer\PHPMailer\PHPMailer;
 use UserModel;
 use JetBrains\PhpStorm\NoReturn;
 
@@ -9,13 +10,14 @@ session_start();
 
 class LogInController {
     public UserModel $userModel;
+    private $mailer;
 
     public function __construct($dbConnection) {
+
         $this->userModel = new UserModel($dbConnection);
+        $this->mailer = new PHPMailer(true);
 
     }
-
-
 
     public function getView(): void {
         if ($this->checkIfLoggedIn()) {

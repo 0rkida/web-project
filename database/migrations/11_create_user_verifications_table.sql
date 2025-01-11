@@ -3,6 +3,5 @@ CREATE TABLE user_verifications (
     user_id INT NOT NULL,
     verification_code VARCHAR(64) NOT NULL,
     is_verified TINYINT(1) DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
