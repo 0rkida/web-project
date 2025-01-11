@@ -11,7 +11,7 @@ class RegisterController {
     private PHPMailer $mailer;
 
     // Konstruktor që merr lidhjen me bazën e të dhënave dhe shërbimin e postës
-    public function __construct($dbConnection, $mailerailer) {
+    public function __construct($dbConnection, $mailer) {
         global $mailer;
         $this->userModel = new UserModel($dbConnection);
         $this->mailer = $mailer;

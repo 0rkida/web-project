@@ -3,6 +3,5 @@ CREATE TABLE login_attempts (
     user_id INT NOT NULL,
     attempt_time DATETIME NOT NULL,
     is_successful BOOLEAN NOT NULL,
-    ip_address VARCHAR(45),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    ip_address VARCHAR(45)
 );
