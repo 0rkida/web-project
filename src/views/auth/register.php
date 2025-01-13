@@ -40,8 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Function to send verification email
-function sendVerificationEmail($email, $verificationCode): void
-{
+function sendVerificationEmail($email, $verificationCode) {
     $subject = "Email Verification Code";
     $message = "Your verification code is: $verificationCode";
     $headers = "From: no-reply@yourdomain.com";

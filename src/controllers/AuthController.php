@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 
 namespace App\controllers;
 
@@ -91,3 +92,5 @@ class AuthController {
         exit();
     }
 }
+=======
+>>>>>>> 4b3fbb073b47e93c08d2c7abbf1094ec144cc5a8

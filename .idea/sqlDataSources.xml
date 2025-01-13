@@ -91,17 +91,6 @@
           </option>
           <option name="outLayout" value="File per object by schema.groovy" />
         </State>
-        <State>
-          <option name="id" value="32ead46e-bd0b-4e1d-8493-2cf67e892b77" />
-          <option name="name" value="08_create_notifications_table" />
-          <option name="dbmsName" value="MYSQL" />
-          <option name="urls">
-            <array>
-              <option value="file://$PROJECT_DIR$/database/migrations/ 08_create_notifications_table.sql" />
-            </array>
-          </option>
-          <option name="outLayout" value="File per object by schema.groovy" />
-        </State>
       </list>
     </option>
   </component>

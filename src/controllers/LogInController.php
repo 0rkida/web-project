@@ -12,13 +12,12 @@ class LogInController {
     public User $user;
     private PHPMailer $mailer;
 
-    public function __construct($dbConnection, PHPMailer $mailer) {
+    public function __construct($dbConnection) {
 
         $this->user = new User($dbConnection);
         $this->mailer = new PHPMailer(true);
         return $this->mailer;
 
-        $this->mailer = $mailer;
     }
 
     public function getView(): void {
