@@ -4,6 +4,7 @@ use App\Controllers\LogInController;
 use App\Controllers\LogoutController;
 use App\controllers\MatchController;
 use App\controllers\MessageController;
+use App\controllers\NotificationController;
 use App\controllers\ProfileController;
 use App\controllers\RegisterController;
 use App\controllers\VerifyController;
@@ -139,7 +140,7 @@ switch ($uri) {
         }
         break;
 
-<<<<<<< HEAD
+
     case '/Notifications' :
         require 'controllers/NotificationController.php';
         $NotificationController = new NotificationController($conn);
@@ -157,6 +158,4 @@ switch ($uri) {
         echo "404 Not Found";
         break;
 
-=======
->>>>>>> 4b3fbb073b47e93c08d2c7abbf1094ec144cc5a8
 }
