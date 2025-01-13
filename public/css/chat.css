@@ -131,6 +131,7 @@ main header {
     align-items: center;
     padding: 20px;
     border-bottom: 1px solid #ddd;
+    position: relative;
 }
 
 main header img:first-child {
@@ -273,4 +274,57 @@ main footer a {
 main footer a:hover {
     background-color: #b71c4b;
     box-shadow: 0px 8px 15px rgba(255, 0, 0, 0.7);
+}
+
+/* Position the menu button in the top-right corner */
+.menu {
+    position: absolute;
+    top: 20px; /* Adjust as needed */
+    right: 20px; /* Align to the right */
+    z-index: 10; /* Ensure it appears above other elements */
+}
+
+/* Style for the menu button */
+.menu-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #d5013d;
+}
+
+.menu-button:hover {
+    color: #b71c4b;
+}
+
+/* Dropdown styling */
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 30px; /* Adjust for spacing just below the button */
+    right: 0; /* Align dropdown to the right of the button */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-dropdown a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #d5013d;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.menu-dropdown a:hover {
+    background-color: #f9f9f9;
+    color: #b71c4b;
+}
+
+/* Show dropdown when hovering over menu or dropdown */
+.menu:hover .menu-dropdown,
+.menu-dropdown:hover {
+    display: block;
 }

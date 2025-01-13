@@ -2,20 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Report/Block User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report or Block</title>
+    <link rel="stylesheet" href="css/report_block.css">
 </head>
 <body>
-<h2>Report or Block User</h2>
-<form action="report_block.php" method="post">
-    <input type="hidden" name="reported_user_id" value="<?php echo $_GET['user_id']; ?>">
-    <label for="action">Action:</label>
-    <select id="action" name="action" required>
-        <option value="report">Report</option>
-        <option value="block">Block</option>
-    </select>
-    <label for="reason">Reason:</label>
-    <textarea id="reason" name="reason" required></textarea>
-    <button type="submit">Submit</button>
-</form>
+<div class="container">
+    <h2>Block or Report User</h2>
+    <!-- Centered Box for the options -->
+    <div class="options-box">
+        <button class="report-btn">Report User</button>
+        <button class="block-btn">Block User</button>
+    </div>
+
+    <!-- Report Modal -->
+    <div class="modal" id="report-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-report">&times;</span>
+            <h3>Report User</h3>
+            <form action="#" method="POST">
+                <label for="report-reason">Reason for reporting:</label>
+                <select id="report-reason" name="reason" required>
+                    <option value="spam">Spam</option>
+                    <option value="harassment">Harassment</option>
+                    <option value="inappropriate-content">Inappropriate Content</option>
+                    <option value="violating-site-policies">Violating Site Policies</option>
+                    <option value="age-restrictions">Age Restrictions</option>
+                    <option value="other">Other</option>
+                </select>
+                <textarea id="report-other" name="other-reason" rows="4" placeholder="Please specify"></textarea>
+                <button type="submit" class="submit-btn">Submit Report</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Block Modal -->
+    <div class="modal" id="block-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-block">&times;</span>
+            <h3>Block User</h3>
+            <form action="#" method="POST">
+                <label for="block-reason">Reason for blocking:</label>
+                <select id="block-reason" name="reason" required>
+                    <option value="spam">Spam</option>
+                    <option value="harassment">Harassment</option>
+                    <option value="violating-site-policies">Violating Site Policies</option>
+                    <option value="age-restrictions">Age Restrictions</option>
+                    <option value="other">Other</option>
+                </select>
+                <textarea id="block-other" name="other-reason" rows="4" placeholder="Please specify" style="display:none;"></textarea>
+                <button type="submit" class="submit-btn">Submit Block</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="js/report_block.js"></script>
 </body>
 </html>

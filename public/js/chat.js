@@ -73,4 +73,27 @@ function displayMessage(messageData, type) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const menuButton = document.querySelector('.menu-button');
+    const menu = document.querySelector('.menu');
+
+    // Show the menu when the button is hovered
+    menuButton.addEventListener('mouseover', () => {
+        menu.classList.add('open'); // Show the menu
+    });
+
+    // Hide the menu when the mouse leaves the menu button area
+    menuButton.addEventListener('mouseout', () => {
+        menu.classList.remove('open'); // Hide the menu
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target)) { // If the click is outside the menu
+            menu.classList.remove('open'); // Hide the menu
+        }
+    });
+});
+
+
 window.addEventListener('DOMContentLoaded', initChat);
