@@ -5,5 +5,5 @@ CREATE TABLE matches (
     match_details TEXT,                        -- Matches details (e.g., description or extra information)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Date and time when the match was created
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Date and time when the match was last updated
-    FOREIGN KEY (user_id) REFERENCES users(id) -- Assumes a 'users' table with a 'user_id' primary key
+      FOREIGN KEY (user_id) REFERENCES users(id) -- Assumes a 'users' table with a 'user_id' primary key
 );

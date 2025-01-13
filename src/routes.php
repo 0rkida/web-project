@@ -4,6 +4,7 @@ use App\Controllers\LogInController;
 use App\Controllers\LogoutController;
 use App\controllers\MatchController;
 use App\controllers\MessageController;
+use App\controllers\NotificationController;
 use App\controllers\ProfileController;
 use App\controllers\RegisterController;
 use App\controllers\VerifyController;
@@ -135,6 +136,19 @@ switch ($uri) {
         } else if ($requestMethod === 'POST') {
             $MatchController->handlePostRequest();  // Handle the form submission (create, update, delete matches)
             header('Location: /chat');  // Redirect to another page after handling the post request
+            exit();
+        }
+        break;
+
+    case '/Notifications' :
+        require 'controllers/NotificationController.php';
+        $NotificationController = new NotificationController($conn);
+        if($requestMethod === 'GET'){
+            $NotificationController->getView();
+
+        }else if ($requestMethod==='POST'){
+            $NotificationController->postNotification([]);
+            header('Location: /notification');
             exit();
         }
         break;

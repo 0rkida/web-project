@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Fetch user profile data (this could come from an API or database)
 const userProfile = {
     name: 'Anne Hathaway',
@@ -58,10 +57,9 @@ saveProfileBtn.addEventListener('click', () => {
 
 // Call updateProfile to display the initial data
 document.addEventListener('DOMContentLoaded', updateProfile);
-=======
+
 document.querySelector('.dropdown-arrow').addEventListener('click', function() {
     const dropdownMenu = document.querySelector('.dropdown-menu');
     // Toggle the display property
     dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
 });
->>>>>>> e5090113bfa2fab8188931142ac9299df799258a
