@@ -70,17 +70,30 @@
       color: #555;
     }
     .close-btn {
-      background-color: #e63946;
+      background-color: #f57760; /* Vibrant pink */
       border: none;
       color: white;
-      font-size: 18px;
-      padding: 0 8px;
-      border-radius: 50%;
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 20px;
       cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
     }
+
     .close-btn:hover {
-      background-color: #c0392b;
+      background-color: #e63946; /* Bold red on hover */
+      transform: scale(1.05); /* Slight zoom effect */
+      box-shadow: 0 4px 8px rgba(230, 57, 70, 0.4); /* Red shadow */
     }
+
+    .close-btn:active {
+      background-color: #c0392b; /* Deep red when clicked */
+      transform: scale(0.95); /* Slight shrink on click */
+      box-shadow: none; /* Remove shadow on click */
+    }
+
   </style>
 </head>
 <body>
@@ -88,36 +101,42 @@
 
 <div class="notifications-container">
   <h2>Notifications</h2>
+  <?php foreach ($notifications as $notification): ?>
   <div class="notification-item">
-    <span class="notification-type joined">Joined</span>
+    <span class="notification-type <?= $notification['type'] ?>"><?= ucfirst($notification['type']) ?></span>
     <div class="notification-content">
-      <p class="notification-title">New Registration: Finibus Bonorum et Malorum</p>
-      <p class="notification-message">Welcome to our platform!</p>
-      <span class="notification-meta">Allen Deu &middot; Just now</span>
+      <p class="notification-title"><?= $notification['title'] ?></p>
+      <p class="notification-message"><?= $notification['message'] ?></p>
+      <span class="notification-meta">
+                    <?= timeAgo($notification['created_at']) ?>
+                </span>
     </div>
-    <button class="close-btn">&times;</button>
+    <button class="close-btn">❤️ Mark as read</button>
   </div>
-
-  <div class="notification-item">
-    <span class="notification-type message">Message</span>
-    <div class="notification-content">
-      <p class="notification-title">Darren Smith sent you a message</p>
-      <p class="notification-message">Hey there! How are you?</p>
-      <span class="notification-meta">Darren &middot; 2 minutes ago</span>
-    </div>
-    <button class="close-btn">&times;</button>
-  </div>
-
-  <div class="notification-item">
-    <span class="notification-type comment">Comment</span>
-    <div class="notification-content">
-      <p class="notification-title">Arin Ganshiram commented on your post</p>
-      <p class="notification-message">Great work on your recent project!</p>
-      <span class="notification-meta">Arin &middot; 10 minutes ago</span>
-    </div>
-    <button class="close-btn">&times;</button>
-  </div>
+  <?php endforeach; ?>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const notificationItems = document.querySelectorAll(".notification-item");
+
+    notificationItems.forEach((item) => {
+      const button = item.querySelector(".close-btn");
+
+      button.addEventListener("click", () => {
+        // Add the "read" class to the notification
+        item.classList.add("read");
+
+        // Disable the button after marking as read
+        button.textContent = "❤️ Read";
+        button.style.backgroundColor = "#f8d7da"; /* Light pink for disabled state */
+        button.style.color = "#c0392b"; /* Deep red text */
+        button.style.cursor = "not-allowed";
+        button.disabled = true;
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
