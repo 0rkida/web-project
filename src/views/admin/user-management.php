@@ -1,21 +1,29 @@
 <?php
-class User
-{
-    public static function register($userData): bool
-    {
-        $conn = Database::getConnection();
-        $verificationCode = EmailVerification::generateVerificationCode();
-        $userEmail = $userData['email'];
-        // Other user data...
 
-        // Insert user data and verification code into the database
-        $sql = "INSERT INTO users (email, verification_code, ...) VALUES ('$userEmail', '$verificationCode', ...)";
-        mysqli_query($conn, $sql);
+//query for all users
+global $conn;
+$query = "SELECT * FROM users";
+$result = $conn->query($query);
 
-        // Send verification email
-        EmailVerification::sendVerificationEmail($userEmail, $verificationCode);
-        }
-
-
-
+//ad an user
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $role = $_POST['role'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $query = "INSERT INTO users (username, email, role, password) VALUES ('$username', '$email', '$role', '$password')";
+    $conn->query($query);
 }
+
+
+//delete user
+if (isset($_POST['delete_user'])) {
+    $userId = $_POST['user_id'];
+    $query = "DELETE FROM users WHERE id = $userId";
+    $conn->query($query);
+}
+
+
+
+
+
