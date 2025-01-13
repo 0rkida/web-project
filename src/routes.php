@@ -98,7 +98,7 @@ switch ($uri) {
         }
         break;
 
-        case '/profileviews':
+        case '/profile':
             require 'controllers/ProfileController.php';
             $ProfileController = new ProfileController($conn);
             if ($requestMethod === 'GET') {
@@ -140,6 +140,7 @@ switch ($uri) {
         }
         break;
 
+
     case '/Notifications' :
         require 'controllers/NotificationController.php';
         $NotificationController = new NotificationController($conn);
@@ -151,6 +152,10 @@ switch ($uri) {
             header('Location: /notification');
             exit();
         }
+        break;
+    default:
+        http_response_code(404);
+        echo "404 Not Found";
         break;
 
 }

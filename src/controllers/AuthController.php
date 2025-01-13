@@ -1,62 +1,96 @@
 <?php
+<<<<<<< HEAD
 
-use Random\RandomException;
+namespace App\controllers;
 
-require 'db.php';
-function registerUser($fullname, $email, $password): string
-{
-    global $conn;
-    try {
-        $verification_code = bin2hex(random_bytes(16));
-    } catch (RandomException) {
+use App\models\User;
+use JetBrains\PhpStorm\NoReturn;
 
-    }
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $stmt=$conn->prepare("INSERT INTO users(full_name, email, username, password, verification_code) VALUES (?,?,?,?,?)");
-    $stmt->bind_param("ssss" ,$fullname, $email, $username, $hashed_password, $verification_code);
-    if($stmt->execute()) {
-        $verification_link = "http://localhost/web-project/verify.php?verification_code=" . $verification_code;
-        return "User registered successfully. <a href='$verification_link'>Click here</a> to verify your account.";
-    }else{
-        return "Error while registering. Try again.";
+session_start();
 
+class AuthController {
+    public User $user;
+
+    public function __construct($dbConnection) {
+        $this->user = new User($dbConnection);
     }
 
-}
-function login($email, $password): string
-{
-    global $conn;
+    public function getRegisterView(): void {
+        require_once 'C:\xampp\htdocs\web-project\public\register.html';
+    }
 
-    $stmt=$conn->prepare("SELECT * FROM users WHERE email=? AND password=?");
-    $stmt->bind_param("ss", $email, $password);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        if($user['is_verified'] == 0) {
-            return "Account not verified. Please try again.";
-        }
-        if(password_verify($password, $user['password'])) {
-            return "Login successfol! Welcome." . $user['full_name'];
-        }else{
-            return "Login failed. Try again.";
+    public function postRegister(array $data): void {
+        $fullname = htmlspecialchars($data['fullname'] ?? '');
+        $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
+        $username = htmlspecialchars($data['username'] ?? '');
+        $password = $data['password'] ?? '';
+
+        if (empty($fullname) || empty($email) || empty($username) || empty($password)) {
+            echo "Të gjitha fushat janë të detyrueshme.";
+            return;
         }
 
-    }else{
-        return "User not found. Try again.";
+        $verificationCode = bin2hex(random_bytes(16));
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $success = $this->user->registerUser($fullname, $email, $username, $hashedPassword, $verificationCode);
+
+        if ($success) {
+            $verificationLink = "http://localhost/web-project/verify.php?verification_code=" . $verificationCode;
+            echo "Regjistrimi u krye me sukses. <a href='$verificationLink'>Klikoni këtu</a> për të verifikuar llogarinë tuaj.";
+        } else {
+            echo "Gabim gjatë regjistrimit. Provoni përsëri.";
+        }
+    }
+
+    public function getLoginView(): void {
+        require_once 'C:\xampp\htdocs\web-project\public\login.html';
+    }
+
+    public function postLogin(array $data): void {
+        $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
+        $password = $data['password'] ?? '';
+
+        if (empty($email) || empty($password)) {
+            echo "Email dhe fjalëkalimi janë të detyrueshëm.";
+            return;
+        }
+
+        $userId = $this->user->authenticateUser($email, $password);
+
+        if ($userId) {
+            if (!$this->user->isUserVerified($userId)) {
+                echo "Përdoruesi nuk është verifikuar ende. Kontrolloni email-in tuaj.";
+                return;
+            }
+
+            session_regenerate_id(true);
+            $_SESSION['userId'] = $userId;
+            $_SESSION['loggedIn'] = true;
+
+            header('Location: /home');
+            exit();
+        } else {
+            echo "Gabim! Email ose fjalëkalim i gabuar!";
+        }
+    }
+
+    public function verifyAccount(string $verificationCode): void {
+        $success = $this->user->verifyUser($verificationCode);
+
+        if ($success) {
+            echo "Verifikimi i email-it u krye me sukses! Mund të kyçeni tani.";
+        } else {
+            echo "Kodi i verifikimit është i pavlefshëm ose përdoruesi është verifikuar tashmë.";
+        }
+    }
+
+    #[NoReturn] public function logout(): void {
+        session_unset();
+        session_destroy();
+        header('Location: /login');
+        exit();
     }
 }
-function verify($verification_code): string
-{
-    global $conn;
-    $stmt=$conn->prepare("UPDATE  users SET is_verified=1 where verification_code=?");
-    $stmt->bind_param("s", $verification_code);
-    if($stmt->execute() && $stmt->affected_rows > 0) {
-        return "Email verification successful! You can now login.";
-
-    }else{
-        return "Invalid verification code or user already verified.";
-    }
-}
-
-
+=======
+>>>>>>> 4b3fbb073b47e93c08d2c7abbf1094ec144cc5a8
