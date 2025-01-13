@@ -49,6 +49,26 @@ function markNotificationAsRead($notificationId, $conn) {
     $stmt->execute();
 }
 
+function timeAgo($timestamp) {
+    $timeAgo = strtotime($timestamp);
+    $currentTime = time();
+    $timeDifference = $currentTime - $timeAgo;
+
+    if ($timeDifference < 60) {
+        return "Just now";
+    } elseif ($timeDifference < 3600) {
+        $minutes = floor($timeDifference / 60);
+        return "$minutes minute" . ($minutes > 1 ? "s" : "") . " ago";
+    } elseif ($timeDifference < 86400) {
+        $hours = floor($timeDifference / 3600);
+        return "$hours hour" . ($hours > 1 ? "s" : "") . " ago";
+    } else {
+        $days = floor($timeDifference / 86400);
+        return "$days day" . ($days > 1 ? "s" : "") . " ago";
+    }
+}
+
+
 
 
 
