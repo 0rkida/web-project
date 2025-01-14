@@ -4,7 +4,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\models\User;
 
-session_start(); // Sigurohuni që seancat janë të nisin në fillim
+//session_start(); // Sigurohuni që seancat janë të nisin në fillim
 require_once 'C:\xampp\htdocs\web-project\vendor\autoload.php';
 require_once 'C:\xampp\htdocs\web-project\src\models\User.php'; // Rruga për te UserModel
 

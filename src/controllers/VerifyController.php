@@ -20,8 +20,8 @@ class VerifyController {
 
     // Funksioni për të shfaqur faqen e verifikimit
     public function getView(): void {
-        $code = $_GET['code'];
-        require_once __DIR__.'/../views/auth/verify.php'; // Vendosni rrugën e saktë për skedarin verify.html
+        $code = $_GET['code']??"";
+            require_once __DIR__.'/../views/auth/verify.php'; // Vendosni rrugën e saktë për skedarin verify.html
     }
 
     // Funksioni për të trajtuar verifikimin e përdoruesit

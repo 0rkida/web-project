@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="<?php echo dirname(__DIR__, 2); ?>/profile.css">
+
 
 </head>
 <body>
@@ -89,7 +90,7 @@
             <section class="details">
                 <h2>My Details</h2>
                 <ul>
-                    <li><?=$height?>></li>
+                    <li><?=$height?></li>
                     <li>Orientation: Straight</li>
                     <li>Diet: Vegetarian</li>
                     <li>Smokes: No</li>

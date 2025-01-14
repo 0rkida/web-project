@@ -11,8 +11,8 @@
     <h2>Verifikimi i Emailit</h2>
     <p>Një kod verifikimi është dërguar në emailin tuaj. Ju lutem vendoseni atë më poshtë:</p>
    <form action="/Verify" method="post">
-       <input type="email" name="email" id="email" placeholder="Email adresa" required>
-       <input type="text" name="code" id="verification-code" placeholder="Vendosni kodin e verifikimit" value="<?php echo htmlspecialchars($code); ?>" required />
+       <label for="email"></label><input type="email" name="email" id="email" placeholder="Email address" required>
+       <label for="verification-code"></label><input type="text" name="code" id="verification-code" placeholder="Vendosni kodin e verifikimit" value="<?php echo htmlspecialchars($code); ?>" required />
        <button id="verify-button">Verifiko</button>
    </form>
 
