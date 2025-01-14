@@ -1,25 +1,28 @@
 <?php
-<<<<<<< HEAD
 
 namespace App\controllers;
 
 use App\models\User;
 use JetBrains\PhpStorm\NoReturn;
 
-session_start();
+//session_start();
 
-class AuthController {
+class AuthController
+{
     public User $user;
 
-    public function __construct($dbConnection) {
+    public function __construct($dbConnection)
+    {
         $this->user = new User($dbConnection);
     }
 
-    public function getRegisterView(): void {
+    public function getRegisterView(): void
+    {
         require_once 'C:\xampp\htdocs\web-project\public\register.html';
     }
 
-    public function postRegister(array $data): void {
+    public function postRegister(array $data): void
+    {
         $fullname = htmlspecialchars($data['fullname'] ?? '');
         $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
         $username = htmlspecialchars($data['username'] ?? '');
@@ -43,11 +46,13 @@ class AuthController {
         }
     }
 
-    public function getLoginView(): void {
+    public function getLoginView(): void
+    {
         require_once 'C:\xampp\htdocs\web-project\public\login.html';
     }
 
-    public function postLogin(array $data): void {
+    public function postLogin(array $data): void
+    {
         $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
         $password = $data['password'] ?? '';
 
@@ -75,7 +80,8 @@ class AuthController {
         }
     }
 
-    public function verifyAccount(string $verificationCode): void {
+    public function verifyUser(string $verificationCode): void
+    {
         $success = $this->user->verifyUser($verificationCode);
 
         if ($success) {
@@ -85,12 +91,12 @@ class AuthController {
         }
     }
 
-    #[NoReturn] public function logout(): void {
+    #[NoReturn] public function logout(): void
+    {
         session_unset();
         session_destroy();
         header('Location: /login');
         exit();
     }
+
 }
-=======
->>>>>>> 4b3fbb073b47e93c08d2c7abbf1094ec144cc5a8

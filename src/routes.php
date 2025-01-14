@@ -1,4 +1,14 @@
 <?php
+//session_set_cookie_params([
+//    'lifetime' => 3600, // 1 hour
+//    'path' => '/', // Available throughout the site
+//    'domain' => 'localhost', // Ensure this matches your domain
+//    'secure' => false, // Set to true if using HTTPS
+//    'httponly' => true, // Make the cookie accessible only via HTTP and not JavaScript
+//    'samesite' => 'Lax', // For cross-site request handling
+//]);
+//session_start();
+require_once __DIR__.'/../vendor/autoload.php';
 
 use App\Controllers\LogInController;
 use App\Controllers\LogoutController;
@@ -10,7 +20,7 @@ use App\controllers\RegisterController;
 use App\controllers\VerifyController;
 use PHPMailer\PHPMailer\PHPMailer;
 
-$uri = $_SERVER['REQUEST_URI'];
+//$uri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // Lidhja me bazën e të dhënave
@@ -28,9 +38,36 @@ if ($conn->connect_error) {
 require_once 'C:\xampp\htdocs\web-project\vendor\phpmailer\phpmailer\src\PHPMailer.php';
 $mailer = new PHPMailer(true);
 
-switch ($uri) {
+$request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+error_log("$request_path");
+
+switch (strtolower($request_path)) {
+    case '/profil':
+        require 'controllers/ProfileController.php';
+        $ProfileController = new ProfileController($conn);
+        if ($requestMethod === 'GET') {
+//            echo 'correct url';
+            $ProfileController->getView();
+        }else if ($requestMethod === 'POST') {
+            $ProfileController->postProfile();
+//            header('Location: /profile');
+            exit();
+        }
+        break;
+    case '/profil/update':
+        require 'controllers/ProfileController.php';
+        $ProfileController = new ProfileController($conn);
+        if($requestMethod === 'GET'){
+            $ProfileController->getUpdateView();
+        }else if($requestMethod === 'POST'){
+            $ProfileController->putProfile($_POST);
+        }
+        break;
+    case '/home':
     case '/':
-        require 'C:\xampp\htdocs\web-project\public\home.html';
+        error_log("After home redirect:". $_SESSION['userId']);
+        require __DIR__.'/../public/home.html';
         break;
 
     case '/register':
@@ -44,13 +81,14 @@ switch ($uri) {
                 'email' => $_POST['email'],
                 'password' => $_POST['password']
             ]);
+            echo 'all is good';
             // Redirect pas regjistrimit (mund të jetë një faqe tjetër)
-            header('Location: /login'); // Mund të jetë një URL e ndryshme
+//            header('Location: /login'); // Mund të jetë një URL e ndryshme
             exit();
         }
         break;
 
-    case '/LogIn':
+    case '/login':
         require 'controllers/LogInController.php';
         $LogInController = new LogInController($conn, $mailer); // Kaloni lidhjen me DB dhe PHPMailer
         if ($requestMethod === 'GET') {
@@ -62,12 +100,12 @@ switch ($uri) {
                 'password' => $_POST['password']
             ]);
             // Redirect pas login-it
-            header('Location: /home'); // Mund të jetë një URL e ndryshme
-            exit();
+//            header('Location: /home'); // Mund të jetë një URL e ndryshme
+//            exit();
         }
         break;
 
-        case '/Verify':
+        case '/verify':
             require 'controllers/VerifyController.php';
             $VerifyController = new VerifyController($conn, $mailer);
             if ($requestMethod === 'GET') {
@@ -76,14 +114,13 @@ switch ($uri) {
             } else if ($requestMethod === 'POST') {
                 $VerifyController->postVerify([
                     'email' => $_POST['email'],
-                    'password' => $_POST['password']
-
+                    'code' => $_POST['code']
                 ]);
                 header('Location: /login');
                 exit();
             }
             break;
-    case '/Logout':
+    case '/logout':
         // Include the controller class file
         require_once 'controllers/LogoutController.php';
 
@@ -98,23 +135,7 @@ switch ($uri) {
         }
         break;
 
-        case '/profile':
-            require 'controllers/ProfileController.php';
-            $ProfileController = new ProfileController($conn);
-            if ($requestMethod === 'GET') {
-                $ProfileController->getView();
-            }else if ($requestMethod === 'POST') {
-                $ProfileController->postProfile([
-                    'firstName' => $_POST['firstName'],
-                    'lastName' => $_POST['lastName'],
-                    'email' => $_POST['email']
-                    ]);
-                header('Location: /profile');
-                exit();
-            }
-            break;
-
-    case '/Messages':
+    case '/messages':
         require 'controllers/MessageController.php';
         $MessagesController = new MessageController($conn);
         if ($requestMethod === 'GET') {
@@ -128,7 +149,7 @@ switch ($uri) {
             exit();
         }
         break;
-    case '/Matches':
+    case '/matches':
         require 'controllers/MatchController.php';
         $MatchController = new MatchController($conn);
         if ($requestMethod === 'GET') {
@@ -141,7 +162,7 @@ switch ($uri) {
         break;
 
 
-    case '/Notifications' :
+    case '/notifications' :
         require 'controllers/NotificationController.php';
         $NotificationController = new NotificationController($conn);
         if($requestMethod === 'GET'){

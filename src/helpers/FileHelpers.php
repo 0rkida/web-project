@@ -6,7 +6,7 @@ class FileHelpers
     public static function uploadImage($image): string
     {
         $imageName = time() . '-' . $image['name'];
-        $target = app_path('img/' . $imageName);
+        $target = app_path('assets/img' . $imageName);
 
 
         move_uploaded_file($image['tmp_name'], $target);

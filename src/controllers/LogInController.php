@@ -1,12 +1,14 @@
 <?php
 
+
+
 namespace App\controllers;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use App\models\User;
 use JetBrains\PhpStorm\NoReturn;
 
-session_start();
+require_once __DIR__.'/../models/User.php';
 
 class LogInController {
     public User $user;
@@ -30,6 +32,7 @@ class LogInController {
     }
 
     public function postLogin(array $data): void {
+//        session_start();
         $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
         $password = $data['password'] ?? '';
 
@@ -39,8 +42,12 @@ class LogInController {
         }
 
         $userId = $this->user->authenticateUser($email, $password);
+        error_log("user id is: " . $userId);
 
-        if ($userId) {
+        if ($userId === false) {
+            echo "Gabim! Email ose fjalëkalim i gabuar!";
+            exit();
+        } else {
             if (!$this->user->isUserVerified($userId)) {
                 echo "Përdoruesi nuk është verifikuar ende. Kontrolloni email-in tuaj.";
                 return;
@@ -48,12 +55,12 @@ class LogInController {
 
             session_regenerate_id(true);
             $_SESSION['userId'] = $userId;
+            error_log('User id, saved in the session: ' . $_SESSION['userId']);
+
             $_SESSION['loggedIn'] = true;
 
             header('Location: /home');
             exit();
-        } else {
-            echo "Gabim! Email ose fjalëkalim i gabuar!";
         }
     }
 

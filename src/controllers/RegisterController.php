@@ -10,7 +10,7 @@ require_once 'C:\xampp\htdocs\web-project\src\models\User.php'; // Rruga për te
 
 class RegisterController {
     public User $user;
-    private PHPMailer $mailer;
+//    private PHPMailer $mailer;
 
     // Konstruktor që merr lidhjen me bazën e të dhënave dhe shërbimin e postës
     public function __construct($dbConnection, $mailer) {
@@ -29,44 +29,46 @@ class RegisterController {
         $email = $data['email'];
         $password = $data['password'];
 
+        $verificationCode = $this->user->generateVerificationCode();
         // Provoni të regjistroni përdoruesin
-        if ($this->user->registerUser($email, $password)) {
+        if ($this->user->registerUser($_POST['email'], $_POST['username'], $_POST['password'], $verificationCode)) {
             // Dërgo kodin e verifikimit në email
-            $verificationCode = $this->user->generateVerificationCode();
-
             // Dërgo email për verifikim
-            if ($this->sendVerificationEmail($email, $verificationCode)) {
-                echo "Regjistrimi ishte i suksesshëm! Një kod verifikimi u dërgua në email-in tuaj.";
-            } else {
-                echo "Ka ndodhur një gabim gjatë dërgimit të email-it për verifikim.";
-            }
+            require_once __DIR__.'/../helpers/EmailHelpers.php';
+            \EmailVerification::sendVerificationEmail($email, $verificationCode);
+//            if ($this->sendVerificationEmail($email, $verificationCode)) {
+//                echo "Regjistrimi ishte i suksesshëm! Një kod verifikimi u dërgua në email-in tuaj.";
+//            } else {
+//                echo "Ka ndodhur një gabim gjatë dërgimit të email-it për verifikim.";
+//            }
         } else {
             echo "Email-i është i zënë ose ka ndodhur një gabim gjatë regjistrimit!";
         }
     }
 
     // Funksioni për dërgimin e email-it me kodin e verifikimit
-    private function sendVerificationEmail($email, $verificationCode): bool {
-        $subject = 'Verifikimi i Përdoruesit';
-        $message = "Për të verifikuar llogarinë tuaj, klikoni në këtë link:\n";
-        $message .= "http://yourdomain.com/verify.php?code=" . $verificationCode;
-        $headers = 'From: no-reply@yourdomain.com';
-
-        // Përdorim PHPMailer për dërgimin e email-it
-        try {
-            $this->mailer->addAddress($email);
-            $this->mailer->Subject = $subject;
-            $this->mailer->Body = $message;
-
-            if ($this->mailer->send()) {
-                return true;
-            }
-        } catch (Exception $e) {
-            echo 'Gabim gjatë dërgimit të email-it: ' . $e->getMessage();
-        }
-
-        return false;
-    }
+//    private function sendVerificationEmail($email, $verificationCode): bool {
+//        require_once __DIR__.'/../helpers/EmailHelpers.php';
+//        $subject = 'Verifikimi i Përdoruesit';
+//        $message = "Për të verifikuar llogarinë tuaj, klikoni në këtë link:\n";
+//        $message .= "http://yourdomain.com/verify.php?code=" . $verificationCode;
+//        $headers = 'From: no-reply@yourdomain.com';
+//        \EmailVerification::sendVerificationEmail($email, $verificationCode);
+//        // Përdorim PHPMailer për dërgimin e email-it
+////        try {
+////            $this->mailer->addAddress($email);
+////            $this->mailer->Subject = $subject;
+////            $this->mailer->Body = $message;
+////
+////            if ($this->mailer->send()) {
+////                return true;
+////            }
+////        } catch (Exception $e) {
+////            echo 'Gabim gjatë dërgimit të email-it: ' . $e->getMessage();
+////        }
+//
+////        return false;
+//    }
 
     // Funksioni për të verifikuar përdoruesin
     public function getverifyUser($verificationCode): void {

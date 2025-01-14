@@ -10,8 +10,12 @@
 <div class="container">
     <h2>Verifikimi i Emailit</h2>
     <p>Një kod verifikimi është dërguar në emailin tuaj. Ju lutem vendoseni atë më poshtë:</p>
-    <input type="text" id="verification-code" placeholder="Vendosni kodin e verifikimit" required />
-    <button id="verify-button">Verifiko</button>
+   <form action="/Verify" method="post">
+       <input type="email" name="email" id="email" placeholder="Email adresa" required>
+       <input type="text" name="code" id="verification-code" placeholder="Vendosni kodin e verifikimit" value="<?php echo htmlspecialchars($code); ?>" required />
+       <button id="verify-button">Verifiko</button>
+   </form>
+
 </div>
 <script src="js/verify.js"></script>
 </body>

@@ -1,9 +1,9 @@
 CREATE TABLE profile (
-    id INT AUTO_INCREMENT PRIMARY KEY, -- Unique ID for the profile
-    full_name VARCHAR(100) NOT NULL,   -- User's full name
-    email VARCHAR(255) NOT NULL UNIQUE, -- User's email (unique)
-    password VARCHAR(255) NOT NULL,    -- User's password (hashed)
-    role ENUM('user', 'admin') DEFAULT 'user', -- User role
+    user_id INT PRIMARY KEY, -- Unique ID for the profile
+#     full_name VARCHAR(100) NOT NULL,   -- User's full name
+#     email VARCHAR(255) NOT NULL UNIQUE, -- User's email (unique)
+#     password VARCHAR(255) NOT NULL,    -- User's password (hashed)
+#     role ENUM('user', 'admin') DEFAULT 'user', -- User role
     profile_picture VARCHAR(255) DEFAULT 'default.png', -- profileviews picture path
     age INT,                           -- User's age
     gender ENUM('male', 'female'), -- User's gender

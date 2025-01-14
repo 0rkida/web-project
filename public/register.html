@@ -11,7 +11,7 @@
 <body>
 <div class="container registration-container">
     <div class="form-container sign-up-container">
-        <form action="/register" method="POST">
+        <form action="/register" method="post">
 
             <div class="logo-container">
                 <img src="assets/img/logo.png" height="200" width="200" alt="logo"/>
@@ -31,16 +31,16 @@
             <input type="password" name="password" placeholder="Password" required />
 
 
-            <input type="date" placeholder="Ditëlindja" required />
+            <input type="date" name="birthday" placeholder="Ditëlindja" required />
 
             <button type="submit">Regjistrohu</button>
 
-            <div id="verification-section" style="display: none;">
-                <h2>Verifikimi i Emailit</h2>
-                <p>Një kod verifikimi është dërguar në emailin tuaj. Ju lutem vendosni atë këtu për të aktivizuar llogarinë tuaj.</p>
-                <input type="text" id="verification-code" placeholder="Vendosni kodin e verifikimit" required />
-                <button id="verify-button">Verifiko</button>
-            </div>
+<!--            <div id="verification-section" style="display: none;">-->
+<!--                <h2>Verifikimi i Emailit</h2>-->
+<!--                <p>Një kod verifikimi është dërguar në emailin tuaj. Ju lutem vendosni atë këtu për të aktivizuar llogarinë tuaj.</p>-->
+<!--                <input type="text" id="verification-code" placeholder="Vendosni kodin e verifikimit" required />-->
+<!--                <button id="verify-button">Verifiko</button>-->
+<!--            </div>-->
 
         </form>
 

@@ -14,19 +14,19 @@ class User
     }
 
     // Registers the user in the database
-    public function registerUser($email, $password)
+    public function registerUser($email, $username, $password, $verificationCode)
     {
         // Check if the email already exists
         if ($this->isEmailTaken($email)) {
             return false;
         }
 
-        $verificationCode = $this->generateVerificationCode();
+        //$verificationCode = $this->generateVerificationCode();
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         // Insert user data into the database
-        $stmt = $this->dbConnection->prepare("INSERT INTO users (email, password, verification_code, is_verified) VALUES (?, ?, ?, 0)");
-        $stmt->bind_param("sss", $email, $hashedPassword, $verificationCode);
+        $stmt = $this->dbConnection->prepare("INSERT INTO users (email, username, password, verification_code, is_verified) VALUES (?, ?, ?, ?, 0)");
+        $stmt->bind_param("ssss", $email, $username, $hashedPassword, $verificationCode);
 
         return $stmt->execute();
     }
@@ -72,7 +72,7 @@ class User
     }
 
     // Verifies the user using the verification code
-    public function getverifyUser($verificationCode)
+    public function verifyUser($verificationCode)
     {
         $stmt = $this->dbConnection->prepare("UPDATE users SET is_verified = 1 WHERE verification_code = ?");
         $stmt->bind_param("s", $verificationCode);
@@ -80,10 +80,11 @@ class User
     }
 
     // Checks if a user is verified by email
-    public function isUserVerified($email): bool
+    public function isUserVerified($userId): bool
     {
-        $stmt = $this->dbConnection->prepare("SELECT is_verified FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
+        error_log("emaili duke u loguar:". $userId);
+        $stmt = $this->dbConnection->prepare("SELECT is_verified FROM users WHERE id = ?");
+        $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->num_rows > 0 && $result->fetch_assoc()['is_verified'] == 1;
