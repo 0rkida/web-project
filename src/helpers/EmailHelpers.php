@@ -1,4 +1,7 @@
 <?php
+
+require __DIR__ . '/../../vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Random\RandomException;
@@ -15,25 +18,25 @@ class EmailVerification {
     public static function sendVerificationEmail($userEmail, $verificationCode): void
     {
         $mail = new PHPMailer(true);
-
+        $info = require_once __DIR__ . "/../../emailkeys.php";
         try {
             // Server settings
             $mail->isSMTP();
-            $mail->Host = 'smtp.example.com';
+            $mail->Host = $info['host'];
             $mail->SMTPAuth = true;
-            $mail->Username = 'your_email@example.com';
-            $mail->Password = 'your_password';
+            $mail->Username = $info['username'];
+            $mail->Password = $info['password'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            $mail->Port = $info['port'];
 
             // Recipients
-            $mail->setFrom('your_email@example.com', 'Your Name');
+            $mail->setFrom($info['email'], $info['name']);
             $mail->addAddress($userEmail);
 
             // Content
             $mail->isHTML();
             $mail->Subject = 'Email Verification';
-            $mail->Body    = "Please verify your email by clicking the link: <a href='https://yourdomain.com/verify.php?code=$verificationCode'>Verify Email</a>";
+            $mail->Body    = "Please verify your email by clicking the link: <a href=http://{$_SERVER['HTTP_HOST']}/verify?code=$verificationCode'>Verify Email</a>";
 
             $mail->send();
             echo 'Verification email has been sent';

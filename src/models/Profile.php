@@ -16,7 +16,7 @@ class Profile {
      * @return array|null - Returns the profile data or null if not found
      */
     public function getProfileData(int $userId): ?array {
-        $query = "SELECT * FROM profile WHERE id = ?";
+        $query = "SELECT * FROM profile WHERE user_id = ?";
 
         if ($stmt = $this->dbConnection->prepare($query)) {
             $stmt->bind_param("i", $userId);
@@ -43,15 +43,15 @@ class Profile {
      */
     public function updateProfile(int $userId, array $data): bool {
         $query = "UPDATE profile 
-                  SET full_name = ?, email = ?, age = ?, gender = ?, location = ?, 
+                  SET age = ?, gender = ?, location = ?, 
                       self_summary = ?, hobby = ?, doing_with_life = ?, good_at = ?, 
                       ethnicity = ?, height = ? 
-                  WHERE id = ?";
+                  WHERE profile.user_id = ?";
 
         if ($stmt = $this->dbConnection->prepare($query)) {
             // Bind parameters
             $stmt->bind_param(
-                "ssissssssssi",
+                "ssissssssssd",
                 $data['full_name'],
                 $data['email'],
                 $data['age'],
@@ -108,46 +108,49 @@ class Profile {
      */
     public function updateUserProfile(int $userId, array $data): bool {
         // Sanitize inputs
-        $fullName = htmlspecialchars($data['full_name'], ENT_QUOTES, 'UTF-8');
-        $email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
-        $age = filter_var($data['age'], FILTER_SANITIZE_NUMBER_INT);
-        $gender = $data['gender'];
-        $location = htmlspecialchars($data['location'], ENT_QUOTES, 'UTF-8');
-        $selfSummary = htmlspecialchars($data['self_summary'], ENT_QUOTES, 'UTF-8');
-        $hobby = htmlspecialchars($data['hobby'], ENT_QUOTES, 'UTF-8');
-        $doingWithLife = htmlspecialchars($data['doing_with_life'], ENT_QUOTES, 'UTF-8');
-        $goodAt = htmlspecialchars($data['good_at'], ENT_QUOTES, 'UTF-8');
-        $ethnicity = htmlspecialchars($data['ethnicity'], ENT_QUOTES, 'UTF-8');
-        $height = filter_var($data['height'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $sql = "UPDATE profile 
+            SET profile_picture = ?, age = ?, gender = ?, location = ?, self_summary = ?, hobby = ?, doing_with_life = ?, good_at = ?, ethnicity = ?, height = ?
+            WHERE user_id = ?";
 
-        // Prepare the SQL query to update the user profile
-        $query = "UPDATE profile 
-                  SET full_name = ?, email = ?, age = ?, gender = ?, location = ?, 
-                      self_summary = ?, hobby = ?, doing_with_life = ?, good_at = ?, 
-                      ethnicity = ?, height = ?, updated_at = CURRENT_TIMESTAMP 
-                  WHERE id = ?";
+        // Prepare statement
+        $stmt = $this->dbConnection->prepare($sql);
 
-        if ($stmt = $this->dbConnection->prepare($query)) {
-            $stmt->bind_param(
-                "ssissssssssi",
-                $fullName,
-                $email,
-                $age,
-                $gender,
-                $location,
-                $selfSummary,
-                $hobby,
-                $doingWithLife,
-                $goodAt,
-                $ethnicity,
-                $height,
-                $userId
-            );
+        // Bind parameters
+        $stmt->bind_param(
+            "sissssssssi", // Define parameter types: s = string, i = integer
+            $data['profile_picture'],
+            $data['age'],
+            $data['gender'],
+            $data['location'],
+            $data['self_summary'],
+            $data['hobby'],
+            $data['doing_with_life'],
+            $data['good_at'],
+            $data['ethnicity'],
+            $data['height'],
+            $userId // The user_id parameter
+        );
 
-            return $stmt->execute();
-        } else {
-            error_log("Error preparing user profile update query: " . $this->dbConnection->error);
-            return false;
+        // Execute the query and check for success
+        return $stmt->execute();
+    }
+    function createProfile($user_id, $profile_picture, $age, $gender, $location, $self_summary, $hobby, $doing_with_life, $good_at, $ethnicity, $height) {
+
+        // Prepare the SQL statement
+        $sql = "INSERT INTO profile (user_id, profile_picture, age, gender, location, self_summary, hobby, doing_with_life, good_at, ethnicity, height) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        // Prepare the statement
+        $stmt = $this->dbConnection->prepare($sql);
+
+        if (!$stmt) {
+            die("Statement preparation failed: " . $this->dbConnection->error);
         }
+
+        // Bind parameters
+        $stmt->bind_param("isisssssssd", $user_id, $profile_picture, $age, $gender, $location, $self_summary, $hobby, $doing_with_life, $good_at, $ethnicity, $height);
+
+        // Execute the statement
+        return $stmt->execute();
     }
 }

@@ -4,7 +4,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\models\User;
 
-session_start(); // Sigurohuni që seancat janë të nisin në fillim
+//session_start(); // Sigurohuni që seancat janë të nisin në fillim
 require_once 'C:\xampp\htdocs\web-project\vendor\autoload.php';
 require_once 'C:\xampp\htdocs\web-project\src\models\User.php'; // Rruga për te UserModel
 
@@ -20,7 +20,8 @@ class VerifyController {
 
     // Funksioni për të shfaqur faqen e verifikimit
     public function getView(): void {
-        require_once 'C:\xampp\htdocs\web-project\public\verify.html'; // Vendosni rrugën e saktë për skedarin verify.html
+        $code = $_GET['code'];
+        require_once __DIR__.'/../views/auth/verify.php'; // Vendosni rrugën e saktë për skedarin verify.html
     }
 
     // Funksioni për të trajtuar verifikimin e përdoruesit
