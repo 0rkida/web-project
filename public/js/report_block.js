@@ -16,6 +16,10 @@ const blockReason = document.getElementById("block-reason");
 const reportOther = document.getElementById("report-other");
 const blockOther = document.getElementById("block-other");
 
+// Get form elements
+const reportForm = document.getElementById("report-form");
+const blockForm = document.getElementById("block-form");
+
 // Show/hide textarea based on selection
 reportReason.addEventListener("change", function() {
     if (this.value === "other") {
@@ -61,4 +65,78 @@ window.addEventListener("click", (event) => {
     if (event.target === blockModal) {
         blockModal.style.display = "none";
     }
+});
+
+// Handle report form submission
+reportForm.addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form from submitting
+
+    // Get the selected reason and other input (if any)
+    const reason = reportReason.value;
+    const otherReason = reportOther.value;
+
+    // Validate form data
+    if (!reason) {
+        alert("Please select a reason for reporting.");
+        return;
+    }
+
+    // If "Other" was selected, validate that the "Other Reason" is filled out
+    if (reason === "other" && !otherReason) {
+        alert("Please provide a reason for reporting.");
+        return;
+    }
+
+    // Prepare data to be sent to the server
+    const reportData = {
+        reason: reason,
+        otherReason: otherReason || "",
+    };
+
+    // Here, you would send the data to the server
+    // For now, we'll just log it
+    console.log("Report submitted:", reportData);
+
+    // Close the modal after submission
+    reportModal.style.display = "none";
+
+    // Optionally, reset the form
+    reportForm.reset();
+});
+
+// Handle block form submission
+blockForm.addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form from submitting
+
+    // Get the selected reason and other input (if any)
+    const reason = blockReason.value;
+    const otherReason = blockOther.value;
+
+    // Validate form data
+    if (!reason) {
+        alert("Please select a reason for blocking.");
+        return;
+    }
+
+    // If "Other" was selected, validate that the "Other Reason" is filled out
+    if (reason === "other" && !otherReason) {
+        alert("Please provide a reason for blocking.");
+        return;
+    }
+
+    // Prepare data to be sent to the server
+    const blockData = {
+        reason: reason,
+        otherReason: otherReason || "",
+    };
+
+    // Here, you would send the data to the server
+    // For now, we'll just log it
+    console.log("Block submitted:", blockData);
+
+    // Close the modal after submission
+    blockModal.style.display = "none";
+
+    // Optionally, reset the form
+    blockForm.reset();
 });

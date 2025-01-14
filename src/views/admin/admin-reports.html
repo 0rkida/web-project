@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Reports</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+</head>
+<body>
+
+<nav>
+  <div class="logo-name">
+    <div class="logo-image">
+      <img src="../../../public/assets/img/logo.png" height="50" width="50" alt="logo"/>
+    </div>
+
+    <span class="logo_name">Mish&Thu</span>
+  </div>
+
+  <div class="menu-items">
+    <ul class="nav-links">
+      <li><a href="admin-dashboard.html">
+        <i class="uil uil-estate"></i>
+        <span class="link-name">Dashboard</span>
+      </a></li>
+      <li><a href="admin-reports.html">
+        <i class="uil uil-comment-block"></i>
+        <span class="link-name">Reports</span>
+      </a></li>
+    </ul>
+
+    <ul class="logout-mode">
+      <li><a href="/public/login.html">
+        <i class="uil uil-signout"></i>
+        <span class="link-name">Logout</span>
+      </a></li>
+
+      <li class="mode">
+        <a href="#">
+          <i class="uil uil-moon"></i>
+          <span class="link-name">Dark Mode</span>
+        </a>
+
+        <div class="mode-toggle">
+          <span class="switch"></span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<section class="reports">
+  <div class="top">
+    <i class="uil uil-bars sidebar-toggle"></i>
+    <h2>Reported Users</h2>
+
+    <img src="../../../public/assets/img/default-avatar.jpeg" height="40" width="40" alt="default profile"/>
+
+  </div>
+  <div class="reports-content">
+    <table id="reports-table">
+      <thead>
+      <tr>
+        <th>Reported User</th>
+        <th>Reason</th>
+        <th>Reported By</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Rows will be populated dynamically with JavaScript -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="admin-reports.js"></script>
+</body>
+</html>

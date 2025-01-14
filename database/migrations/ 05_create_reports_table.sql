@@ -1,9 +1,11 @@
 CREATE TABLE reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    reporting_user_id INT NOT NULL,
-    reported_user_id INT NOT NULL,
+    reported_id INT NOT NULL,
     reason TEXT NOT NULL,
+    status ENUM('pending', 'reviewed') DEFAULT 'pending',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (reporting_user_id) REFERENCES users(id),
-    FOREIGN KEY (reported_user_id) REFERENCES users(id)
+    FOREIGN KEY (reported_id) REFERENCES users(id),
+    additional_info TEXT,
+    report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
 );

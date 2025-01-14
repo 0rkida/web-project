@@ -8,7 +8,6 @@ CREATE TABLE profile (
     age INT,                           -- User's age
     gender ENUM('male', 'female'), -- User's gender
     location VARCHAR(255),             -- User's location
-    match_percentage INT,              -- Matches percentage
     self_summary TEXT,                 -- Self-summary
     hobby TEXT,                        -- Hobbies
     doing_with_life TEXT,              -- Activities or goals

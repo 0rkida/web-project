@@ -3,7 +3,7 @@
 const DB_HOST = 'localhost';     // MySQL host (usually 'localhost')
 const DB_USERNAME = 'root';      // MySQL username
 const DB_PASSWORD = '';          // MySQL password (empty if not set)
-const DB_NAME = 'datting_app';      // Your database name
+const DB_NAME = 'dating_app';      // Your database name
 
 try {
     $conn = new PDO(

@@ -44,7 +44,7 @@
                         <button class="menu-btn">Matchers</button>
                     </a>
                 </li>
-                <li><button class="menu-btn">Favorites</button></li>
+
             </ul>
         </nav>
 
@@ -73,29 +73,55 @@
         <div class="content">
             <section class="summary">
                 <h2>My self-summary</h2>
-                <p>
-                    I’m an adventurous soul who loves trying new things.
-                    Candy lollipop bonbon chocolate bar chupa chups soufflé tart!
-                </p>
+                <form action="update_profile.php" method="POST">
+                    <textarea name="self_summary" id="self-summary" rows="4" cols="50" placeholder="Write something about yourself..."></textarea>
+                    <button type="submit" class="update-btn">Save Changes</button>
+                </form>
             </section>
+
             <section class="photos">
                 <h2>Photos</h2>
-                <div class="photo-grid">
-                    <img src="photo1.jpg" alt="Photo 1">
-                    <img src="photo2.jpg" alt="Photo 2">
-                    <img src="photo3.jpg" alt="Photo 3">
-                    <img src="photo4.jpg" alt="Photo 4">
-                </div>
+                <form id="upload-form" action="upload_photos.php" method="POST" enctype="multipart/form-data">
+                    <div class="photo-grid">
+                        <!-- Hidden file input -->
+                        <input type="file" name="photos[]" id="upload-input" multiple accept="image/*" hidden>
+
+                        <!-- Label styled as a button -->
+                        <label for="upload-input" class="upload-btn">
+                            <span class="plus">+</span> Upload Photos
+                        </label>
+                    </div>
+                </form>
             </section>
+
+
             <section class="details">
                 <h2>My Details</h2>
                 <ul>
-                    <li>Height: 1.68m</li>
-                    <li>Orientation: Straight</li>
-                    <li>Diet: Vegetarian</li>
-                    <li>Smokes: No</li>
+                    <li>
+                        Hobby:
+                        <textarea id="hobby" placeholder="Enter your hobby"></textarea>
+                    </li>
+                    <li>
+                        Ethnicity:
+                        <textarea id="ethnicity" placeholder="Enter your ethnicity"></textarea>
+                    </li>
+                    <li>
+                        Profession:
+                        <textarea id="profession" placeholder="Enter your profession"></textarea>
+                    </li>
+                    <li>
+                        Good At:
+                        <textarea id="good-at" placeholder="Enter what you're good at"></textarea>
+                    </li>
+                    <li>
+                        Height:
+                        <textarea id="height" placeholder="Enter your height"></textarea>
+                    </li>
                 </ul>
+                <button type="submit" onclick="saveChanges()" class="update-btn">Save Changes</button>
             </section>
+
         </div>
     </div>
 
