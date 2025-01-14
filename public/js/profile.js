@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-// Fetch user profile data (this could come from an API or database)
-const userProfile = {
-    name: 'Anne Hathaway',
-    bio: 'Lorem ipsum dolor sit amet consectetuer adipiscing.',
-    photo: 'http://upload.wikimedia.org/wikipedia/commons/e/e1/Anne_Hathaway_Face.jpg'
-};
+
 
 // Elements on the profile page
 const profileName = document.getElementById('user-name');
@@ -58,10 +52,80 @@ saveProfileBtn.addEventListener('click', () => {
 
 // Call updateProfile to display the initial data
 document.addEventListener('DOMContentLoaded', updateProfile);
-=======
+
 document.querySelector('.dropdown-arrow').addEventListener('click', function() {
     const dropdownMenu = document.querySelector('.dropdown-menu');
     // Toggle the display property
     dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
 });
->>>>>>> e5090113bfa2fab8188931142ac9299df799258a
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const userId = 1; // Replace with the logged-in user's ID
+
+    try {
+        const response = await fetch(`http://localhost/dating_app/get_profile.php?user_id=${userId}`);
+        const result = await response.json();
+
+        if (result.status === "success") {
+            const user = result.data;
+
+            // Update profile details
+            document.querySelector(".profile-name").textContent = user.username;
+            document.querySelector(".location").textContent = `${user.age} • ${user.location}`;
+            document.querySelector(".summary p").textContent = user.bio;
+
+            // Update profile picture
+            const profilePic = user.profilePic || "default-avatar.jpeg";
+            document.querySelector(".large-profile-pic").src = `../assets/img/${profilePic}`;
+            document.querySelector(".profile-pic").src = `../assets/img/${profilePic}`;
+        } else {
+            console.error("Error:", result.message);
+        }
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+    }
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const userId = 1; // Replace with the actual logged-in user's ID.
+
+    try {
+        const response = await fetch(`http://localhost/dating_app/get_profile.php?user_id=${userId}`);
+        const result = await response.json();
+
+        if (result.status === "success") {
+            const user = result.data;
+
+            // Populate the self-summary textarea with the user's current self-summary
+            document.getElementById("self-summary").textContent = user.self_summary || '';  // Ensure it's not null
+        } else {
+            console.error("Error:", result.message);
+        }
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+    }
+});
+
+document.getElementById('upload-input').addEventListener('change', function(event) {
+    const fileInput = event.target;
+    const form = document.getElementById('upload-form');
+
+    // Submit the form when files are selected
+    form.submit();
+});
+function saveChanges() {
+    let hobby = document.getElementById("hobby").value;
+    let ethnicity = document.getElementById("ethnicity").value;
+    let profession = document.getElementById("profession").value;
+    let goodAt = document.getElementById("good-at").value;
+    let height = document.getElementById("height").value;
+
+    // Here, you can send the data to the server or save it locally
+    console.log("Changes Saved: ");
+    console.log("Hobby:", hobby);
+    console.log("Ethnicity:", ethnicity);
+    console.log("Profession:", profession);
+    console.log("Good At:", goodAt);
+    console.log("Height:", height);
+}
+

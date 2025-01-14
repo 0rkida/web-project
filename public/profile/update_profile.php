@@ -56,3 +56,30 @@ if ($conn->query($sql) === TRUE) {
 
 $conn->close();
 
+
+session_start();
+include("config/db_connection.php"); // Include your database connection script
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get user data from POST request
+    $self_summary = $_POST['self_summary'];
+
+    // Assume you have the logged-in user ID in the session
+    $user_id = $_SESSION['user_id'];
+
+    // Update self-summary in the database
+    $query = "UPDATE profile SET self_summary = :self_summary WHERE id = :user_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':self_summary', $self_summary);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+        echo "Profile updated successfully!";
+    } else {
+        echo "Error updating profile!";
+    }
+} else {
+    echo "Invalid request method.";
+}
+
+
