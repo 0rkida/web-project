@@ -1,33 +1,33 @@
 <?php
-global $db;
-require '../../db.php'; // Lidhja me bazën e të dhënave
-require '../../models/User.php'; // Modeli i përdoruesit
-require '../../../vendor/autoload.php'; // PHPMailer
+// Include necessary files for database and PHPMailer
+require '../../db.php'; // Database connection
+require '../../models/User.php'; // User model
+require '../../../vendor/autoload.php'; // PHPMailer autoload
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $userModel = new UserModel($db);
 
-    // Kontrollo nëse përdoruesi ekziston
+    // Check if the user exists and is verified
     if (!$userModel->isUserVerified($email)) {
-        echo "Ky email nuk është regjistruar ose nuk është i verifikuar.";
+        echo "This email is not registered or not verified.";
         exit();
     }
 
-    // Gjenero një token dhe cakto një afat
+    // Generate a reset token and set expiry time (1 hour from now)
     $resetToken = bin2hex(random_bytes(32));
     $resetTokenExpiry = date("Y-m-d H:i:s", strtotime('+1 hour'));
 
-    // Ruaj token-in në databazë
+    // Save the reset token to the database
     if ($userModel->saveResetToken($email, $resetToken, $resetTokenExpiry)) {
-        // Konfiguro dhe dërgo email-in me PHPMailer
+        // Configure and send the email using PHPMailer
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         try {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'your_email@gmail.com';
-            $mail->Password = 'your_password';
+            $mail->Username = 'your_email@gmail.com'; // Your SMTP email
+            $mail->Password = 'your_password'; // Your SMTP password
             $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
@@ -39,14 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Body = "<p>Click <a href='http://yourdomain.com/reset_password.php?token=$resetToken'>here</a> to reset your password.</p>";
 
             if ($mail->send()) {
-                echo "Një email për rivendosjen e fjalëkalimit është dërguar.";
+                echo "A password reset email has been sent to your email address.";
             } else {
-                echo "Gabim gjatë dërgimit të email-it.";
+                echo "Error sending email: " . $mail->ErrorInfo;
             }
         } catch (Exception $e) {
-            echo "Gabim: " . $e->getMessage();
+            echo "Mailer Error: " . $e->getMessage();
         }
     } else {
-        echo "Nuk u ruajt token-i.";
+        echo "Failed to save reset token.";
     }
 }
+?>
