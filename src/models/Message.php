@@ -13,7 +13,7 @@ class Message
     // Save message to the database
     public function saveMessage($userId, $message): bool
     {
-        $query = "INSERT INTO messages (user_id, message, created_at) VALUES (?, ?, NOW())";
+        $query = "INSERT INTO messages (sender_id, receiver_id,message, created_at) VALUES (?, ?,?, NOW())";
 
         // Prepare the SQL statement
         $stmt = $this->dbConnection->prepare($query);
@@ -32,7 +32,7 @@ class Message
     // Retrieve all messages from the database
     public function getMessages(): array
     {
-        $query = "SELECT m.message, m.created_at, u.username 
+        $query = "SELECT m.sender_id, m.receiver_id, u.username 
                   FROM messages m 
                   JOIN users u ON m.user_id = u.id 
                   ORDER BY m.created_at ";

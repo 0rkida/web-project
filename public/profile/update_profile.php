@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_SESSION['user_id'];
 
     // Update self-summary in the database
-    $query = "UPDATE profile SET self_summary = :self_summary WHERE id = :user_id";
+    $query = "UPDATE profile SET self_summary = :self_summary WHERE user_id = :user_id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':self_summary', $self_summary);
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);

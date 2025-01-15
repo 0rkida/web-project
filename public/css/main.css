@@ -6,11 +6,10 @@
 
 body {
     background: #f57760; /* Background color */
-    display: ruby-text;
+    display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Montserrat', sans-serif;
-    height: 100vh;
     margin: 0;
     padding: 20px 0; /* Added padding for space at the top and bottom */
     overflow: auto;

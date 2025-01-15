@@ -1,6 +1,6 @@
 <?php
 //session_set_cookie_params([
-//    'lifetime' => 3600, // 1 hour
+//   'lifetime' => 3600, // 1 hour
 //    'path' => '/', // Available throughout the site
 //    'domain' => 'localhost', // Ensure this matches your domain
 //    'secure' => false, // Set to true if using HTTPS
@@ -11,7 +11,6 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use App\Controllers\LogInController;
-use App\Controllers\LogoutController;
 use App\controllers\MatchController;
 use App\controllers\MessageController;
 use App\controllers\NotificationController;
@@ -55,6 +54,10 @@ switch (strtolower($request_path)) {
             exit();
         }
         break;
+    case '/':
+        require '../public/MishEThu.html';
+        break;
+
     case '/profil/update':
         require 'controllers/ProfileController.php';
         $ProfileController = new ProfileController($conn);
@@ -65,8 +68,7 @@ switch (strtolower($request_path)) {
         }
         break;
     case '/home':
-    case '/':
-        error_log("After home redirect:". $_SESSION['userId']);
+      //  error_log("After home redirect:". $_SESSION['userId']);
         require __DIR__.'/../public/home.html';
         break;
 
@@ -90,7 +92,7 @@ switch (strtolower($request_path)) {
 
     case '/login':
         require 'controllers/LogInController.php';
-        $LogInController = new LogInController($conn, $mailer); // Kaloni lidhjen me DB dhe PHPMailer
+        $LogInController = new LogInController($conn); // Kaloni lidhjen me DB dhe PHPMailer
         if ($requestMethod === 'GET') {
             $LogInController->getView();
         } else if ($requestMethod === 'POST') {
@@ -104,8 +106,12 @@ switch (strtolower($request_path)) {
 //            exit();
         }
         break;
-
-        case '/verify':
+    case '/logout':
+        require_once 'controllers/LogInController.php';
+        $logInController = new LogInController($conn);
+        $logInController->Logout();
+        break;
+    case '/verify':
             require 'controllers/VerifyController.php';
             $VerifyController = new VerifyController($conn, $mailer);
             if ($requestMethod === 'GET') {
@@ -120,20 +126,7 @@ switch (strtolower($request_path)) {
                 exit();
             }
             break;
-    case '/logout':
-        // Include the controller class file
-        require_once 'controllers/LogoutController.php';
-
-        // Check if the controller class exists
-        if (class_exists('\App\Controllers\LogoutController')) {
-            // Create an instance of the LogOutController and call the logout method
-            $logOutController = new LogoutController();
-            $logOutController->logout();
-        } else {
-            // Handle error if the class doesn't exist
-            echo "Error: LogOutController not found.";
-        }
-        break;
+    // Ensures no further code is executed after logout
 
     case '/messages':
         require 'controllers/MessageController.php';
@@ -174,6 +167,7 @@ switch (strtolower($request_path)) {
             exit();
         }
         break;
+
     default:
         http_response_code(404);
         echo "404 Not Found";
