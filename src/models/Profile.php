@@ -81,7 +81,7 @@ class Profile {
      * @return array|null - Returns the user profile data or null if not found
      */
     public function getUserProfile(int $userId): ?array {
-        $query = "SELECT * FROM profile WHERE id = ?";
+        $query = "SELECT * FROM profile WHERE $userId = ?";
 
         if ($stmt = $this->dbConnection->prepare($query)) {
             $stmt->bind_param("i", $userId);
