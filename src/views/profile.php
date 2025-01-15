@@ -6,18 +6,16 @@
     <title>Profile Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo dirname(__DIR__, 2); ?>/profile.css">
-
-
 </head>
 <body>
 <div class="main-container">
     <!-- Left Sidebar -->
     <div class="sidebar left-sidebar">
         <div class="profile-section">
-            <img src="../assets/img/default-avatar.jpeg" height="736" width="736"  class="profile-pic">
+            <img src="../assets/img/default-avatar.jpeg" height="736" width="736" alt="Default Avatar" class="profile-pic">
             <div class="username-dropdown">
                 <h3 class="username">
-                    <?=$name?>
+                    <?php echo $name; ?>
                     <span class="dropdown-arrow">▼</span>
                 </h3>
                 <ul class="dropdown-menu">
@@ -65,8 +63,8 @@
             <div class="profile-info">
                 <img src="../assets/img/default-avatar.jpeg" height="736" width="736" alt="Profile Picture" class="large-profile-pic">
                 <div class="profile-text">
-                    <h1 class="profile-name"><?=$name?></h1>
-                    <span class="location">2<?=$location?></span>
+                    <h1 class="profile-name"><?php echo $name; ?></h1>
+                    <span class="location"><?php echo $location; ?></span>
                 </div>
             </div>
             <button class="update-btn">Update Info</button>
@@ -75,7 +73,7 @@
             <section class="summary">
                 <h2>My self-summary</h2>
                 <p>
-                    <?=$summary?>
+                    <?php echo $summary; ?>
                 </p>
             </section>
             <section class="photos">
@@ -90,7 +88,7 @@
             <section class="details">
                 <h2>My Details</h2>
                 <ul>
-                    <li><?=$height?></li>
+                    <li><?php echo $height; ?></li>
                     <li>Orientation: Straight</li>
                     <li>Diet: Vegetarian</li>
                     <li>Smokes: No</li>
@@ -101,7 +99,7 @@
 
     <!-- Right Sidebar -->
     <div class="sidebar right-sidebar">
-        <img src="../assets/img/logo.png" height="300" width="300" alt="logo" class="premium-image"/>
+        <img src="../assets/img/logo.png" height="300" width="300" alt="Logo" class="premium-image"/>
         <div class="premium-section">
             <h2 class="premium-title">You're Invisible</h2>
             <p>In order to increase your visibility and remove ads, go Premium!</p>
@@ -110,6 +108,6 @@
     </div>
 
 </div>
-<script src="../js/profile.js"></script>
+<script src="<?php echo dirname(__DIR__, 2) . '/profile.js'; ?>"></script>
 </body>
 </html>
