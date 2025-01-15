@@ -14,7 +14,7 @@ class User
     }
 
     // Registers the user in the database
-    public function registerUser($email, $username, $password, $verificationCode)
+    public function registerUser($email,$full_name, $username, $password, $verificationCode)
     {
         // Check if the email already exists
         if ($this->isEmailTaken($email)) {
@@ -25,8 +25,8 @@ class User
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         // Insert user data into the database
-        $stmt = $this->dbConnection->prepare("INSERT INTO users (email, username, password, verification_code, is_verified) VALUES (?, ?, ?, ?, 0)");
-        $stmt->bind_param("ssss", $email, $username, $hashedPassword, $verificationCode);
+        $stmt = $this->dbConnection->prepare("INSERT INTO users (email, full_name,username, password, verification_code, is_verified) VALUES (?, ?,?, ?, ?, 0)");
+        $stmt->bind_param("sssss", $email,$full_name,$username, $hashedPassword, $verificationCode,);
 
         return $stmt->execute();
     }

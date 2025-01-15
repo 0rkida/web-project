@@ -2,16 +2,21 @@
 namespace App\controllers;
 use AllowDynamicProperties;
 require_once __DIR__.'/../models/Profile.php';
+require_once __DIR__.'/../models/User.php';
 use App\models\Profile;
+use App\models\User;
 
 //session_start();
 
 #[AllowDynamicProperties]
 class ProfileController {
     public Profile $profile;
+    public User $user;
+
 
     public function __construct($dbConnection) {
         $this->profile = new Profile($dbConnection);
+        $this->user= new User($dbConnection);
     }
 
     // Get view for profile page
@@ -25,12 +30,16 @@ class ProfileController {
         $userId = $_SESSION['userId'];
 
         // Fetch the user profile data from the database
+      $user=$this->user->getUserById($userId);
         $userProfile = $this->profile->getProfileData($userId);
+
+
 
         // If the profile data is successfully fetched, pass it to the view
         if ($userProfile) {
-//            $name = $userProfile['name'];
-            $name = 'placeholder name, do merret nga user model';
+       $full_name = $user['full_name'];
+ // Assuming $user is an instance of the user model
+
             $location = $userProfile['location'];
             $summary = $userProfile['self_summary'];
             $height = $userProfile['height'];

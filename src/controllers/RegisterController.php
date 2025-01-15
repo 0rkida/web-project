@@ -31,7 +31,7 @@ class RegisterController {
 
         $verificationCode = $this->user->generateVerificationCode();
         // Provoni të regjistroni përdoruesin
-        if ($this->user->registerUser($_POST['email'], $_POST['username'], $_POST['password'], $verificationCode)) {
+        if ($this->user->registerUser($_POST['email'], $_POST['name'],$_POST['username'], $_POST['password'], $verificationCode)) {
             // Dërgo kodin e verifikimit në email
             // Dërgo email për verifikim
             require_once __DIR__.'/../helpers/EmailHelpers.php';
