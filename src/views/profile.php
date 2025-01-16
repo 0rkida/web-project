@@ -13,7 +13,7 @@
     <!-- Left Sidebar -->
     <div class="sidebar left-sidebar">
         <div class="profile-section">
-            <img src="/assets/img/user-uploads/albums/ " height="736" width="736" alt=" " class="profile-pic">
+            <img src="/public/assets/img/user-uploads/albums/ " height="736" width="736" alt=" " class="profile-pic">
             <div class="username-dropdown">
                 <h3 class="username">
                     <?php echo $full_name; ?>
@@ -63,7 +63,7 @@
     <div class="profile-container">
         <header class="profile-header">
             <div class="profile-info">
-                <img src="/assets/img/user-uploads/albums/<?= $picture_path ?>" alt="Uploaded photo">
+                <img src="/assets/img/user-uploads/albums/<?= $imageName ?>" alt="Uploaded photo">
 
                 <div class="profile-text">
                     <h1 class="profile-name"><?php echo $full_name; ?></h1>

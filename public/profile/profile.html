@@ -114,10 +114,11 @@
                 <p>No photos uploaded yet. Start uploading now!</p>
                 <?php else: ?>
                 <?php foreach ($photos as $photo): ?>
-                <img src="<?= htmlspecialchars($photo['photo_path']) ?>" alt="User Photo">
+                <img src="/assets/img/user-uploads/albums/<?= htmlspecialchars($photo['picture_path']) ?>" alt="User Photo">
                 <?php endforeach; ?>
                 <?php endif; ?>
             </div>
+
 
 
             <section class="details">
@@ -162,5 +163,7 @@
 
 </div>
 <script src="../js/profile.js"></script>
+<script src="../js/profile-upload.js"></script>
+
 </body>
 </html>

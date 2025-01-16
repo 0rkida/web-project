@@ -28,29 +28,22 @@ $height = $_POST['height'];
 
 // Handle file upload for profile picture
 if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-    // File was uploaded successfully
-    $profile_picture_tmp = $_FILES['profile_picture']['tmp_name'];
-    $profile_picture_name = $_FILES['profile_picture']['name'];
-    $uploads_dir = 'public/assets/img/user-uploads/albums/'; // Assuming this is where the images are stored
+    $uploadDir = 'public/assets/img/user-uploads/albums/';
+    $uploadFile = $uploadDir . basename($_FILES['profile_picture']['name']);
 
-    // Create a unique name for the image
-    $picture_path = uniqid('photo_') . '.' . pathinfo($profile_picture_name, PATHINFO_EXTENSION);
-
-    // Move the uploaded file to the desired location
-    if (move_uploaded_file($profile_picture_tmp, $uploads_dir . $picture_path)) {
-        // File upload was successful, $picture_path contains the path
-        echo "Profile picture uploaded successfully.";
+    // Move the uploaded file to the desired directory
+    if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $uploadFile)) {
+        echo "File is valid and was successfully uploaded.";
     } else {
-        // Error during file upload
-        echo "Error moving the uploaded file.";
+        echo "Failed to upload the file.";
     }
 } else {
-    // No new file uploaded, keep the existing profile picture if not changed
-    $picture_path = $_POST['existing_profile_picture'];  // Assuming you have a form field for the existing picture path
+    echo "Error: " . $_FILES['profile_picture']['error'];
 }
 
+
 // Connect to the database
-$conn = new mysqli("localhost", "root", "", "datting_app");  // Use the correct database name
+$conn = new mysqli("localhost", "root", "", "14_create_user_pictures_table.sql");  // Use the correct database name
 
 // Check connection
 if ($conn->connect_error) {

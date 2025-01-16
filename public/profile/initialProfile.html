@@ -9,13 +9,14 @@
 </head>
 <body>
 <h1>Create Profile</h1>
-<form action="/profil" method="post" enctype="multipart/form-data">
-<!--  <label for="user_id">User ID:</label>-->
-<!--    <input type="number" id="user_id" name="user_id" required><br><br>-->
+<form id="profile-form" action="/profile/upload" method="post" enctype="multipart/form-data">
+    <label for="profile_picture">Choose Profile Picture:</label>
+    <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+    <img id="profile_pic_preview" src="" alt="Profile Preview" style="display: none; width: 200px; height: 200px;">
+    <button type="submit">Upload</button>
+</form>
 
-    <label for="profile_picture">Profile Picture:</label>
-    <input type="file" id="profile_picture" name="profile_picture" accept="image/*" multiple><br><br>
-    <label for="age">Age:</label>
+
     <input type="number" id="age" name="age" required><br><br>
 
     <label for="gender">Gender:</label>
