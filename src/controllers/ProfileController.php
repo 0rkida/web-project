@@ -27,6 +27,7 @@ class ProfileController
         $this->profile = new Profile($dbConnection);
         $this->user = new User($dbConnection);
         $this->userPhotos = new UserPhotos($dbConnection);
+
     }
 
     public function checkSessionTimeout(): void
@@ -54,6 +55,11 @@ class ProfileController
         $userId = $_SESSION['userId'];
         $user = $this->user->getUserById($userId);
         $userProfile = $this->profile->getProfileData($userId);
+        try {
+            $photos = $this->userPhotos->getPhotosByUserId($userId);
+        } catch (Exception $e) {
+
+        }
 
         if ($userProfile) {
             $full_name = $user['full_name'];
@@ -124,7 +130,10 @@ class ProfileController
 
     public function uploadPictures($userId, $files): array
     {
-        $uploadsDir = 'public/assets/img/user-uploads/albums/';
+        $this->userPhotos->savePicture($userId, 'public/assets/img/user-uploads/albums/' . $newFileName);
+
+        $uploadsDir = __DIR__ . '/../../public/assets/img/user-uploads/albums/';
+
 
 // Check if the directory exists, if not, create it
         if (!file_exists($uploadsDir)) {

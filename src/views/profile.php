@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="/css/profile.css">
 </head>
 <body>
@@ -13,10 +12,10 @@
     <!-- Left Sidebar -->
     <div class="sidebar left-sidebar">
         <div class="profile-section">
-            <img src="/assets/img/user-uploads/albums/ " height="736" width="736" alt=" " class="profile-pic">
+            <img src="/assets/img/user-uploads/albums/<?= htmlspecialchars($picture_path, ENT_QUOTES, 'UTF-8') ?>" alt="Profile Picture" height="736" width="736" class="profile-pic">
             <div class="username-dropdown">
                 <h3 class="username">
-                    <?php echo $full_name; ?>
+                    <?= htmlspecialchars($full_name, ENT_QUOTES, 'UTF-8') ?>
                     <span class="dropdown-arrow">▼</span>
                 </h3>
                 <ul class="dropdown-menu">
@@ -24,31 +23,16 @@
                     <li><a href="/account/settings">Account Settings</a></li>
                     <li><a href="/logout" class="logout-btn">Log Out</a></li>
                 </ul>
-
             </div>
         </div>
-
         <nav>
             <ul class="menu">
-                <li>
-                    <a href="../chat.html">
-                        <button class="menu-btn">Messages</button>
-                    </a>
-                </li>
-                <li>
-                    <a href="../notifications.html">
-                        <button class="menu-btn">Notifications</button>
-                    </a>
-                </li>
-                <li>
-                    <a href="../matches.html">
-                        <button class="menu-btn">Matchers</button>
-                    </a>
-                </li>
+                <li><a href="../chat.html"><button class="menu-btn">Messages</button></a></li>
+                <li><a href="../notifications.html"><button class="menu-btn">Notifications</button></a></li>
+                <li><a href="../matches.html"><button class="menu-btn">Matchers</button></a></li>
                 <li><button class="menu-btn">Favorites</button></li>
             </ul>
         </nav>
-
         <div class="recently-visited">
             <h4>Recently Visited</h4>
             <div class="avatars">
@@ -58,16 +42,14 @@
             </div>
         </div>
     </div>
-
     <!-- Middle Section -->
     <div class="profile-container">
         <header class="profile-header">
             <div class="profile-info">
-                <img src="/assets/img/user-uploads/albums/<?= $picture_path ?>" alt="Uploaded photo">
-
+                <img src="/assets/img/user-uploads/albums/<?= htmlspecialchars($picture_path, ENT_QUOTES, 'UTF-8') ?>" alt="Uploaded photo">
                 <div class="profile-text">
-                    <h1 class="profile-name"><?php echo $full_name; ?></h1>
-                    <span class="location"><?php echo $location; ?></span>
+                    <h1 class="profile-name"><?= htmlspecialchars($full_name, ENT_QUOTES, 'UTF-8') ?></h1>
+                    <span class="location"><?= htmlspecialchars($location, ENT_QUOTES, 'UTF-8') ?></span>
                 </div>
             </div>
             <button class="update-btn">Update Info</button>
@@ -75,9 +57,7 @@
         <div class="content">
             <section class="summary">
                 <h2>My self-summary</h2>
-                <p>
-                    <?php echo $summary; ?>
-                </p>
+                <p><?= nl2br(htmlspecialchars($summary, ENT_QUOTES, 'UTF-8')) ?></p>
             </section>
             <section class="photos">
                 <h2>Photos</h2>
@@ -102,16 +82,14 @@
                     <button type="submit">Upload Additional Photos</button>
                 </form>
             </section>
-
             <section class="details">
                 <h2>My Details</h2>
                 <ul>
-                    <li><?php echo $height; ?></li>
+                    <li><?= htmlspecialchars($height, ENT_QUOTES, 'UTF-8') ?></li>
                 </ul>
             </section>
         </div>
     </div>
-
     <!-- Right Sidebar -->
     <div class="sidebar right-sidebar">
         <img src="../assets/img/logo.png" height="300" width="300" alt="Logo" class="premium-image"/>
@@ -121,8 +99,7 @@
             <button class="premium-btn">Go Premium</button>
         </div>
     </div>
-
 </div>
-<script src="<?php echo dirname(__DIR__, 2) . '/profile.js'; ?>"></script>
+<script src="<?= dirname(__DIR__, 2) . '/profile.js' ?>"></script>
 </body>
 </html>
