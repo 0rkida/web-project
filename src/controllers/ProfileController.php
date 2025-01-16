@@ -21,7 +21,7 @@ class ProfileController {
     }
 
     public function checkSessionTimeout(): void {
-        session_start();
+    //    session_start();
         $timeout = 900; // 15 minutes
 
         if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
