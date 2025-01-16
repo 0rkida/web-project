@@ -13,8 +13,8 @@ $user_id = $_POST['user_id'];
 $full_name = $_POST['full_name'];
 $email = $_POST['email'];
 $password = ($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : null;
-$profile_picture = $_FILES['profile_picture']['name'];
-$profile_picture_tmp = $_FILES['profile_picture']['tmp_name'];
+$profile_picture = $_FILES['picture_path']['name'];
+$profile_picture_tmp = $_FILES['picture_path']['tmp_name'];
 $age = $_POST['age'];
 $gender = $_POST['gender'];
 $location = $_POST['location'];
@@ -25,38 +25,51 @@ $good_at = $_POST['good_at'];
 $ethnicity = $_POST['ethnicity'];
 $height = $_POST['height'];
 
+
 // Handle file upload for profile picture
-if ($profile_picture) {
-    $profile_picture_path = 'uploads/' . $profile_picture;
-    move_uploaded_file($profile_picture_tmp, $profile_picture_path);
+if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+    // File was uploaded successfully
+    $profile_picture_tmp = $_FILES['profile_picture']['tmp_name'];
+    $profile_picture_name = $_FILES['profile_picture']['name'];
+    $uploads_dir = 'public/assets/img/user-uploads/albums/'; // Assuming this is where the images are stored
+
+    // Create a unique name for the image
+    $picture_path = uniqid('photo_') . '.' . pathinfo($profile_picture_name, PATHINFO_EXTENSION);
+
+    // Move the uploaded file to the desired location
+    if (move_uploaded_file($profile_picture_tmp, $uploads_dir . $picture_path)) {
+        // File upload was successful, $picture_path contains the path
+        echo "Profile picture uploaded successfully.";
+    } else {
+        // Error during file upload
+        echo "Error moving the uploaded file.";
+    }
 } else {
-    $profile_picture_path = $_POST['existing_profile_picture'];  // Keep existing picture if not changed
+    // No new file uploaded, keep the existing profile picture if not changed
+    $picture_path = $_POST['existing_profile_picture'];  // Assuming you have a form field for the existing picture path
 }
 
-$conn = new mysqli("localhost", "root", "", "02_create_profiles_table.sql");
+// Connect to the database
+$conn = new mysqli("localhost", "root", "", "datting_app");  // Use the correct database name
 
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Update profile in the database
-$sql = "UPDATE profile SET full_name='$full_name', email='$email', age='$age', gender='$gender', location='$location', 
-        self_summary='$self_summary', hobby='$hobby', doing_with_life='$doing_with_life', good_at='$good_at', 
-        ethnicity='$ethnicity', height='$height', profile_picture='$profile_picture_path'";
+// Update the user's profile picture in the database
+$user_id = $_SESSION['userId']; // Assuming user ID is stored in session
+$query = "UPDATE user_pictures SET picture_path = ? WHERE user_id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("si", $picture_path, $user_id); // "si" means string and integer
+$stmt->execute();
 
-if ($password) {
-    $sql .= ", password='$password'";
-}
-
-$sql .= " WHERE id='$user_id'";
-
-if ($conn->query($sql) === TRUE) {
-    echo "profileviews updated successfully!";
+// Handle errors or success
+if ($stmt->affected_rows > 0) {
+    echo "Profile picture updated successfully in the database.";
 } else {
-    echo "Error: " . $conn->error;
+    echo "Error updating profile picture in the database.";
 }
-
-$conn->close();
 
 
 session_start();

@@ -22,7 +22,7 @@
 <p>Created At: <?php echo htmlspecialchars($userProfile['created_at']); ?></p>
 
 <!-- Profile Picture -->
-<img src="path_to_images/<?php echo htmlspecialchars($userProfile['profile_picture']); ?>" alt="Profile Picture" width="150">
+<img src="/assets/img/user-uploads/albums/<?php echo htmlspecialchars($userProfile['picture_path']); ?>" alt="Profile Picture" width="150">
 
 <!-- Update Form -->
 <form method="POST" action="/profile/update">
@@ -61,6 +61,7 @@
 
     <label for="height">Height (in cm):</label>
     <input type="number" id="height" name="height" value="<?php echo htmlspecialchars($userProfile['height']); ?>"><br><br>
+
 
     <button type="submit">Update Profile</button>
 </form>
