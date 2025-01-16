@@ -9,4 +9,3 @@ CREATE TABLE users (
     is_verified TINYINT(1) DEFAULT 0
 
 );
-

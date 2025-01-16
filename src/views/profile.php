@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo dirname(__DIR__, 2); ?>/profile.css">
+
+    <link rel="stylesheet" href="/css/profile.css">
 </head>
 <body>
 <div class="main-container">
@@ -15,14 +16,15 @@
             <img src="../assets/img/default-avatar.jpeg" height="736" width="736" alt="Default Avatar" class="profile-pic">
             <div class="username-dropdown">
                 <h3 class="username">
-                    <?php echo $name; ?>
+                    <?php echo $full_name; ?>
                     <span class="dropdown-arrow">▼</span>
                 </h3>
                 <ul class="dropdown-menu">
-                    <li>Edit Profile</li>
-                    <li>Account Settings</li>
-                    <li>Logout</li>
+                    <li><a href="/profile/update">Edit Profile</a></li>
+                    <li><a href="/account/settings">Account Settings</a></li>
+                    <li><a href="/logout" class="logout-btn">Log Out</a></li>
                 </ul>
+
             </div>
         </div>
 
@@ -63,7 +65,7 @@
             <div class="profile-info">
                 <img src="../assets/img/default-avatar.jpeg" height="736" width="736" alt="Profile Picture" class="large-profile-pic">
                 <div class="profile-text">
-                    <h1 class="profile-name"><?php echo $name; ?></h1>
+                    <h1 class="profile-name"><?php echo $full_name; ?></h1>
                     <span class="location"><?php echo $location; ?></span>
                 </div>
             </div>
