@@ -1,4 +1,5 @@
 <?php
+
 namespace App\controllers;
 use AllowDynamicProperties;
 require_once __DIR__.'/../models/Profile.php';
@@ -13,53 +14,61 @@ class ProfileController {
     public Profile $profile;
     public User $user;
 
-
     public function __construct($dbConnection) {
+        $this->checkSessionTimeout(); // Check session timeout on every instantiation
         $this->profile = new Profile($dbConnection);
-        $this->user= new User($dbConnection);
+        $this->user = new User($dbConnection);
     }
 
-    // Get view for profile page
+    public function checkSessionTimeout(): void {
+        session_start();
+        $timeout = 900; // 15 minutes
+
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
+            session_unset();
+            session_destroy();
+            header("Location: /logout");
+            exit();
+        }
+
+        $_SESSION['LAST_ACTIVITY'] = time();
+    }
+
     public function getView(): void {
-//        session_start();
         if (!isset($_SESSION['userId'])) {
             header('Location: /login');
             exit();
         }
 
         $userId = $_SESSION['userId'];
-
-        // Fetch the user profile data from the database
-      $user=$this->user->getUserById($userId);
+        $user = $this->user->getUserById($userId);
         $userProfile = $this->profile->getProfileData($userId);
 
-
-
-        // If the profile data is successfully fetched, pass it to the view
         if ($userProfile) {
-       $full_name = $user['full_name'];
- // Assuming $user is an instance of the user model
-
+            $full_name = $user['full_name'];
             $location = $userProfile['location'];
             $summary = $userProfile['self_summary'];
             $height = $userProfile['height'];
-            include __DIR__.'/../views/profile.php';  // Pass the profile to the view
+            include __DIR__ . '/../views/profile.php';
         } else {
-            include __DIR__.'/../../public/profile/initialProfile.html';
-//            echo "Profile not found.";
+            include __DIR__ . '/../../public/profile/initialProfile.html';
         }
     }
 
     public function getUpdateView(): void {
+        $this->checkSessionTimeout();
         $data = $this->profile->getProfileData($_SESSION['userId']);
-        error_log("entered the function");
-        include __DIR__.'/../views/editProfile.php';
+        include __DIR__ . '/../views/editProfile.php';
     }
+
     public function postProfile(): void {
-        if (!isset($_SESSION['userId'])){
+        $this->checkSessionTimeout();
+
+        if (!isset($_SESSION['userId'])) {
             header('Location: /login');
             exit();
         }
+
         $result = $this->profile->createProfile(
             $_SESSION['userId'],
             $_POST['profile_picture'],
@@ -73,30 +82,26 @@ class ProfileController {
             $_POST['ethnicity'],
             $_POST['height'],
         );
-        if($result){
+
+        if ($result) {
             header('Location: /profil');
-        }
-        else{
+        } else {
             echo "Something went wrong.";
         }
-
     }
 
-
-    // Handle the profile update on POST request
     public function putProfile($data): void {
+        $this->checkSessionTimeout();
+
         if (!isset($_SESSION['userId'])) {
             header('Location: /login');
             exit();
         }
 
         $userId = $_SESSION['userId'];
-
-        // Update the profile data
         $updated = $this->profile->updateUserProfile($userId, $data);
 
         if ($updated) {
-            echo "profile updated successfully!";
             header('Location: /profil/update');
         } else {
             echo "Error updating profile.";

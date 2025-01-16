@@ -1,4 +1,5 @@
 <?php
+include 'session_check.php';
 
 $host = "localhost";
 $db_name = "dating_app";
