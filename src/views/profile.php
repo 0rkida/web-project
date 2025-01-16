@@ -13,7 +13,7 @@
     <!-- Left Sidebar -->
     <div class="sidebar left-sidebar">
         <div class="profile-section">
-            <img src="../assets/img/default-avatar.jpeg" height="736" width="736" alt="Default Avatar" class="profile-pic">
+            <img src="/assets/img/user-uploads/albums/ " height="736" width="736" alt=" " class="profile-pic">
             <div class="username-dropdown">
                 <h3 class="username">
                     <?php echo $full_name; ?>
@@ -63,7 +63,8 @@
     <div class="profile-container">
         <header class="profile-header">
             <div class="profile-info">
-                <img src="../assets/img/default-avatar.jpeg" height="736" width="736" alt="Profile Picture" class="large-profile-pic">
+                <img src="/assets/img/user-uploads/albums/<?= $picture_path ?>" alt="Uploaded photo">
+
                 <div class="profile-text">
                     <h1 class="profile-name"><?php echo $full_name; ?></h1>
                     <span class="location"><?php echo $location; ?></span>
@@ -86,14 +87,26 @@
                     <img src="photo3.jpg" alt="Photo 3">
                     <img src="photo4.jpg" alt="Photo 4">
                 </div>
+
+                <!-- Form for uploading profile picture -->
+                <form action="/upload_profile_picture" method="POST" enctype="multipart/form-data">
+                    <label for="profile_picture">Upload Profile Picture:</label>
+                    <input type="file" name="profile_picture[]" id="profile_picture" accept="image/*" required>
+                    <button type="submit">Upload Profile Picture</button>
+                </form>
+
+                <!-- Form for uploading additional pictures -->
+                <form action="/upload_additional_pictures" method="POST" enctype="multipart/form-data">
+                    <label for="additional_pictures">Upload Additional Pictures:</label>
+                    <input type="file" name="additional_pictures[]" id="additional_pictures" accept="image/*" multiple>
+                    <button type="submit">Upload Additional Photos</button>
+                </form>
             </section>
+
             <section class="details">
                 <h2>My Details</h2>
                 <ul>
                     <li><?php echo $height; ?></li>
-                    <li>Orientation: Straight</li>
-                    <li>Diet: Vegetarian</li>
-                    <li>Smokes: No</li>
                 </ul>
             </section>
         </div>
