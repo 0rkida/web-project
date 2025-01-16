@@ -8,12 +8,23 @@
 </head>
 <body>
 <h1>Create Profile</h1>
+<<<<<<< HEAD
 <form action="/profil" method="post" enctype="multipart/form-data">
     <!-- Removed user_id field for simplicity -->
     <label for="profile_picture">Profile Picture:</label>
     <input type="file" id="profile_picture" name="profile_picture" accept="image/*" multiple><br><br>
 
     <label for="age">Age:</label>
+=======
+<form id="profile-form" action="/profile/upload" method="post" enctype="multipart/form-data">
+    <label for="profile_picture">Choose Profile Picture:</label>
+    <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+    <img id="profile_pic_preview" src="" alt="Profile Preview" style="display: none; width: 200px; height: 200px;">
+    <button type="submit">Upload</button>
+</form>
+
+
+>>>>>>> a5b07c5b6e5372be1f72e533b00fe90450a4636e
     <input type="number" id="age" name="age" required><br><br>
 
     <label for="gender">Gender:</label>

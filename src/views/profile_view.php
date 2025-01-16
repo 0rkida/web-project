@@ -21,8 +21,13 @@
     <p>Last Online: <?php echo htmlspecialchars($userProfile['last_online'], ENT_QUOTES, 'UTF-8'); ?></p>
     <p>Created At: <?php echo htmlspecialchars($userProfile['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
 
+<<<<<<< HEAD
     <!-- Profile Picture -->
     <img src="/assets/img/user-uploads/albums/<?php echo htmlspecialchars($userProfile['picture_path'], ENT_QUOTES, 'UTF-8'); ?>" alt="Profile Picture" width="150">
+=======
+<!-- Profile Picture -->
+<img src="/assets/img/user-uploads/albums/<?php echo htmlspecialchars($userProfile['profile_picture']); ?>" alt="Profile Picture" width="150">
+>>>>>>> a5b07c5b6e5372be1f72e533b00fe90450a4636e
 
     <!-- Update Form -->
     <form method="POST" action="/profile/update">

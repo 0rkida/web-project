@@ -12,7 +12,11 @@
     <!-- Left Sidebar -->
     <div class="sidebar left-sidebar">
         <div class="profile-section">
+<<<<<<< HEAD
             <img src="/assets/img/user-uploads/albums/<?= htmlspecialchars($picture_path, ENT_QUOTES, 'UTF-8') ?>" alt="Profile Picture" height="736" width="736" class="profile-pic">
+=======
+            <img src="/public/assets/img/user-uploads/albums/ " height="736" width="736" alt=" " class="profile-pic">
+>>>>>>> a5b07c5b6e5372be1f72e533b00fe90450a4636e
             <div class="username-dropdown">
                 <h3 class="username">
                     <?= htmlspecialchars($full_name, ENT_QUOTES, 'UTF-8') ?>
@@ -46,7 +50,12 @@
     <div class="profile-container">
         <header class="profile-header">
             <div class="profile-info">
+<<<<<<< HEAD
                 <img src="/assets/img/user-uploads/albums/<?= htmlspecialchars($picture_path, ENT_QUOTES, 'UTF-8') ?>" alt="Uploaded photo">
+=======
+                <img src="/assets/img/user-uploads/albums/<?= $imageName ?>" alt="Uploaded photo">
+
+>>>>>>> a5b07c5b6e5372be1f72e533b00fe90450a4636e
                 <div class="profile-text">
                     <h1 class="profile-name"><?= htmlspecialchars($full_name, ENT_QUOTES, 'UTF-8') ?></h1>
                     <span class="location"><?= htmlspecialchars($location, ENT_QUOTES, 'UTF-8') ?></span>
