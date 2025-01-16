@@ -1,6 +1,8 @@
 <?php
+include 'session_check.php';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['photos'])) {
-    $uploadsDir = 'public/assets/img/user-uploads/albums';  // Directory to save uploaded photos
+    $uploadsDir = 'public/assets/img/user-uploads/albums/';  // Make sure this ends with a slash
 
     foreach ($_FILES['photos']['tmp_name'] as $index => $tmpName) {
         $fileName = $_FILES['photos']['name'][$index];
@@ -24,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['photos'])) {
                     if (move_uploaded_file($fileTmp, $uploadsDir . $newFileName)) {
                         // File is successfully uploaded
                         echo 'File uploaded successfully: ' . $newFileName;
+                        // Optionally, you could add the file path to the database here
                     } else {
                         echo 'Error moving the uploaded file.';
                     }
@@ -31,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['photos'])) {
                     echo 'Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.';
                 }
             } else {
-                echo 'File size exceeds the limit.';
+                echo 'File size exceeds the limit (5MB).';
             }
         } else {
             echo 'Error uploading file: ' . $fileError;
@@ -40,4 +43,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['photos'])) {
 } else {
     echo 'No files selected.';
 }
-

@@ -18,7 +18,7 @@ class EmailVerification {
     public static function sendVerificationEmail($userEmail, $verificationCode): void
     {
         $mail = new PHPMailer(true);
-        $info = require_once __DIR__ . "/../../emailkeys.php";
+       $info = require_once __DIR__ . "/../../emailkeys.php";
         try {
             // Server settings
             $mail->isSMTP();

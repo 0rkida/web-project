@@ -1,5 +1,3 @@
-
-
 // Elements on the profile page
 const profileName = document.getElementById('user-name');
 const profileBio = document.getElementById('profile-description').querySelector('p');
@@ -129,3 +127,23 @@ function saveChanges() {
     console.log("Height:", height);
 }
 
+let inactivityTime = function () {
+    let time;
+    const logout = () => {
+        alert("You have been logged out due to inactivity.");
+        window.location.href = "logout.php"; // Redirect to logout script
+    };
+
+    // Reset the timer when user interacts
+    const resetTimer = () => {
+        clearTimeout(time);
+        time = setTimeout(logout, 15 * 60 * 1000); // 15 minutes
+    };
+
+    // Detect user actions
+    window.onload = resetTimer;
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+};
+
+inactivityTime();

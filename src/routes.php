@@ -67,6 +67,45 @@ switch (strtolower($request_path)) {
             $ProfileController->putProfile($_POST);
         }
         break;
+    // Handle profile picture upload
+    case '/upload_profile_picture':
+        require 'controllers/ProfileController.php';
+        $ProfileController = new ProfileController($conn);
+        if ($requestMethod === 'POST' && isset($_FILES['profile_picture'])) {
+            // Call the uploadPictures method with the profile picture
+            $response = $ProfileController->uploadPictures($_SESSION['userId'], $_FILES['profile_picture']);
+            echo json_encode($response); // You can return the response (success/error) as JSON
+        } else {
+            echo json_encode(['error' => 'Invalid request for profile picture upload.']);
+        }
+        break;
+
+// Handle additional pictures upload
+    case '/upload_additional_pictures':
+        require 'controllers/ProfileController.php';
+        $ProfileController = new ProfileController($conn);
+        if ($requestMethod === 'POST' && isset($_FILES['additional_pictures'])) {
+            // Call the uploadPictures method with the additional pictures
+            $response = $ProfileController->uploadPictures($_SESSION['userId'], $_FILES['additional_pictures']);
+            echo json_encode($response); // You can return the response (success/error) as JSON
+        } else {
+            echo json_encode(['error' => 'Invalid request for additional pictures upload.']);
+        }
+        break;
+
+
+    case '/user_photos':
+        require 'controllers/ProfileController.php';
+        $ProfileController = new ProfileController($conn);
+        if ($requestMethod === 'GET') {
+            $photos = $ProfileController->getPictures($_SESSION['userId']);
+            echo json_encode($photos); // Return user photos to the front-end
+        } else {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid request for retrieving user photos.']);
+        }
+        break;
+
     case '/home':
       //  error_log("After home redirect:". $_SESSION['userId']);
         require __DIR__.'/../public/home.html';
@@ -127,6 +166,8 @@ switch (strtolower($request_path)) {
             }
             break;
     // Ensures no further code is executed after logout
+
+
 
     case '/messages':
         require 'controllers/MessageController.php';

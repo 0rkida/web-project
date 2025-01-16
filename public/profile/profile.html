@@ -13,7 +13,8 @@
     <!-- Left Sidebar -->
     <div class="sidebar left-sidebar">
         <div class="profile-section">
-            <img src="../assets/img/default-avatar.jpeg" height="736" width="736"  class="profile-pic">
+            <img src="/assets/img/user-uploads/albums/ <?php echo htmlspecialchars($userProfile['picture_path']); ?>" alt="Profile Picture" width="150">
+
             <div class="username-dropdown">
                 <h3 class="username">
                     Emma Stone
@@ -62,7 +63,8 @@
     <div class="profile-container">
         <header class="profile-header">
             <div class="profile-info">
-                <img src="../assets/img/default-avatar.jpeg" height="736" width="736" alt="Profile Picture" class="large-profile-pic">
+                <img src="/assets/img/user-uploads/albums/<?php echo htmlspecialchars($userProfile['picture_path']); ?>" alt="Profile Picture" width="150">
+
                 <div class="profile-text">
                     <h1 class="full_name">Emma Stone</h1>
                     <span class="location">25 • Scottsdale, United States</span>
@@ -81,18 +83,41 @@
 
             <section class="photos">
                 <h2>Photos</h2>
-                <form id="upload-form" action="upload_photos.php" method="POST" enctype="multipart/form-data">
+                <!-- Form for uploading profile picture -->
+                <form id="upload-profile-form" action="/upload_profile_picture" method="POST" enctype="multipart/form-data">
                     <div class="photo-grid">
-                        <!-- Hidden file input -->
-                        <input type="file" name="photos[]" id="upload-input" multiple accept="image/*" hidden>
-
-                        <!-- Label styled as a button -->
-                        <label for="upload-input" class="upload-btn">
-                            <span class="plus">+</span> Upload Photos
+                        <input type="file" name="profile_picture[]" id="profile-pic-upload" accept="image/*" hidden>
+                        <label for="profile-pic-upload" class="upload-btn">
+                            <span class="plus">+</span> Upload Profile Picture
                         </label>
                     </div>
+                    <button type="submit" class="update-btn">Save Profile Picture</button>
                 </form>
+
+
+                <!-- Form for uploading additional photos -->
+                <form id="upload-additional-form" action="/upload_additional_pictures" method="POST" enctype="multipart/form-data">
+                    <div class="photo-grid">
+                        <input type="file" name="additional_pictures[]" id="additional-pictures-upload" multiple accept="image/*" hidden>
+                        <label for="additional-pictures-upload" class="upload-btn">
+                            <span class="plus">+</span> Upload Additional Photos
+                        </label>
+                    </div>
+                    <button type="submit" class="update-btn">Save Additional Photos</button>
+                </form>
+
             </section>
+
+            <!-- Display uploaded photos -->
+            <div class="photo-grid">
+                <?php if (empty($photos)): ?>
+                <p>No photos uploaded yet. Start uploading now!</p>
+                <?php else: ?>
+                <?php foreach ($photos as $photo): ?>
+                <img src="<?= htmlspecialchars($photo['photo_path']) ?>" alt="User Photo">
+                <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
 
 
             <section class="details">
