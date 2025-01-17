@@ -32,7 +32,7 @@ class UserPhotos
 
     public function getPhotosByUserId($userId)
     {
-        $query = "SELECT picture_path  FROM user_pictures WHERE user_id = ?";
+        $query = "SELECT picture_path FROM user_pictures WHERE user_id = ?";
         $stmt = $this->db->prepare($query);
 
         if (!$stmt) {
@@ -43,12 +43,9 @@ class UserPhotos
         $stmt->execute();
 
         $result = $stmt->get_result();
-<<<<<<< HEAD
-        return $result->fetch_all(MYSQLI_ASSOC);
-=======
         $pictures = $result->fetch_all(MYSQLI_ASSOC);
 
         return $pictures;
->>>>>>> 0c6fe087de46b68b8fc270134d78536e8321f467
     }
+
 }
