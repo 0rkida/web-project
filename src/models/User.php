@@ -6,15 +6,18 @@ use Exception;
 #[AllowDynamicProperties]
 class User
 {
-    private $dbConnection;
+    private $db;
 
     public function __construct($dbConnection)
     {
-        $this->dbConnection = $dbConnection;
+        if (!$dbConnection) {
+            throw new \Exception("Database connection is not valid.");
+        }
+        $this->db = $dbConnection;
     }
 
     // Registers the user in the database
-    public function registerUser($email,$full_name, $username, $password, $verificationCode)
+    public function registerUser($email, $full_name, $username, $password, $verificationCode)
     {
         // Check if the email already exists
         if ($this->isEmailTaken($email)) {
@@ -25,8 +28,8 @@ class User
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         // Insert user data into the database
-        $stmt = $this->dbConnection->prepare("INSERT INTO users (email, full_name,username, password, verification_code, is_verified) VALUES (?, ?,?, ?, ?, 0)");
-        $stmt->bind_param("sssss", $email,$full_name,$username, $hashedPassword, $verificationCode,);
+        $stmt = $this->db->prepare("INSERT INTO users (email, full_name,username, password, verification_code, is_verified) VALUES (?, ?,?, ?, ?, 0)");
+        $stmt->bind_param("sssss", $email, $full_name, $username, $hashedPassword, $verificationCode);
 
         return $stmt->execute();
     }
@@ -34,7 +37,7 @@ class User
     // Authenticates the user by checking email and password
     public function authenticateUser($email, $password)
     {
-        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->bind_param('s', $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -53,7 +56,7 @@ class User
     // Fetches user data by user ID
     public function getUserById($userId)
     {
-        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
         $stmt->bind_param('i', $userId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -74,7 +77,7 @@ class User
     // Verifies the user using the verification code
     public function verifyUser($verificationCode)
     {
-        $stmt = $this->dbConnection->prepare("UPDATE users SET is_verified = 1 WHERE verification_code = ?");
+        $stmt = $this->db->prepare("UPDATE users SET is_verified = 1 WHERE verification_code = ?");
         $stmt->bind_param("s", $verificationCode);
         return $stmt->execute();
     }
@@ -82,8 +85,8 @@ class User
     // Checks if a user is verified by email
     public function isUserVerified($userId): bool
     {
-        error_log("emaili duke u loguar:". $userId);
-        $stmt = $this->dbConnection->prepare("SELECT is_verified FROM users WHERE id = ?");
+        error_log("emaili duke u loguar:" . $userId);
+        $stmt = $this->db->prepare("SELECT is_verified FROM users WHERE id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -93,7 +96,7 @@ class User
     // Checks if the verification code matches for the email
     public function checkVerificationCode($email, $code): bool
     {
-        $stmt = $this->dbConnection->prepare("SELECT * FROM users WHERE email = ? AND verification_code = ?");
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ? AND verification_code = ?");
         $stmt->bind_param("ss", $email, $code);
         $stmt->execute();
         return $stmt->get_result()->num_rows > 0;
@@ -102,7 +105,7 @@ class User
     // Marks the user as verified using the email
     public function markUserAsVerified($email)
     {
-        $stmt = $this->dbConnection->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
+        $stmt = $this->db->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
         $stmt->bind_param("s", $email);
         return $stmt->execute();
     }
@@ -110,7 +113,7 @@ class User
     // Checks if the email is already taken
     private function isEmailTaken($email): bool
     {
-        $stmt = $this->dbConnection->prepare("SELECT 1 FROM users WHERE email = ?");
+        $stmt = $this->db->prepare("SELECT 1 FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         return $stmt->get_result()->num_rows > 0;
@@ -118,14 +121,14 @@ class User
 
     public function saveResetToken($email, $token, $expiry)
     {
-        $stmt = $this->dbConnection->prepare("UPDATE password_resets SET reset_token = ?, reset_token_expiry = ? WHERE user_id = ?");
+        $stmt = $this->db->prepare("UPDATE password_resets SET reset_token = ?, reset_token_expiry = ? WHERE user_id = ?");
         $stmt->bind_param("sss", $token, $expiry, $email);
         return $stmt->execute();
     }
 
     public function verifyResetToken($token): bool
     {
-        $stmt = $this->dbConnection->prepare("SELECT * FROM password_resets where reset_token_expiry =? ");
+        $stmt = $this->db->prepare("SELECT * FROM password_resets where reset_token_expiry =? ");
         $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -134,16 +137,15 @@ class User
 
     public function updatePassword($token, $hashedPassword)
     {
-        $stmt = $this->dbConnection->prepare("UPDATE password_resets SET reset_token = NULL, reset_token_expiry = NULL WHERE reset_token = ?");
+        $stmt = $this->db->prepare("UPDATE password_resets SET reset_token = NULL, reset_token_expiry = NULL WHERE reset_token = ?");
         $stmt->bind_param("ss", $hashedPassword, $token);
         return $stmt->execute();
     }
 
     // Reset failed login attempts
-    public static function resetFailedAttempts($email): bool
+    public function resetFailedAttempts($email): bool
     {
-        global $db;
-        $stmt = $db->prepare("UPDATE login_attempts SET attempt_time = 0 WHERE user_id = ?");
+        $stmt = $this->db->prepare("UPDATE login_attempts SET attempt_time = 0 WHERE user_id = ?");
         $stmt->bind_param("s", $email);
         return $stmt->execute();
     }
@@ -157,49 +159,47 @@ class User
         return $stmt->execute();
     }
 
-    // Increment failed login attempts
-    public static function incrementFailedAttempts($email): bool
+    public function incrementFailedAttempts($email): bool
     {
-        global $db;
-
-        // Prepare the SQL query to update the last failed attempt for the given email
-        $stmt = $db->prepare("UPDATE login_attempts SET last_failed_attempt = NOW() WHERE user_id = ?");
-
+        $stmt = $this->db->prepare("UPDATE login_attempts SET last_failed_attempt = NOW() WHERE user_id = ?");
         if (!$stmt) {
-            throw new Exception("Failed to prepare statement: " . $db->error);
+            throw new Exception("Failed to prepare statement: " . $this->db->error);
         }
-
-        // Bind the email parameter (string type)
         $stmt->bind_param("s", $email);
-
-        // Execute the query and return the result
-        if ($stmt->execute()) {
-            return true;
-        } else {
-            return throw new Exception("Failed to execute query: " . $stmt->error);
-        }
-
+        return $stmt->execute();
     }
 
-    // Check if user is blocked
-    public static function isBlocked($email): bool
+    public function isBlocked($email): bool
     {
-        global $db;
-        $stmt = $db->prepare("SELECT attempt_time FROM login_attempts WHERE user_id = ?");
+        $stmt = $this->db->prepare(
+            "SELECT COUNT(*) as failed_attempts, MAX(last_failed_attempt) as last_failed_attempt 
+         FROM login_attempts 
+         WHERE user_id = ? AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE"
+        );
+
+        if (!$stmt) {
+            throw new Exception("Failed to prepare statement: " . $this->db->error);
+        }
+
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
-            $user = $result->fetch_assoc();
-            $failedAttempts = $user['failed_attempts'];
-            $lastFailedAttempt = strtotime($user['last_failed_attempt']);
+            $data = $result->fetch_assoc();
+            $failedAttempts = $data['failed_attempts'];
+            $lastFailedAttempt = strtotime($data['last_failed_attempt']);
+            $isBlocked = $failedAttempts >= 7 && (time() - $lastFailedAttempt) < 1800;
 
-            // Block if there are 7 failed attempts and less than 30 minutes have passed
-            if ($failedAttempts >= 7 && (time() - $lastFailedAttempt) < 1800) {
-                return true;
-            }
+            // Debug information
+            error_log("Failed Attempts: $failedAttempts");
+            error_log("Last Failed Attempt: " . date('Y-m-d H:i:s', $lastFailedAttempt));
+            error_log("Is Blocked: " . ($isBlocked ? 'Yes' : 'No'));
+
+            return $isBlocked;
         }
-        return false; // User is not blocked
+
+        return false;
     }
+
 }

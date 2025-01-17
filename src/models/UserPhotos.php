@@ -46,8 +46,6 @@ class UserPhotos
         $stmt->execute();
 
         $result = $stmt->get_result();
-        $photos = $result->fetch_all(MYSQLI_ASSOC);
-
-        return $photos;
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 }

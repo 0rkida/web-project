@@ -2,24 +2,24 @@
 
 namespace App\controllers;
 
+use AllowDynamicProperties;
+use Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\models\User;
 use JetBrains\PhpStorm\NoReturn;
 
-require_once __DIR__.'/../models/User.php';
+require_once __DIR__ . '/../models/User.php';
 
+#[AllowDynamicProperties]
 class LogInController
 {
-    public User $user;
+    private User $user;
     private PHPMailer $mailer;
 
     public function __construct($dbConnection)
     {
         $this->user = new User($dbConnection);
         $this->mailer = new PHPMailer(true);
-        return $this->mailer;
-
-        $this->mailer = $mailer;
     }
 
     public function getView(): void
@@ -41,12 +41,27 @@ class LogInController
             return;
         }
 
+        // Check if the user is blocked due to too many failed attempts
+        if ($this->user->isBlocked($email)) {
+            echo "Shumë përpjekje të dështuara. Ju lutemi prisni 30 minuta dhe provoni përsëri.";
+            return;
+        }
+
         $userId = $this->user->authenticateUser($email, $password);
         error_log("user id is: " . $userId);
 
         if ($userId === false) {
+            // Increment failed login attempts
+            try {
+                $this->user->incrementFailedAttempts($email);
+            } catch (Exception $e) {
+                error_log("Failed to increment login attempts: " . $e->getMessage());
+            }
             echo "Gabim! Email ose fjalëkalim i gabuar!";
         } else {
+            // Reset failed attempts on successful login
+            $this->user->resetFailedAttempts($email);
+
             if (!$this->user->isUserVerified($userId)) {
                 echo "Përdoruesi nuk është verifikuar ende. Kontrolloni email-in tuaj.";
                 return;
