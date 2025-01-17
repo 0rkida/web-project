@@ -39,18 +39,18 @@ $conn->close();
 </head>
 <body>
 
-<h1>Profile of <?php echo htmlspecialchars($user['full_name'], ENT_QUOTES, 'UTF-8'); ?></h1>
-<img src="uploads/<?php echo htmlspecialchars($user['profile_picture'], ENT_QUOTES, 'UTF-8'); ?>" alt="Profile Picture" width="100">
-<p>Email: <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
-<p>Age: <?php echo htmlspecialchars($user['age'], ENT_QUOTES, 'UTF-8'); ?></p>
-<p>Gender: <?php echo htmlspecialchars($user['gender'], ENT_QUOTES, 'UTF-8'); ?></p>
-<p>Location: <?php echo htmlspecialchars($user['location'], ENT_QUOTES, 'UTF-8'); ?></p>
-<p>Self Summary: <?php echo nl2br(htmlspecialchars($user['self_summary'], ENT_QUOTES, 'UTF-8')); ?></p>
-<p>Hobbies: <?php echo nl2br(htmlspecialchars($user['hobby'], ENT_QUOTES, 'UTF-8')); ?></p>
-<p>Doing with Life: <?php echo nl2br(htmlspecialchars($user['doing_with_life'], ENT_QUOTES, 'UTF-8')); ?></p>
-<p>Good At: <?php echo nl2br(htmlspecialchars($user['good_at'], ENT_QUOTES, 'UTF-8')); ?></p>
-<p>Ethnicity: <?php echo htmlspecialchars($user['ethnicity'], ENT_QUOTES, 'UTF-8'); ?></p>
-<p>Height: <?php echo htmlspecialchars($user['height'], ENT_QUOTES, 'UTF-8'); ?></p>
+<h1>Profile of <?php echo $user['full_name']; ?></h1>
+<img src="uploads/<?php echo $user['profile_picture']; ?>" alt="Profile Picture" width="100">
+<p>Email: <?php echo $user['email']; ?></p>
+<p>Age: <?php echo $user['age']; ?></p>
+<p>Gender: <?php echo $user['gender']; ?></p>
+<p>Location: <?php echo $user['location']; ?></p>
+<p>Self Summary: <?php echo nl2br($user['self_summary']); ?></p>
+<p>Hobbies: <?php echo nl2br($user['hobby']); ?></p>
+<p>Doing with Life: <?php echo nl2br($user['doing_with_life']); ?></p>
+<p>Good At: <?php echo nl2br($user['good_at']); ?></p>
+<p>Ethnicity: <?php echo $user['ethnicity']; ?></p>
+<p>Height: <?php echo $user['height']; ?></p>
 
 <a href="edit_profile.php">Edit Profile</a>
 

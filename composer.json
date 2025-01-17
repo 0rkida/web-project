@@ -12,7 +12,6 @@
   "require": {
     "ext-mysqli": "*",
     "phpmailer/phpmailer": "^6.9",
-    "ext-pdo": "*",
-    "stripe/stripe-php": "^16.4"
+    "ext-pdo": "*"
   }
 }

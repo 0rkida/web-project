@@ -6,13 +6,15 @@
     <title>Profile Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/profile.css">
+
 </head>
 <body>
 <div class="main-container">
     <!-- Left Sidebar -->
     <div class="sidebar left-sidebar">
         <div class="profile-section">
-            <img src="/assets/img/user-uploads/albums/<?php echo htmlspecialchars($userProfile['picture_path']); ?>" alt="Profile Picture" width="150">
+            <img src="/assets/img/user-uploads/albums/ <?php echo htmlspecialchars($userProfile['picture_path']); ?>" alt="Profile Picture" width="150">
+
             <div class="username-dropdown">
                 <h3 class="username">
                     Emma Stone
@@ -25,6 +27,7 @@
                 </ul>
             </div>
         </div>
+
         <nav>
             <ul class="menu">
                 <li>
@@ -42,8 +45,10 @@
                         <button class="menu-btn">Matchers</button>
                     </a>
                 </li>
+
             </ul>
         </nav>
+
         <div class="recently-visited">
             <h4>Recently Visited</h4>
             <div class="avatars">
@@ -53,11 +58,13 @@
             </div>
         </div>
     </div>
+
     <!-- Middle Section -->
     <div class="profile-container">
         <header class="profile-header">
             <div class="profile-info">
-                <img src="/assets/img/user-uploads/albums/<?php echo htmlspecialchars($userProfile['picture_path'], ENT_QUOTES, 'UTF-8'); ?>" alt="Profile Picture" width="150">
+                <img src="/assets/img/user-uploads/albums/<?php echo htmlspecialchars($userProfile['picture_path']); ?>" alt="Profile Picture" width="150">
+
                 <div class="profile-text">
                     <h1 class="full_name">Emma Stone</h1>
                     <span class="location">25 • Scottsdale, United States</span>
@@ -69,10 +76,11 @@
             <section class="summary">
                 <h2>My self-summary</h2>
                 <form action="update_profile.php" method="POST">
-                    <label for="self-summary"></label><textarea name="self_summary" id="self-summary" rows="4" cols="50" placeholder="Write something about yourself..."></textarea>
+                    <textarea name="self_summary" id="self-summary" rows="4" cols="50" placeholder="Write something about yourself..."></textarea>
                     <button type="submit" class="update-btn">Save Changes</button>
                 </form>
             </section>
+
             <section class="photos">
                 <h2>Photos</h2>
                 <!-- Form for uploading profile picture -->
@@ -85,6 +93,8 @@
                     </div>
                     <button type="submit" class="update-btn">Save Profile Picture</button>
                 </form>
+
+
                 <!-- Form for uploading additional photos -->
                 <form id="upload-additional-form" action="/upload_additional_pictures" method="POST" enctype="multipart/form-data">
                     <div class="photo-grid">
@@ -95,7 +105,9 @@
                     </div>
                     <button type="submit" class="update-btn">Save Additional Photos</button>
                 </form>
+
             </section>
+
             <!-- Display uploaded photos -->
             <div class="photo-grid">
                 <?php if (empty($photos)): ?>
@@ -106,40 +118,39 @@
                 <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> a5b07c5b6e5372be1f72e533b00fe90450a4636e
             <section class="details">
                 <h2>My Details</h2>
                 <ul>
                     <li>
                         Hobby:
-                        <label for="hobby"></label><textarea id="hobby" placeholder="Enter your hobby"></textarea>
+                        <textarea id="hobby" placeholder="Enter your hobby"></textarea>
                     </li>
                     <li>
                         Ethnicity:
-                        <label for="ethnicity"></label><textarea id="ethnicity" placeholder="Enter your ethnicity"></textarea>
+                        <textarea id="ethnicity" placeholder="Enter your ethnicity"></textarea>
                     </li>
                     <li>
                         Profession:
-                        <label for="profession"></label><textarea id="profession" placeholder="Enter your profession"></textarea>
+                        <textarea id="profession" placeholder="Enter your profession"></textarea>
                     </li>
                     <li>
                         Good At:
-                        <label for="good-at"></label><textarea id="good-at" placeholder="Enter what you're good at"></textarea>
+                        <textarea id="good-at" placeholder="Enter what you're good at"></textarea>
                     </li>
                     <li>
                         Height:
-                        <label for="height"></label><textarea id="height" placeholder="Enter your height"></textarea>
+                        <textarea id="height" placeholder="Enter your height"></textarea>
                     </li>
                 </ul>
                 <button type="submit" onclick="saveChanges()" class="update-btn">Save Changes</button>
             </section>
+
         </div>
     </div>
+
     <!-- Right Sidebar -->
     <div class="sidebar right-sidebar">
         <img src="../assets/img/logo.png" height="300" width="300" alt="logo" class="premium-image"/>
@@ -149,6 +160,7 @@
             <button class="premium-btn">Go Premium</button>
         </div>
     </div>
+
 </div>
 <script src="../js/profile.js"></script>
 <script src="../js/profile-upload.js"></script>

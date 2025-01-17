@@ -6,16 +6,13 @@ use Exception;
 class UserPhotos
 {
     private $db;
-    private array $photos;
 
     public function __construct($dbConnection)
     {
-
         $this->db = $dbConnection;
-
     }
 
-    public function savePicture($userId, $picturePath): true
+    public function savePicture($userId, $picturePath)
     {
         $query = "INSERT INTO user_pictures (user_id, picture_path) VALUES (?, ?)";
         $stmt = $this->db->prepare($query);
@@ -46,6 +43,12 @@ class UserPhotos
         $stmt->execute();
 
         $result = $stmt->get_result();
+<<<<<<< HEAD
         return $result->fetch_all(MYSQLI_ASSOC);
+=======
+        $pictures = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $pictures;
+>>>>>>> 0c6fe087de46b68b8fc270134d78536e8321f467
     }
 }
