@@ -1,7 +1,6 @@
 <?php
-
 namespace App\controllers;
-
+use App\models\Admin;
 use AllowDynamicProperties;
 use Exception;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -9,16 +8,19 @@ use App\models\User;
 use JetBrains\PhpStorm\NoReturn;
 
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../models/Admin.php';
 
 #[AllowDynamicProperties]
 class LogInController
 {
     private User $user;
+    private Admin $admin;
     private PHPMailer $mailer;
 
     public function __construct($dbConnection)
     {
         $this->user = new User($dbConnection);
+        $this->admin = new Admin($dbConnection);
         $this->mailer = new PHPMailer(true);
     }
 
@@ -83,6 +85,32 @@ class LogInController
         return isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === true;
     }
 
+    public function postAdminLogin(array $data): void
+    {
+        $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
+        $password = $data['password'] ?? '';
+
+        if (empty($email) || empty($password)) {
+            echo "Email dhe fjalëkalimi janë të detyrueshëm.";
+            return;
+        }
+        $admin = $this->authenticateAdmin($email['email'], $password['password']);
+        if ($admin) {
+            // Start session for admin
+            $this->startSession($admin);
+
+            // Redirect to admin dashboard
+            header("Location: /admin/dashboard");
+        } else {
+            // Redirect back with an error message
+            $_SESSION['login_errors'] = ["Invalid email or password for Admin."];
+            header("Location: /login");
+        }
+        exit();
+
+    }
+
+
     #[NoReturn] public function Logout(): void
     {
         session_unset();
@@ -91,3 +119,5 @@ class LogInController
         exit();
     }
 }
+
+
