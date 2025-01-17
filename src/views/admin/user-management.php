@@ -9,9 +9,8 @@ $result = $conn->query($query);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $role = $_POST['role'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $query = "INSERT INTO users (username, email, role, password) VALUES ('$username', '$email', '$role', '$password')";
+    $query = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
     $conn->query($query);
 }
 
