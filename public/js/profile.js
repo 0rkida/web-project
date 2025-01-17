@@ -146,4 +146,68 @@ let inactivityTime = function () {
     document.onkeypress = resetTimer;
 };
 
+const subscribeButton = document.getElementById('subscribeBtntn');
+
+subscribeButton.addEventListener('click', async () => {
+    try {
+        const response = await fetch('/payment/initiate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                itemName: 'Premium Subscription',
+                itemPrice: 25.0,
+                currency: 'EUR',
+            }),
+        });
+
+        const data = await response.json();
+
+        if (data.clientSecret) {
+            // Pass the client secret to Stripe's frontend library
+            stripe.confirmCardPayment(data.clientSecret, {
+                payment_method: {
+                    card: cardElement, // From Stripe.js card input
+                    billing_details: {
+                        name: document.getElementById('name').value,
+                    },
+                },
+            }).then((result) => {
+                if (result.error) {
+                    console.error(result.error.message);
+                } else if (result.paymentIntent.status === 'succeeded') {
+                    // Call the backend to save the transaction
+                    saveTransaction(result.paymentIntent);
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+async function saveTransaction(paymentIntent) {
+    const response = await fetch('/payment/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            paymentIntent,
+        }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        alert('Payment successful!');
+    } else {
+        alert('Payment saving failed!');
+    }
+}
+
+
+
+
 inactivityTime();
