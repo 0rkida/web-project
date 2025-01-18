@@ -142,10 +142,21 @@ class User
         return $stmt->execute();
     }
 
+    // Get failed attempts
+    public function getFailedAttempts($email): int
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM login_attempts WHERE user_id = (SELECT id FROM users WHERE email = ?) AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_row()[0];
+    }
+
+
     // Reset failed login attempts
     public function resetFailedAttempts($email): bool
     {
-        $stmt = $this->db->prepare("UPDATE login_attempts SET attempt_time = 0 WHERE user_id = ?");
+        $stmt = $this->db->prepare("UPDATE login_attempts SET failed_attempts = 0 WHERE user_id = (SELECT id FROM users WHERE email = ?)");
         $stmt->bind_param("s", $email);
         return $stmt->execute();
     }
@@ -161,45 +172,54 @@ class User
 
     public function incrementFailedAttempts($email): bool
     {
-        $stmt = $this->db->prepare("UPDATE login_attempts SET last_failed_attempt = NOW() WHERE user_id = ?");
-        if (!$stmt) {
-            throw new Exception("Failed to prepare statement: " . $this->db->error);
-        }
+        error_log("Incrementing failed attempts for: $email");
+
+        $stmt = $this->db->prepare("UPDATE login_attempts SET last_failed_attempt = NOW() WHERE user_id = (SELECT id FROM users WHERE email = ?)");
         $stmt->bind_param("s", $email);
-        return $stmt->execute();
+
+        $result = $stmt->execute();
+        if (!$result) {
+            error_log("Failed to update failed attempts: " . $this->db->error);
+        }
+        return $result;
     }
 
     public function isBlocked($email): bool
     {
-        $stmt = $this->db->prepare(
-            "SELECT COUNT(*) as failed_attempts, MAX(last_failed_attempt) as last_failed_attempt 
-         FROM login_attempts 
-         WHERE user_id = ? AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE"
-        );
-
-        if (!$stmt) {
-            throw new Exception("Failed to prepare statement: " . $this->db->error);
-        }
-
+        // Merrni ID-në e përdoruesit nga emaili
+        $stmt = $this->db->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
 
-        if ($result->num_rows > 0) {
-            $data = $result->fetch_assoc();
-            $failedAttempts = $data['failed_attempts'];
-            $lastFailedAttempt = strtotime($data['last_failed_attempt']);
-            $isBlocked = $failedAttempts >= 7 && (time() - $lastFailedAttempt) < 1800;
+        if ($user) {
+            // Ekzekuto pyetjen për tentativat e login-it
+            $stmt = $this->db->prepare(
+                "SELECT COUNT(*) as failed_attempts, MAX(last_failed_attempt) as last_failed_attempt
+             FROM login_attempts
+             WHERE user_id = ? AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE"
+            );
+            $stmt->bind_param("i", $user['id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-            // Debug information
-            error_log("Failed Attempts: $failedAttempts");
-            error_log("Last Failed Attempt: " . date('Y-m-d H:i:s', $lastFailedAttempt));
-            error_log("Is Blocked: " . ($isBlocked ? 'Yes' : 'No'));
+            if ($result->num_rows > 0) {
+                $data = $result->fetch_assoc();
+                $failedAttempts = $data['failed_attempts'];
+                $lastFailedAttempt = strtotime($data['last_failed_attempt']);
+                $isBlocked = $failedAttempts >= 7 && (time() - $lastFailedAttempt) < 1800;
 
-            return $isBlocked;
+                error_log("Failed Attempts: $failedAttempts");
+                error_log("Last Failed Attempt: " . date('Y-m-d H:i:s', $lastFailedAttempt));
+                error_log("Is Blocked: " . ($isBlocked ? 'Yes' : 'No'));
+
+                return $isBlocked;
+            }
         }
 
         return false;
     }
+
 
 }

@@ -3,7 +3,6 @@ namespace App\controllers;
 
 use App\models\Admin;
 use App\models\User;
-use JetBrains\PhpStorm\NoReturn;
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once __DIR__ . '/../models/User.php';
@@ -17,18 +16,14 @@ class LogInController
 
     public function __construct($dbConnection)
     {
-        try {
-            $this->user = new User($dbConnection);
-        } catch (\Exception $e) {
-
-        }
+        $this->user = new User($dbConnection);
         $this->admin = new Admin($dbConnection);
         $this->mailer = new PHPMailer(true);
     }
 
     public function getView(): void
     {
-       // session_start();
+        session_start();
         if ($this->checkIfLoggedIn()) {
             header('Location: /home');
             exit();
@@ -38,34 +33,35 @@ class LogInController
 
     public function handleLogin(array $data): void
     {
+        session_start();
+
         $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
         $password = $data['password'] ?? '';
+        $role = $data['role'] ?? 'User'; // Default to 'User'
 
         if (empty($email) || empty($password)) {
             echo "Email dhe fjalëkalimi janë të detyrueshëm.";
             return;
         }
 
-        // Check if credentials are for an admin
-        $admin = $this->admin->authenticateAdmin($email, $password);
-        if ($admin) {
-            echo "Admin authenticated successfully";
-            $this->startSession($admin, 'admin');
-            header("Location: /admin/dashboard");
-            exit();
+        if ($role === 'Admin') {
+            $admin = $this->admin->authenticateAdmin($email, $password);
+            if ($admin) {
+                $this->startSession($admin, 'admin');
+                header("Location: /admin-dashboard.html");
+                exit();
+            } else {
+                echo "Email ose fjalëkalim i gabuar për admin.";
+            }
         } else {
-            echo "Not an admin";
             if ($this->user->isBlocked($email)) {
                 echo "Shumë përpjekje të dështuara. Ju lutemi prisni 30 minuta dhe provoni përsëri.";
                 return;
             }
+
             $userId = $this->user->authenticateUser($email, $password);
             if ($userId === false) {
-                try {
-                    $this->user->incrementFailedAttempts($email);
-                } catch (\Exception $e) {
-                    // Handle exception
-                }
+                $this->user->incrementFailedAttempts($email);
                 echo "Gabim! Email ose fjalëkalim i gabuar!";
             } else {
                 $this->user->resetFailedAttempts($email);
@@ -82,8 +78,7 @@ class LogInController
         }
     }
 
-
-    #[NoReturn] public function logout(): void
+    public function logout(): void
     {
         session_start();
         session_unset();
