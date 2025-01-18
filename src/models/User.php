@@ -172,40 +172,54 @@ class User
 
     public function incrementFailedAttempts($email): bool
     {
-        $stmt = $this->db->prepare("UPDATE login_attempts SET failed_attempts = failed_attempts + 1, last_failed_attempt = NOW() WHERE user_id = (SELECT id FROM users WHERE email = ?)");
+        error_log("Incrementing failed attempts for: $email");
+
+        $stmt = $this->db->prepare("UPDATE login_attempts SET last_failed_attempt = NOW() WHERE user_id = (SELECT id FROM users WHERE email = ?)");
         $stmt->bind_param("s", $email);
-        return $stmt->execute();
+
+        $result = $stmt->execute();
+        if (!$result) {
+            error_log("Failed to update failed attempts: " . $this->db->error);
+        }
+        return $result;
     }
 
     public function isBlocked($email): bool
     {
-        // Kontrollojmë për tentativat e pasuksesshme brenda 30 minutave
-        $stmt = $this->db->prepare(
-            "SELECT COUNT(*) as failed_attempts, MAX(last_failed_attempt) as last_failed_attempt
-         FROM login_attempts
-         WHERE user_id = (SELECT id FROM users WHERE email = ?) AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE"
-        );
+        // Merrni ID-në e përdoruesit nga emaili
+        $stmt = $this->db->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
 
-        if ($result->num_rows > 0) {
-            $data = $result->fetch_assoc();
-            $failedAttempts = $data['failed_attempts'];
-            $lastFailedAttempt = strtotime($data['last_failed_attempt']);
-            $isBlocked = $failedAttempts >= 7 && (time() - $lastFailedAttempt) < 1800;
+        if ($user) {
+            // Ekzekuto pyetjen për tentativat e login-it
+            $stmt = $this->db->prepare(
+                "SELECT COUNT(*) as failed_attempts, MAX(last_failed_attempt) as last_failed_attempt
+             FROM login_attempts
+             WHERE user_id = ? AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE"
+            );
+            $stmt->bind_param("i", $user['id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-            // Debugging
-            error_log("Failed Attempts: $failedAttempts");
-            error_log("Last Failed Attempt: " . date('Y-m-d H:i:s', $lastFailedAttempt));
-            error_log("Is Blocked: " . ($isBlocked ? 'Yes' : 'No'));
+            if ($result->num_rows > 0) {
+                $data = $result->fetch_assoc();
+                $failedAttempts = $data['failed_attempts'];
+                $lastFailedAttempt = strtotime($data['last_failed_attempt']);
+                $isBlocked = $failedAttempts >= 7 && (time() - $lastFailedAttempt) < 1800;
 
-            return $isBlocked;
+                error_log("Failed Attempts: $failedAttempts");
+                error_log("Last Failed Attempt: " . date('Y-m-d H:i:s', $lastFailedAttempt));
+                error_log("Is Blocked: " . ($isBlocked ? 'Yes' : 'No'));
+
+                return $isBlocked;
+            }
         }
 
         return false;
     }
-
 
 
 }
