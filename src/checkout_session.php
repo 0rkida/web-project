@@ -2,12 +2,12 @@
 require 'C:\xampp\htdocs\web-project\vendor\autoload.php'; // Include Stripe PHP SDK
 require 'C:\xampp\htdocs\web-project\config\paymentsConfig.php';
 
-\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+php\lib\Stripe::setApiKey(STRIPE_SECRET_KEY);
 
 header('Content-Type: application/json');
 
 try {
-    $session = \Stripe\Checkout\Session::create([
+    $session = php\lib\Checkout\Session::create([
         'payment_method_types' => ['card'],
         'line_items' => [[
             'price_data' => [

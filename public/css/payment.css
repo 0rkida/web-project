@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+
+h2 {
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+  color: #322525; /* Dark text color for headings */
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+
+
+.StripeElement {
+  background-color: #fff;
+  height: 40px;
+  padding: 10px 12px;
+  border-radius: 6px; /* Slightly more rounded corners for a modern feel */
+  border: 1px solid transparent;
+  box-shadow: 0 2px 5px 0 rgba(237, 76, 139, 0.2); /* Soft pink shadow */
+  -webkit-transition: box-shadow 150ms ease, border-color 150ms ease;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 2px 5px 0 rgba(237, 76, 139, 0.4); /* Highlighted shadow */
+  border-color: #ed4c8b; /* Pink border to match focus style */
+}
+
+.StripeElement--invalid {
+  border-color: #ff5e5e; /* Brighter red for errors */
+  box-shadow: 0 2px 5px 0 rgba(255, 94, 94, 0.3);
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fff5fb !important; /* Subtle pink background for autofill */
+}
