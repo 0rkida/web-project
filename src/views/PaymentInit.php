@@ -5,7 +5,7 @@ include_once 'C:\xampp\htdocs\web-project\src\db.php';
 include_once 'C:\xampp\htdocs\web-project\config\db_connection.php';
 require_once 'C:\xampp\htdocs\web-project\vendor\stripe-php-master\init.php';
 
-$stripe = new \Stripe\StripeClient(STRIPE_SECRET_KEY);
+$stripe = new php\lib\StripeClient(STRIPE_SECRET_KEY);
 
 $jsonStr = file_get_contents('php://input');
 $jsonObj = json_decode($jsonStr);
