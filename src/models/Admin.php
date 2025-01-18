@@ -31,22 +31,15 @@ public function createAdmin($data) {
 
 
 
-    public static function authenticateAdmin($email, $password): false|array|null
-    {
-        global $conn;
-
-        $stmt = $conn->prepare("SELECT * FROM admins WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
+    public function authenticateAdmin($email, $password) {
+        $stmt = $this->db->prepare("SELECT * FROM admins WHERE email = ?");
+        $stmt->bind_param("s", $email); $stmt->execute();
         $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $admin = $result->fetch_assoc();
-            if (password_verify($password, $admin['password'])) {
-                return $admin;  // Return admin data if login is successful
-            }
+        $admin = $result->fetch_assoc();
+        if ($admin && password_verify($password, $admin['password'])) {
+            return $admin;
         }
-        return false;  // Return false if login fails
+        return false;
     }
 
     public function updateAdmin($data) {
