@@ -197,6 +197,7 @@ switch (strtolower($request_path)) {
         $logInController = new LogInController($conn);
         $logInController->Logout();
         break;
+
     case '/verify':
             require 'controllers/VerifyController.php';
             $VerifyController = new VerifyController($conn, $mailer);

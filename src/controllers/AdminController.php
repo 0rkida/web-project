@@ -2,7 +2,7 @@
 namespace App\controllers;
 
 use App\models\Admin;
-
+require_once __DIR__.'/../models/Admin.php';
 class AdminController {
     private Admin $admin;
 
@@ -17,7 +17,7 @@ class AdminController {
             header('Location: /dashboard');
             exit();
         }
-        require_once 'C:\xampp\htdocs\web-project\src\admin-dashboard.html';
+        require_once __DIR__ . "/../views/admin-dashboard.html";
     }
 
     // Handle admin creation (registration)
