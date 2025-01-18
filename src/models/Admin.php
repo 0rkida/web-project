@@ -32,15 +32,33 @@ public function createAdmin($data) {
 
 
     public function authenticateAdmin($email, $password) {
-        $stmt = $this->db->prepare("SELECT * FROM admins WHERE email = ?");
-        $stmt->bind_param("s", $email); $stmt->execute();
+        // Prepare a query to check for an admin
+        $sql = "SELECT * FROM users WHERE email = ? AND role = 'admin'";
+        $stmt = $this->db->prepare($sql);
+
+        // Bind the email parameter (assuming email is a string, s for string)
+        $stmt->bind_param("s", $email);
+
+        // Execute the query
+        $stmt->execute();
+
+        // Get the result
         $result = $stmt->get_result();
+
+        // Fetch the admin details
         $admin = $result->fetch_assoc();
+
+        // Verify password
         if ($admin && password_verify($password, $admin['password'])) {
             return $admin;
         }
-        return false;
+
+        return false;  // Return false if the user is not an admin or the password is incorrect
     }
+
+
+
+
 
     public function updateAdmin($data) {
         $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);

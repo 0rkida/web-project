@@ -20,30 +20,20 @@ class AdminController {
         require_once __DIR__ . "/../views/admin-dashboard.html";
     }
 
-    // Handle admin creation (registration)
-    public function createAdmin($data): void
-    {
-        if ($this->admin->createAdmin($data)) {
-            // Admin created successfully
-            header("Location: /admin-dashboard.html");
-        } else {
-            // Handle error (admin already exists, etc.)
-            echo "Error: Admin already exists.";
-        }
-    }
+//    // Handle admin creation (registration)
+//    public function createAdmin($data): void
+//    {
+//        if ($this->admin->createAdmin($data)) {
+//            // Admin created successfully
+//            header("Location: /admin-dashboard.html");
+//        } else {
+//            // Handle error (admin already exists, etc.)
+//            echo "Error: Admin already exists.";
+//        }
+//    }
 
     // Handle admin login
-    public function authenticateAdmin($email, $password) {
-        $admin = $this->admin->authenticateAdmin($email, $password);
-        if ($admin) {
-            // Login successful, store session data
-            $_SESSION['admin'] = $admin;
-            header("Location: /admin-dashboard.html");
-        } else {
-            // Handle authentication failure
-            echo "Invalid email or password.";
-        }
-    }
+
 
     // Handle admin update
     public function updateAdmin($data) {

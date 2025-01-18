@@ -3,6 +3,7 @@ namespace App\controllers;
 
 use App\models\Admin;
 use App\models\User;
+use JetBrains\PhpStorm\NoReturn;
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once __DIR__ . '/../models/User.php';
@@ -23,7 +24,6 @@ class LogInController
 
     public function getView(): void
     {
-        session_start();
         if ($this->checkIfLoggedIn()) {
             header('Location: /home');
             exit();
@@ -33,51 +33,49 @@ class LogInController
 
     public function handleLogin(array $data): void
     {
-        session_start();
-
         $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
         $password = $data['password'] ?? '';
-        $role = $data['role'] ?? 'User'; // Default to 'User'
 
         if (empty($email) || empty($password)) {
             echo "Email dhe fjalëkalimi janë të detyrueshëm.";
             return;
         }
 
-        if ($role === 'Admin') {
-            $admin = $this->admin->authenticateAdmin($email, $password);
-            if ($admin) {
-                $this->startSession($admin, 'admin');
-                header("Location: /admin-dashboard.html");
-                exit();
-            } else {
-                echo "Email ose fjalëkalim i gabuar për admin.";
-            }
-        } else {
-            if ($this->user->isBlocked($email)) {
-                echo "Shumë përpjekje të dështuara. Ju lutemi prisni 30 minuta dhe provoni përsëri.";
-                return;
-            }
-
-            $userId = $this->user->authenticateUser($email, $password);
-            if ($userId === false) {
-                $this->user->incrementFailedAttempts($email);
-                echo "Gabim! Email ose fjalëkalim i gabuar!";
-            } else {
-                $this->user->resetFailedAttempts($email);
-
-                if (!$this->user->isUserVerified($userId)) {
-                    echo "Përdoruesi nuk është verifikuar ende. Kontrolloni email-in tuaj.";
-                    return;
-                }
-
-                $this->startSession(['id' => $userId], 'user');
-                header("Location: /home");
-                exit();
-            }
+        // Check if the user is an admin
+        $admin = $this->admin->authenticateAdmin($email, $password);
+        if ($admin) {
+            $this->startSession($admin, 'admin');
+            header("Location: /admin/dashboard");
+            exit();
         }
+
+        // Check if the user is a regular user
+        if ($this->user->isBlocked($email)) {
+            echo "Shumë përpjekje të dështuara. Ju lutemi prisni 30 minuta dhe provoni përsëri.";
+            return;
+        }
+
+        $userId = $this->user->authenticateUser($email, $password);
+        if ($userId === false) {
+            $this->user->incrementFailedAttempts($email);
+            echo "Gabim! Email ose fjalëkalim i gabuar!";
+            return;
+        }
+
+        $this->user->resetFailedAttempts($email);
+
+        if (!$this->user->isUserVerified($userId)) {
+            echo "Përdoruesi nuk është verifikuar ende. Kontrolloni email-in tuaj.";
+            return;
+        }
+
+        // Successful login for a regular user
+        $this->startSession(['id' => $userId], 'user');
+        header("Location: /home");
+        exit();
     }
 
+    #[NoReturn]
     public function logout(): void
     {
         session_start();
@@ -104,4 +102,5 @@ class LogInController
             $_SESSION['loggedIn'] = true;
         }
     }
+
 }
