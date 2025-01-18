@@ -1,17 +1,9 @@
 <?php
 
-
-// Database connection (update with your database credentials)
-$servername = "localhost";
-$username = "root";
-$password_db = "";
-$dbname = "datting_app";  // Your database name
-
-$conn = new mysqli($servername, $username, $password_db, $dbname);
-
-// Check connection
+// Database connection
+$conn = new mysqli("localhost", "root", "root", "test");
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Database connection failed: " . $conn->connect_error);
 }
 
 // Check if form is submitted

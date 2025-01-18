@@ -147,40 +147,46 @@ switch (strtolower($request_path)) {
 //        }
 //        break;
 
-            case '/login':
-                require 'controllers/LogInController.php';
-                $LogInController = new LogInController($conn); // Kaloni lidhjen me DB dhe PHPMailer
-                if ($requestMethod === 'GET') {
-                    $LogInController->getView();
-                } else if ($requestMethod === 'POST') {
-                    // Check if the role is Admin
-                    $role = isset($_POST['role']) && $_POST['role'] === 'Admin' ? 'Admin' : 'User';
+//            case '/login':
+//                require 'controllers/LogInController.php';
+//                $LogInController = new LogInController($conn); // Kaloni lidhjen me DB dhe PHPMailer
+//                if ($requestMethod === 'GET') {
+//                    $LogInController->getView();
+//                } else if ($requestMethod === 'POST') {
+//                    // Check if the role is Admin
+//                    $role = isset($_POST['role']) && $_POST['role'] === 'Admin' ? 'Admin' : 'User';
+//
+//                    // Call appropriate method based on role
+//                    if ($admin) {
+//                        $_SESSION['adminId'] = $admin['id'];
+//                        $_SESSION['adminLoggedIn'] = true;
+//                        header("Location: /admin/dashboard");
+//                        exit();
+//                    } elseif ($userId) {
+//                        $_SESSION['userId'] = $userId;
+//                        $_SESSION['loggedIn'] = true;
+//                        header("Location: /home");
+//                        exit();
+//                    }
+//
+//                }
+//                break;
+    case '/login':
+        require 'controllers/LogInController.php';
+        $LogInController = new LogInController($conn);
 
-                    // Call appropriate method based on role
-                    if ($role === 'Admin') {
-                        $LogInController->postAdminLogin([
-                            'email' => $_POST['email'],
-                            'password' => $_POST['password']
-                        ]);
-                        // Redirect to admin dashboard
-                        header('Location: /admin-dashboard.html');
-                    } else {
-                        $LogInController->postLogin([
-                            'email' => $_POST['email'],
-                            'password' => $_POST['password']
-                        ]);
-                        // Redirect to user dashboard
-                        header('Location: /user/dashboard');
-                    }
-                    exit();
-                }
-                break;
+        if ($requestMethod === 'GET') {
+            $LogInController->getView();
+        } elseif ($requestMethod === 'POST') {
+            $LogInController->handleLogin($_POST); // Delegate all POST logic to the controller
+        }
+        break;
 
-            case '/admin/dashboard':
+    case '/admin/dashboard':
                 require 'controllers/AdminController.php';
                 $AdminController = new AdminController($conn); // Kaloni lidhjen me DB
                 if ($requestMethod === 'GET') {
-                    $AdminController->getDashboard(); // Show the admin dashboard
+                    $AdminController->getView(); // Show the admin dashboard
                 }
                 break;
 
