@@ -14,6 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $rememberMe = isset($_POST['remember_me']);
 
+    // Check if the user is blocked
+    if (User::isBlocked($email)) {
+        $_SESSION['error_message'] = "Your account is temporarily locked due to multiple failed login attempts. Please try again after 30 minutes.";
+        header("Location: /login.php");
+        exit();
+    }
+
     // First, check if it's an admin login
     $admin = Admin::authenticateAdmin($email, $password);
 
@@ -63,13 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             User::incrementFailedAttempts($email);
 
             // Set the error message in session for display in modal
-            if (User::isBlocked($email)) {
-                $_SESSION['error_message'] = "Your account is temporarily locked due to multiple failed login attempts.";
-            } else {
-                $_SESSION['error_message'] = "Invalid email or password.";
-            }
-
-            // Redirect back to the login page to display the error
+            $_SESSION['error_message'] = "Invalid email or password.";
             header("Location: /login.php");
             exit();
         }
@@ -80,6 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if (isset($_SESSION['error_message'])) {
     $error_message = $_SESSION['error_message'];
     unset($_SESSION['error_message']); // Unset after passing to JS
+    echo "<script>
+            document.getElementById('error-message').innerText = '$error_message';
+            document.getElementById('error-message').style.display = 'block';
+          </script>";
 } else {
     $error_message = '';
 }

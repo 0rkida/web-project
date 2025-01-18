@@ -145,7 +145,7 @@ class User
     // Get failed attempts
     public function getFailedAttempts($email): int
     {
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM login_attempts WHERE user_id = ? AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE");
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM login_attempts WHERE user_id = (SELECT id FROM users WHERE email = ?) AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -156,7 +156,7 @@ class User
     // Reset failed login attempts
     public function resetFailedAttempts($email): bool
     {
-        $stmt = $this->db->prepare("UPDATE login_attempts SET attempt_time = 0 WHERE user_id = ?");
+        $stmt = $this->db->prepare("UPDATE login_attempts SET failed_attempts = 0 WHERE user_id = (SELECT id FROM users WHERE email = ?)");
         $stmt->bind_param("s", $email);
         return $stmt->execute();
     }
@@ -172,26 +172,19 @@ class User
 
     public function incrementFailedAttempts($email): bool
     {
-        $stmt = $this->db->prepare("UPDATE login_attempts SET last_failed_attempt = NOW() WHERE user_id = ?");
-        if (!$stmt) {
-            throw new Exception("Failed to prepare statement: " . $this->db->error);
-        }
+        $stmt = $this->db->prepare("UPDATE login_attempts SET failed_attempts = failed_attempts + 1, last_failed_attempt = NOW() WHERE user_id = (SELECT id FROM users WHERE email = ?)");
         $stmt->bind_param("s", $email);
         return $stmt->execute();
     }
 
     public function isBlocked($email): bool
     {
+        // Kontrollojmë për tentativat e pasuksesshme brenda 30 minutave
         $stmt = $this->db->prepare(
-            "SELECT COUNT(*) as failed_attempts, MAX(last_failed_attempt) as last_failed_attempt 
-         FROM login_attempts 
-         WHERE user_id = ? AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE"
+            "SELECT COUNT(*) as failed_attempts, MAX(last_failed_attempt) as last_failed_attempt
+         FROM login_attempts
+         WHERE user_id = (SELECT id FROM users WHERE email = ?) AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE"
         );
-
-        if (!$stmt) {
-            throw new Exception("Failed to prepare statement: " . $this->db->error);
-        }
-
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -202,7 +195,7 @@ class User
             $lastFailedAttempt = strtotime($data['last_failed_attempt']);
             $isBlocked = $failedAttempts >= 7 && (time() - $lastFailedAttempt) < 1800;
 
-            // Debug information
+            // Debugging
             error_log("Failed Attempts: $failedAttempts");
             error_log("Last Failed Attempt: " . date('Y-m-d H:i:s', $lastFailedAttempt));
             error_log("Is Blocked: " . ($isBlocked ? 'Yes' : 'No'));
@@ -212,5 +205,7 @@ class User
 
         return false;
     }
+
+
 
 }
