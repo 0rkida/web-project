@@ -6,24 +6,68 @@
     <title>Logimi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* CSS for the modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
 
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Close Button */
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            right: 10px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <div class="container login-container">
     <div class="form-container sign-in-container">
-        <form method = "POST" action="/login">
+        <form method="POST" action="/login">
 
             <div class="logo-container">
                 <img src="assets/img/logo.png" height="200" width="200" alt="logo"/>
             </div>
             <div class="overlay-panel overlay-left">
                 <h1>Mirë se vini!</h1>
-                <p>Nuk keni ende një llogari ? Krijojeni tani. </p>
-                <a href="register.html" class="ghost">Regjistrohu</a>
+                <p>Nuk keni ende një llogari? Krijojeni tani.</p>
+                <a href="register.php" class="ghost">Regjistrohu</a>
             </div>
             <br>
             <h1>Logohuni</h1>
-            <span>përdorni llogarinë tuaj.</span>
+            <span>Përdorni llogarinë tuaj.</span>
+
+            <!-- Form inputs -->
             <input type="email" name="email" placeholder="Emaili" required />
             <input type="password" name="password" placeholder="Password" required />
 
@@ -32,11 +76,20 @@
                 Remember me
             </label><br>
 
-            <a href="forgot_password.html">Nuk e mbani mend password-in?</a>
+            <a href="forgot_password.php">Nuk e mbani mend password-in?</a>
             <button>Logohu</button>
         </form>
     </div>
 </div>
+
+<!-- Modal for displaying error message -->
+<div id="errorModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="errorMessage"></p>
+    </div>
+</div>
+
 <script src="js/main.js"></script>
 </body>
 </html>

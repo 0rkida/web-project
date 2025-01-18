@@ -1,14 +1,14 @@
 <?php
-
+session_start();
 use App\models\Admin;
 use App\models\User;
 
-session_start();
 require_once '../../db.php';  // Assuming db.php contains the database connection
 require_once 'C:\xampp\htdocs\web-project\src\models\User.php';
 require_once 'C:\xampp\htdocs\web-project\src\models\Admin.php';
 require_once '../../services/LoginService.php';
 
+// Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -62,11 +62,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Increment failed login attempts for user
             User::incrementFailedAttempts($email);
 
+            // Set the error message in session for display in modal
             if (User::isBlocked($email)) {
-                echo "Your account is temporarily locked due to multiple failed login attempts.";
+                $_SESSION['error_message'] = "Your account is temporarily locked due to multiple failed login attempts.";
             } else {
-                echo "Invalid email or password.";
+                $_SESSION['error_message'] = "Invalid email or password.";
             }
+
+            // Redirect back to the login page to display the error
+            header("Location: /login.php");
+            exit();
         }
     }
 }
+
+// Check if there's an error message and pass it to JavaScript
+if (isset($_SESSION['error_message'])) {
+    $error_message = $_SESSION['error_message'];
+    unset($_SESSION['error_message']); // Unset after passing to JS
+} else {
+    $error_message = '';
+}
+
+// Include the login form HTML from the separate file
+include('public/login.html');
+?>

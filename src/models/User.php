@@ -142,6 +142,17 @@ class User
         return $stmt->execute();
     }
 
+    // Get failed attempts
+    public function getFailedAttempts($email): int
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM login_attempts WHERE user_id = ? AND last_failed_attempt >= NOW() - INTERVAL 30 MINUTE");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_row()[0];
+    }
+
+
     // Reset failed login attempts
     public function resetFailedAttempts($email): bool
     {

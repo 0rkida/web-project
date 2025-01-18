@@ -23,7 +23,9 @@ class LogInController
 
     public function getView(): void
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         if ($this->checkIfLoggedIn()) {
             header('Location: /home');
             exit();
@@ -40,8 +42,9 @@ class LogInController
         $role = $data['role'] ?? 'User'; // Default to 'User'
 
         if (empty($email) || empty($password)) {
-            echo "Email dhe fjalëkalimi janë të detyrueshëm.";
-            return;
+            $_SESSION['error_message'] = "Email dhe fjalëkalimi janë të detyrueshëm.";
+            header('Location: /login');
+            exit();
         }
 
         if ($role === 'Admin') {
@@ -51,24 +54,30 @@ class LogInController
                 header("Location: /admin-dashboard.html");
                 exit();
             } else {
-                echo "Email ose fjalëkalim i gabuar për admin.";
+                $_SESSION['error_message'] = "Email ose fjalëkalim i gabuar për admin.";
+                header('Location: /login');
+                exit();
             }
         } else {
             if ($this->user->isBlocked($email)) {
-                echo "Shumë përpjekje të dështuara. Ju lutemi prisni 30 minuta dhe provoni përsëri.";
-                return;
+                $_SESSION['error_message'] = "Shumë përpjekje të dështuara. Ju lutemi prisni 30 minuta dhe provoni përsëri.";
+                header('Location: /login');
+                exit();
             }
 
             $userId = $this->user->authenticateUser($email, $password);
             if ($userId === false) {
                 $this->user->incrementFailedAttempts($email);
-                echo "Gabim! Email ose fjalëkalim i gabuar!";
+                $_SESSION['error_message'] = "Gabim! Email ose fjalëkalim i gabuar!";
+                header('Location: /login');
+                exit();
             } else {
                 $this->user->resetFailedAttempts($email);
 
                 if (!$this->user->isUserVerified($userId)) {
-                    echo "Përdoruesi nuk është verifikuar ende. Kontrolloni email-in tuaj.";
-                    return;
+                    $_SESSION['error_message'] = "Përdoruesi nuk është verifikuar ende. Kontrolloni email-in tuaj.";
+                    header('Location: /login');
+                    exit();
                 }
 
                 $this->startSession(['id' => $userId], 'user');
@@ -78,9 +87,12 @@ class LogInController
         }
     }
 
+
     public function logout(): void
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         session_unset();
         session_destroy();
         header('Location: /login');
