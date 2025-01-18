@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require '../../db.php/';
 
 if (isset($_GET['action'])) {
 $action = $_GET['action'];
@@ -18,4 +18,3 @@ echo "User blocked.";
 }
 }
 
-?>

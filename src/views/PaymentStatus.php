@@ -30,7 +30,7 @@ if(!empty($_GET['pid'])){
         $statusMsg = "Transaction has been failed!";
     }
 }else{
-    header("Location: index.php");
+    header("Location: payment.php");
     exit;
 }
 ?>

@@ -2,53 +2,124 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Subscription</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="css/home.css">
+
+
 </head>
 <body>
-<div class="panel">
-    <div class="panel-heading">
-        <h3 class="panel-title">Charge <?php echo '$'.$itemPrice; ?> with Stripe</h3>
+<header>
+    <h1>Premium Subscription Service</h1>
+</header>
 
-        <!-- Product Info -->
-        <p><b>Item Name:</b> <?php echo $itemName; ?></p>
-        <p><b>Price:</b> <?php echo '$'.$itemPrice.' '.$currency; ?></p>
-    </div>
-    <div class="panel-body">
-        <!-- Display status message -->
-        <div id="paymentResponse" class="hidden"></div>
+<main>
+    <!-- Payment Form -->
+    <section id="payment-form-section">
+        <h2>Subscribe to Premium</h2>
+        <p>Enjoy exclusive features for just $10 per month!</p>
 
-        <!-- Display a payment form -->
-        <form id="paymentFrm" class="hidden">
-            <div class="form-group">
-                <label>NAME</label>
-                <input type="text" id="name" class="field" placeholder="Enter name" required="" autofocus="">
-            </div>
-            <div class="form-group">
-                <label>EMAIL</label>
-                <input type="email" id="email" class="field" placeholder="Enter email" required="">
-            </div>
+        <form id="payment-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
 
-            <div id="paymentElement">
-                <!--Stripe.js injects the Payment Element-->
-            </div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
 
-            <!-- Form submit button -->
-            <button id="submitBtn" class="btn btn-success">
-                <div class="spinner hidden" id="spinner"></div>
-                <span id="buttonText">Pay Now</span>
-            </button>
+            <button type="button" id="pay-button">Pay Now</button>
         </form>
 
-        <!-- Display processing notification -->
-        <div id="frmProcess" class="hidden">
-            <span class="ring"></span> Processing...
+        <div id="payment-status" style="display: none;">
+            <h2>Payment Status</h2>
+            <p id="status-message"></p>
         </div>
+    </section>
 
-        <!-- Display re-initiate button -->
-        <div id="payReinit" class="hidden">
-            <button class="btn btn-primary" onClick="window.location.href=window.location.href.split('?')[0]"><i class="rload"></i>Re-initiate Payment</button>
-        </div>
-    </div>
-</div>
+    <!-- Payment Status -->
+    <section id="payment-status-section" style="display: none;">
+        <h2>Payment Information</h2>
+        <div id="payment-details"></div>
+
+        <h2>Customer Information</h2>
+        <div id="customer-details"></div>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2025 Premium Subscription Service. All Rights Reserved.</p>
+</footer>
+
+<script>
+    document.getElementById("pay-button").addEventListener("click", async () => {
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+
+        if (!name || !email) {
+            alert("Please fill out all fields.");
+            return;
+        }
+
+        try {
+            // Step 1: Create Payment Intent
+            const response = await fetch('payment_init.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ request_type: 'create_payment_intent' })
+            });
+            const data = await response.json();
+
+            if (data.clientSecret) {
+                const stripe = Stripe('sk_test_51QdZaOIA6j8Agjdo5GJTLy0SpIDPNae1bPpzug7GTqcDIUlNR7CKK1ojTH9gGYRe0uEHUjbnpIDGSKukUVTONETg00wfXvfRpk');
+
+                // Step 2: Confirm Payment
+                const result = await stripe.confirmCardPayment(data.clientSecret, {
+                    payment_method: {
+                        card: {
+                            token: "tok_visa" // Replace with real card details in production
+                        },
+                        billing_details: { name, email }
+                    }
+                });
+
+                if (result.error) {
+                    document.getElementById("payment-status").style.display = "block";
+                    document.getElementById("status-message").textContent = result.error.message;
+                } else {
+                    document.getElementById("payment-status").style.display = "block";
+                    document.getElementById("status-message").textContent = "Payment Successful!";
+
+                    // Step 3: Insert Payment into Database
+                    await fetch('payment_init.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            request_type: 'payment_insert',
+                            payment_intent: result.paymentIntent.id,
+                            customer_id: result.paymentIntent.customer
+                        })
+                    });
+
+                    // Display Payment Details
+                    const paymentDetails = `
+                            <p><b>Transaction ID:</b> ${result.paymentIntent.id}</p>
+                            <p><b>Amount Paid:</b> $10</p>
+                            <p><b>Status:</b> ${result.paymentIntent.status}</p>`;
+
+                    const customerDetails = `
+                            <p><b>Name:</b> ${name}</p>
+                            <p><b>Email:</b> ${email}</p>`;
+
+                    document.getElementById("payment-details").innerHTML = paymentDetails;
+                    document.getElementById("customer-details").innerHTML = customerDetails;
+                    document.getElementById("payment-form-section").style.display = "none";
+                    document.getElementById("payment-status-section").style.display = "block";
+                }
+            }
+        } catch (error) {
+            console.error("Payment failed:", error);
+        }
+    });
+</script>
 </body>
 </html>
