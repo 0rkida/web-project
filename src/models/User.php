@@ -164,7 +164,7 @@ class User
     // Save Remember Me Token
     public function saveRememberMeToken(int $userId, string $token, string $expiry): void
     {
-        $query = "UPDATE users SET remember_me_token = :token, token_expiry = :expiry WHERE id = :id";
+        $query = "UPDATE password_resets SET remember_token = :token, reset_token_expiry = :expiry WHERE id = :id";
         $stmt = $this->db->prepare($query);
         $stmt->execute([
             'token' => $token,
@@ -173,16 +173,36 @@ class User
         ]);
     }
 
-    public static function verifyRememberMeToken($token)
-    {
-        global $db;
-        $stmt = $db->prepare("SELECT * FROM users WHERE remember_me_token = ? AND token_expiry > NOW()");
-        $stmt->bind_param('s', $token);
-        $stmt->execute();
-        $result = $stmt->get_result();
+    function updateToken($userId) {
+        $newToken = generateToken();
+        $expiry = time() + (7 * 24 * 60 * 60); // 7 ditë
 
-        return $result->num_rows > 0 ? $result->fetch_assoc() : null;
+        setcookie('remember_me', $newToken, $expiry, "/", "", true, true);
+
+        $db = new PDO("mysql:host=localhost;dbname=dating_app", "root", "");
+        $stmt = $db->prepare("UPDATE password_resets SET reset_token = :token, reset_token_expiry = :expiry WHERE user_id = :user_id");
+        $stmt->execute(['token' => $newToken, 'expiry' => date('Y-m-d H:i:s', $expiry), 'user_id' => $userId]);
     }
+
+
+    function verifyRememberMe() {
+        if (!isset($_COOKIE['remember_me'])) return false;
+
+        $token = $_COOKIE['remember_me'];
+        $db = new PDO("mysql:host=localhost;dbname=datting_app", "root", "");
+        $stmt = $db->prepare("SELECT user_id FROM password_resets WHERE reset_token = :token AND reset_token_expiry > NOW()");
+        $stmt->execute(['token' => $token]);
+        $user = $stmt->fetch();
+
+        if ($user) {
+            // Autentiko përdoruesin
+            $_SESSION['user_id'] = $user['user_id'];
+            return true;
+        }
+
+        return false;
+    }
+
 
     public function incrementFailedAttempts($email): bool
     {
