@@ -1,35 +1,36 @@
 <?php
 // Include necessary files
 global $db;
+global $conn;
 require '../../db.php';  // Ensure your DB connection is correctly set here
 require '../../models/User.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize and validate user input
-    $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
-    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+    $token = $_POST['token'];
+    $newPassword = $_POST['new_password'];
+    // Validate the token
+    // TODO: Add your database connection code here
 
-    if (empty($token) || empty($password)) {
-        echo "Ju lutem, plotësoni të gjitha fushat.";
-        exit();
-    }
+    $sql = "SELECT * FROM password_resets WHERE token='$token'";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $email = $row['email'];
 
-    $userModel = new UserModel($db);
-
-    // Verify reset token
-    if ($userModel->verifyResetToken($token)) {
-        // Hash the new password
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-        // Update the password in the database
-        if ($userModel->updatePassword($token, $hashedPassword)) {
-            echo "Fjalëkalimi u rivendos me sukses.";
-            header("Location: ../../../login.html");
-            exit();
-        } else {
-            echo "Gabim gjatë rivendosjes së fjalëkalimit. Provoni përsëri.";
+        // Update the user's password
+        $newPasswordHash = password_hash($newPassword, PASSWORD_BCRYPT);
+        $sql = "UPDATE users SET password='$newPasswordHash' WHERE email='$email'";
+        if (mysqli_query($conn, $sql)) {
+            // Delete the reset token
+            $sql = "DELETE FROM password_resets WHERE token='$token'";
+            mysqli_query($conn, $sql);
+            echo "Your password has been successfully reset.";
         }
     } else {
-        echo "Token i pavlefshëm ose i skaduar.";
+        echo "Invalid or expired token.";
     }
+} else {
+    $token = $_GET['token'];
 }
+
+

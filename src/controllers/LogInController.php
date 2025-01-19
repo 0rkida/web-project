@@ -1,25 +1,27 @@
 <?php
+
 namespace App\controllers;
 
 use App\models\Admin;
 use App\models\User;
+use App\services\PasswordResetService;
 use JetBrains\PhpStorm\NoReturn;
-use PHPMailer\PHPMailer\PHPMailer;
 
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Admin.php';
+require_once __DIR__ . '/../services/PasswordResetService.php';
 
 class LogInController
 {
     private User $user;
     private Admin $admin;
-    private PHPMailer $mailer;
+    private PasswordResetService $passwordResetService;
 
     public function __construct($dbConnection)
     {
         $this->user = new User($dbConnection);
         $this->admin = new Admin($dbConnection);
-        $this->mailer = new PHPMailer(true);
+        $this->passwordResetService = new PasswordResetService($dbConnection);
     }
 
     public function getView(): void
@@ -30,7 +32,11 @@ class LogInController
         }
         require_once 'C:/xampp/htdocs/web-project/public/login.html';
     }
-
+    public function getResetPasswordView(): void {
+        require_once 'C:\xampp\htdocs\web-project\src\views\reset_password.html'; }
+    public function getForgetPasswordView(): void {
+        require_once 'C:\xampp\htdocs\web-project\src\views\forgot_password.html';
+    }
     public function handleLogin(array $data): void
     {
         $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
@@ -103,4 +109,14 @@ class LogInController
         }
     }
 
+    public function requestPasswordReset($email): string
+    {
+        return $this->passwordResetService->requestPasswordReset($email);
+    }
+
+    public function resetPassword($token, $newPassword): string
+    {
+        return $this->passwordResetService->resetPassword($token, $newPassword);
+    }
 }
+
