@@ -17,7 +17,6 @@ use App\controllers\MessageController;
 use App\controllers\NotificationController;
 use App\controllers\ProfileController;
 use App\controllers\RegisterController;
-use App\controllers\SearchController;
 use App\controllers\VerifyController;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -261,10 +260,14 @@ switch (strtolower($request_path)) {
     case '/search':
         require 'controllers/SearchController.php';
         $SearchController = new SearchController($conn);
+
         if ($requestMethod === 'GET') {
-            $SearchController->search(); // Call the search function for GET requests
+            $SearchController->getView();
+        } else if ($requestMethod === 'POST') {
+            $SearchController->postSearch($_POST);
         }
         break;
+
 
 
     default:
