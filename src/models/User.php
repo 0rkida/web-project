@@ -251,5 +251,58 @@ class User
         return $users;
     }
 
+    public function likeUser($userId, $likedUserId)
+    {
+        // Insert a like into the 'likes' table
+        $stmt = $this->db->prepare("INSERT IGNORE INTO likes (user_id, liked_user_id) VALUES (?, ?)");
+        $stmt->bind_param("ii", $userId, $likedUserId);
+        $stmt->execute();
+
+        // Check if the liked user also liked this user (to form a match)
+        $stmt = $this->db->prepare("SELECT * FROM likes WHERE user_id = ? AND liked_user_id = ?");
+        $stmt->bind_param("ii", $likedUserId, $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // Insert into matches table if both users like each other
+            $stmt = $this->db->prepare("INSERT INTO matches (user1_id, user2_id) VALUES (?, ?)");
+            $stmt->bind_param("ii", $userId, $likedUserId);
+            $stmt->execute();
+            return true; // It's a match!
+        }
+
+        return false; // Not a match yet
+    }
+
+    public function getMatches($userId)
+    {
+        $stmt = $this->db->prepare("
+        SELECT u.* 
+        FROM users u
+        JOIN matches m ON (m.user1_id = u.id OR m.user2_id = u.id)
+        WHERE (m.user1_id = ? OR m.user2_id = ?) AND u.id != ?");
+        $stmt->bind_param("iii", $userId, $userId, $userId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getNotifications($userId)
+    {
+        $stmt = $this->db->prepare("
+        SELECT u.* 
+        FROM users u
+        JOIN likes l ON l.user_id = u.id
+        WHERE l.liked_user_id = ? AND NOT EXISTS (
+            SELECT 1 FROM matches m
+            WHERE (m.user1_id = l.user_id AND m.user2_id = l.liked_user_id) 
+               OR (m.user2_id = l.user_id AND m.user1_id = l.liked_user_id)
+        )");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+
 
 }
