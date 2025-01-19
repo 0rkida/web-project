@@ -102,5 +102,12 @@ class LogInController
             $_SESSION['loggedIn'] = true;
         }
     }
-
+    public function requestPasswordReset(array $data): void {
+        $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
+        if (empty($email)) {
+            echo "Email është i detyrueshëm.";
+        }
+        return;
+    }
+  
 }
