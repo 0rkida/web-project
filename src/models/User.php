@@ -221,5 +221,21 @@ class User
         return false;
     }
 
+    public function searchByName($name)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE full_name LIKE ?");
+        $searchTerm = "%" . $name . "%"; // Add wildcards for partial matching
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Fetch and return results
+        $users = [];
+        while ($row = $result->fetch_assoc()) {
+            $users[] = $row;
+        }
+        return $users;
+    }
+
 
 }

@@ -17,6 +17,7 @@ use App\controllers\MessageController;
 use App\controllers\NotificationController;
 use App\controllers\ProfileController;
 use App\controllers\RegisterController;
+use App\controllers\SearchController;
 use App\controllers\VerifyController;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -257,9 +258,19 @@ switch (strtolower($request_path)) {
         }
         break;
 
+    case '/search':
+        require 'controllers/SearchController.php';
+        $SearchController = new SearchController($conn);
+        if ($requestMethod === 'GET') {
+            $SearchController->search(); // Call the search function for GET requests
+        }
+        break;
+
+
     default:
         http_response_code(404);
         echo "404 Not Found";
         break;
+
 
 }

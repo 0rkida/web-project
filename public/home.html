@@ -8,15 +8,23 @@
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
+
+<div id="searchContainer">
+    <form id="searchForm" method="GET" action="/search">
+        <input type="text" name="name" placeholder="Search by name" required>
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+
 <header class="main-header">
+
     <div class="container">
 
         <h1>Welcome to Mish&Thu</h1>
         <p>Explore to find your perfect match!</p>
       
-        <a href="/profil" class="btn profile-btn">My Profile</a> <!-- MyProfile button -->
-
-
+        <a href="/profil" class="btn profile-btn">My Profile</a>
     </div>
 </header>
 
