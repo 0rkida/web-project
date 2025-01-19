@@ -1,15 +1,22 @@
 <?php
+global $db;
 // Include necessary files for database and PHPMailer
+use App\models\User;
+
 require '../../db.php'; // Database connection
 require '../../models/User.php'; // User model
 require '../../../vendor/autoload.php'; // PHPMailer autoload
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
-    $userModel = new UserModel($db);
+    try {
+        $userModel = new User($db);
+    } catch (Exception $e) {
+
+    }
 
     // Check if the user exists and is verified
-    if (!$userModel->isUserVerified($email)) {
+    if (!$user->isUserVerified($email)) {
         echo "This email is not registered or not verified.";
         exit();
     }
