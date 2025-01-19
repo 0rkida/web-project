@@ -6,7 +6,7 @@
 	 * 	Binds params to values
 	 *  Returns rows and results
    */
-class Database {
+class PaymentDatabase {
 	private $host = DB_HOST;
 	private $user = DB_USER;
 	private $pass = DB_PASS;

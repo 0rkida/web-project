@@ -257,9 +257,23 @@ switch (strtolower($request_path)) {
         }
         break;
 
+    case '/search':
+        require 'controllers/SearchController.php';
+        $SearchController = new SearchController($conn);
+
+        if ($requestMethod === 'GET') {
+            $SearchController->getView();
+        } else if ($requestMethod === 'POST') {
+            $SearchController->postSearch($_POST);
+        }
+        break;
+
+
+
     default:
         http_response_code(404);
         echo "404 Not Found";
         break;
+
 
 }

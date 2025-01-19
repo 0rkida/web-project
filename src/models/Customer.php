@@ -1,7 +1,7 @@
 <?php
 
 namespace models;
-use Database;
+use PaymentDatabase;
 
 class Customer
 {
@@ -9,7 +9,7 @@ class Customer
 
     public function __construct()
     {
-        $this->db = new Database;
+        $this->db = new PaymentDatabase;
     }
 
     public function addCustomer($data)
