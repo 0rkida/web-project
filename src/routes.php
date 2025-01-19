@@ -130,47 +130,7 @@ switch (strtolower($request_path)) {
         }
         break;
 
-//    case '/login':
-//        require 'controllers/LogInController.php';
-//        $LogInController = new LogInController($conn); // Kaloni lidhjen me DB dhe PHPMailer
-//        if ($requestMethod === 'GET') {
-//            $LogInController->getView();
-//        } else if ($requestMethod === 'POST') {
-//            // Kaloni të dhënat e përdoruesit për login
-//            $LogInController->postLogin([
-//                'email' => $_POST['email'],
-//                'password' => $_POST['password']
-//            ]);
-//            // Redirect pas login-it
-////            header('Location: /home'); // Mund të jetë një URL e ndryshme
-////            exit();
-//        }
-//        break;
 
-//            case '/login':
-//                require 'controllers/LogInController.php';
-//                $LogInController = new LogInController($conn); // Kaloni lidhjen me DB dhe PHPMailer
-//                if ($requestMethod === 'GET') {
-//                    $LogInController->getView();
-//                } else if ($requestMethod === 'POST') {
-//                    // Check if the role is Admin
-//                    $role = isset($_POST['role']) && $_POST['role'] === 'Admin' ? 'Admin' : 'User';
-//
-//                    // Call appropriate method based on role
-//                    if ($admin) {
-//                        $_SESSION['adminId'] = $admin['id'];
-//                        $_SESSION['adminLoggedIn'] = true;
-//                        header("Location: /admin/dashboard");
-//                        exit();
-//                    } elseif ($userId) {
-//                        $_SESSION['userId'] = $userId;
-//                        $_SESSION['loggedIn'] = true;
-//                        header("Location: /home");
-//                        exit();
-//                    }
-//
-//                }
-//                break;
     case '/login':
         require 'controllers/LogInController.php';
         $LogInController = new LogInController($conn);
@@ -180,6 +140,31 @@ switch (strtolower($request_path)) {
         } elseif ($requestMethod === 'POST') {
             $LogInController->handleLogin($_POST); // Delegate all POST logic to the controller
         }
+        break;
+    case '/forgot-password':
+        require 'controllers/LogInController.php';
+        $LogInController = new LogInController($conn);
+        if ($requestMethod === 'GET') {
+            $LogInController->getForgetPasswordView(); // Render the forgot password form
+        } elseif ($requestMethod === 'POST') {
+            $email = trim($_POST['email']);
+            header('Location: /reset-password');
+            exit();
+
+        }
+        break;
+    case '/reset-password':
+        require 'controllers/LogInController.php';
+        $LogInController = new LogInController($conn);
+        if($requestMethod==='GET'){
+            $LogInController->getResetPasswordView();
+        }
+        elseif ($requestMethod === 'POST') {
+            $token = $_POST['token'];
+            $newPassword = $_POST['new_password'];
+            echo $LogInController->resetPassword($token, $newPassword); // Handle password reset
+        }
+
         break;
 
     case '/admin/dashboard':

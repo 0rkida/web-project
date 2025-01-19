@@ -10,7 +10,7 @@ require '../../../vendor/autoload.php'; // PHPMailer autoload
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     try {
-        $userModel = new User($db);
+        $user = new User($db);
     } catch (Exception $e) {
 
     }
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $resetTokenExpiry = date("Y-m-d H:i:s", strtotime('+1 hour'));
 
     // Save the reset token to the database
-    if ($userModel->saveResetToken($email, $resetToken, $resetTokenExpiry)) {
+    if ($user->saveResetToken($email, $resetToken, $resetTokenExpiry)) {
         // Configure and send the email using PHPMailer
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         try {
@@ -57,4 +57,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Failed to save reset token.";
     }
 }
-?>
