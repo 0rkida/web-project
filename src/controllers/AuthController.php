@@ -91,12 +91,28 @@ class AuthController
         }
     }
 
-    #[NoReturn] public function logout(): void
+    #[NoReturn]
+    public function logout(): void
     {
+        session_start();
+
+        // Fshi token-in nga baza e të dhënave nëse ekziston një cookie 'remember_me'
+        if (isset($_COOKIE['remember_me'])) {
+            $token = $_COOKIE['remember_me'];
+            $this->user->clearRememberMeToken($token); // Pastron token-in nga databaza
+
+            // Fshi cookie-n
+            setcookie("remember_me", "", time() - 3600, "/", "", false, true);
+        }
+
+        // Pastroni sesionin
         session_unset();
         session_destroy();
+
+        // Ridrejtoni tek faqja e login-it
         header('Location: /login');
         exit();
     }
+
 
 }

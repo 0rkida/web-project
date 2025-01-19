@@ -7,7 +7,6 @@
     <file url="file://$PROJECT_DIR$/database/migrations/02_create_profiles_table.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$/database/migrations/03_create_matches_table.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$/database/migrations/04_create_messages_table.sql" dialect="MariaDB" />
-    <file url="file://$PROJECT_DIR$/database/migrations/07_create_payments_table.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$/database/migrations/09_create_password_resets_table.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$/database/migrations/10_create_login_attempts_table.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$/database/migrations/11_create_user_verifications_table.sql" dialect="MariaDB" />

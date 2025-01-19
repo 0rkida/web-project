@@ -162,13 +162,29 @@ class User
     }
 
     // Save Remember Me Token
-    public static function saveRememberMeToken($userId, $token): bool
+    public function saveRememberMeToken(int $userId, string $token, string $expiry): void
+    {
+        $query = "UPDATE users SET remember_me_token = :token, token_expiry = :expiry WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            'token' => $token,
+            'expiry' => $expiry,
+            'id' => $userId,
+        ]);
+    }
+
+    public static function verifyRememberMeToken($token)
     {
         global $db;
-        $stmt = $db->prepare("UPDATE password_resets SET reset_token = NULL WHERE id = ?");
-        $stmt->bind_param("si", $token, $userId);
-        return $stmt->execute();
+        $stmt = $db->prepare("SELECT * FROM users WHERE remember_me_token = ? AND token_expiry > NOW()");
+        $stmt->bind_param('s', $token);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result->num_rows > 0 ? $result->fetch_assoc() : null;
     }
+
+
 
     public function incrementFailedAttempts($email): bool
     {
