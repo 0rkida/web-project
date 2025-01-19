@@ -6,12 +6,11 @@
     <title>Logimi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/main.css">
-
 </head>
 <body>
 <div class="container login-container">
     <div class="form-container sign-in-container">
-        <form method = "POST" action="/login">
+        <form method="POST" action="/login">
 
             <div class="logo-container">
                 <img src="assets/img/logo.png" height="200" width="200" alt="logo"/>
@@ -24,6 +23,12 @@
             <br>
             <h1>Logohuni</h1>
             <span>përdorni llogarinë tuaj.</span>
+
+            <!-- Mesazhi i gabimit (i fshehur fillimisht) -->
+            <div id="error-message" style="display:none; color: red; padding: 10px; border: 1px solid red; margin-bottom: 15px;">
+                <!-- Mesazhi do të vendoset nga JavaScript -->
+            </div>
+
             <input type="email" name="email" placeholder="Emaili" required />
             <input type="password" name="password" placeholder="Password" required />
 

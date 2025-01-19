@@ -1,15 +1,5 @@
 <?php
-
-
-
-session_start();
-session_unset(); // Remove all session variables
-session_destroy(); // Destroy the session
-header("Location: login.html"); // Redirect to login page
-exit();
-
-
-session_start();
+session_start(); // Start the session
 
 // Clear the remember me cookie
 if (isset($_COOKIE['remember_me'])) {
@@ -22,17 +12,16 @@ $database = new Database();
 $db = $database->getConnection();
 
 if (isset($_SESSION['user_id'])) {
-    $query = "UPDATE users SET remember_token = NULL WHERE id = :id";
+    $query = "UPDATE users SET remember_me_token = NULL WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(":id", $_SESSION['user_id']);
     $stmt->execute();
 }
 
 // Destroy the session
-session_destroy();
+session_unset(); // Clear all session variables
+session_destroy(); // Destroy the session
 
 // Redirect to login page
 header("Location: login.php");
 exit;
-
-

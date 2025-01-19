@@ -28,8 +28,6 @@ class LogInController
             header('Location: /home');
             exit();
         }
-        $this->checkAuthentication(); // Kontrollon nëse ka cookie të vlefshëm
-
         require_once 'C:/xampp/htdocs/web-project/public/login.html';
     }
 
@@ -77,41 +75,6 @@ class LogInController
         exit();
     }
 
-    private function checkAuthentication(): void
-    {
-        session_start();
-
-        // Kontrollo nëse përdoruesi është i loguar
-        if (!isset($_SESSION['userId']) && isset($_COOKIE['remember_me'])) {
-            $token = $_COOKIE['remember_me'];
-
-            // Verifiko tokenin në databazë
-            $user = $this->user->verifyRememberMeToken($token);
-
-            if ($user) {
-                // Tokeni është i vlefshëm, identifiko përdoruesin
-                $this->startSession(['id' => $user['id']], 'user');
-
-                // Përditëso tokenin për siguri
-                $newToken = bin2hex(random_bytes(32));
-                $expiry = date('Y-m-d H:i:s', strtotime('+30 days'));
-
-                $this->user->saveRememberMeToken($user['id'], $newToken, $expiry);
-                setcookie("remember_me", $newToken, time() + (86400 * 30), "/", "", false, true);
-            } else {
-                // Tokeni nuk është i vlefshëm, hiq cookie
-                setcookie("remember_me", "", time() - 3600, "/", "", false, true);
-            }
-        }
-
-        // Nëse përdoruesi nuk është i loguar, ridrejtoje tek login.php
-        if (!isset($_SESSION['userId'])) {
-            header("Location: /login");
-            exit();
-        }
-    }
-
-
     #[NoReturn]
     public function logout(): void
     {
@@ -139,12 +102,5 @@ class LogInController
             $_SESSION['loggedIn'] = true;
         }
     }
-    public function requestPasswordReset(array $data): void {
-        $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
-        if (empty($email)) {
-            echo "Email është i detyrueshëm.";
-        }
-        return;
-    }
-  
+
 }
