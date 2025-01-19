@@ -9,6 +9,3 @@ CREATE TABLE users (
     is_verified TINYINT(1) DEFAULT 0
 
 );
-ALTER TABLE users
-    ADD COLUMN remember_me_token VARCHAR(255) NULL,
-    ADD COLUMN token_expiry DATETIME NULL;

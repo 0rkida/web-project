@@ -184,8 +184,6 @@ class User
         return $result->num_rows > 0 ? $result->fetch_assoc() : null;
     }
 
-
-
     public function incrementFailedAttempts($email): bool
     {
         error_log("Incrementing failed attempts for: $email");
