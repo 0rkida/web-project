@@ -70,13 +70,18 @@
                     <span class="location">25 • Scottsdale, United States</span>
                 </div>
             </div>
-            <button class="update-btn">Update Info</button>
+            <button type="button" id="updateInfoBtn" class="profile-btn">Update Info</button>
+
+
+
+
+
         </header>
         <div class="content">
             <section class="summary">
                 <h2>My self-summary</h2>
                 <form action="update_profile.php" method="POST">
-                    <textarea name="self_summary" id="self-summary" rows="4" cols="50" placeholder="Write something about yourself..."></textarea>
+                    <label for="self-summary"></label><textarea name="self_summary" id="self-summary" rows="4" cols="50" placeholder="Write something about yourself..."></textarea>
                     <button type="submit" class="update-btn">Save Changes</button>
                 </form>
             </section>
@@ -126,23 +131,23 @@
                 <ul>
                     <li>
                         Hobby:
-                        <textarea id="hobby" placeholder="Enter your hobby"></textarea>
+                        <label for="hobby"></label><textarea id="hobby" placeholder="Enter your hobby"></textarea>
                     </li>
                     <li>
                         Ethnicity:
-                        <textarea id="ethnicity" placeholder="Enter your ethnicity"></textarea>
+                        <label for="ethnicity"></label><textarea id="ethnicity" placeholder="Enter your ethnicity"></textarea>
                     </li>
                     <li>
                         Profession:
-                        <textarea id="profession" placeholder="Enter your profession"></textarea>
+                        <label for="profession"></label><textarea id="profession" placeholder="Enter your profession"></textarea>
                     </li>
                     <li>
                         Good At:
-                        <textarea id="good-at" placeholder="Enter what you're good at"></textarea>
+                        <label for="good-at"></label><textarea id="good-at" placeholder="Enter what you're good at"></textarea>
                     </li>
                     <li>
                         Height:
-                        <textarea id="height" placeholder="Enter your height"></textarea>
+                        <label for="height"></label><textarea id="height" placeholder="Enter your height"></textarea>
                     </li>
                 </ul>
                 <button type="submit" onclick="saveChanges()" class="update-btn">Save Changes</button>

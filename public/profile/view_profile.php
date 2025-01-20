@@ -52,7 +52,7 @@ $conn->close();
 <p>Ethnicity: <?php echo $user['ethnicity']; ?></p>
 <p>Height: <?php echo $user['height']; ?></p>
 
-<a href="edit_profile.php">Edit Profile</a>
+<a href="profil/update/">Update Info</a>
 
 </body>
 </html>

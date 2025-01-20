@@ -2,155 +2,97 @@
 namespace App\models;
 
 class Profile {
-    private  $dbConnection;
+private  $dbConnection;
 
-    // Constructor to initialize the database connection
-    public function __construct($dbConnection) {
-        $this->dbConnection = $dbConnection;
-    }
+// Constructor to initialize the database connection
+public function __construct($dbConnection) {
+$this->dbConnection = $dbConnection;
+}
 
-    /**
-     * Retrieve profile data for a user.
-     *
-     * @param int $userId - The user's ID
-     * @return array|null - Returns the profile data or null if not found
-     */
-    public function getProfileData(int $userId): ?array {
-        $query = "SELECT * FROM profile WHERE user_id = ?";
+/**
+* Retrieve profile data for a user.
+*
+* @param int $userId - The user's ID
+* @return array|null - Returns the profile data or null if not found
+*/
+public function getProfileData(int $userId): ?array {
+$query = "SELECT * FROM profile WHERE user_id = ?";
 
-        if ($stmt = $this->dbConnection->prepare($query)) {
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $result = $stmt->get_result();
+if ($stmt = $this->dbConnection->prepare($query)) {
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
 
-            if ($result->num_rows > 0) {
-                return $result->fetch_assoc();
-            } else {
-                return null;
-            }
-        } else {
-            error_log("Error preparing query: " . $this->dbConnection->error);
-            return null;
-        }
-    }
+return $result->num_rows > 0 ? $result->fetch_assoc() : null;
+} else {
+error_log("Error preparing query: " . $this->dbConnection->error);
+return null;
+}
+}
 
-    /**
-     * Update the profile information of a user.
-     *
-     * @param int $userId - The user's ID
-     * @param array $data - The new profile data
-     * @return bool - Returns true if the update was successful, false otherwise
-     */
-    public function updateProfile(int $userId, array $data): bool {
-        $query = "UPDATE profile 
-                  SET age = ?, gender = ?, location = ?, 
-                      self_summary = ?, hobby = ?, doing_with_life = ?, good_at = ?, 
-                      ethnicity = ?, height = ? 
-                  WHERE profile.user_id = ?";
+/**
+* Update the profile information of a user.
+*
+* @param int $userId - The user's ID
+* @param array $data - The new profile data
+* @return bool - Returns true if the update was successful, false otherwise
+*/
+public function updateUserProfile(int $userId, array $data): bool {
+$sql = "UPDATE profile
+SET profile_picture = ?, age = ?, gender = ?, location = ?, self_summary = ?, hobby = ?, doing_with_life = ?, good_at = ?, ethnicity = ?, height = ?
+WHERE user_id = ?";
 
-        if ($stmt = $this->dbConnection->prepare($query)) {
-            // Bind parameters
-            $stmt->bind_param(
-                "ssissssssssd",
-                $data['full_name'],
-                $data['email'],
-                $data['age'],
-                $data['gender'],
-                $data['location'],
-                $data['self_summary'],
-                $data['hobby'],
-                $data['doing_with_life'],
-                $data['good_at'],
-                $data['ethnicity'],
-                $data['height'],
-                $userId
-            );
+if ($stmt = $this->dbConnection->prepare($sql)) {
+$stmt->bind_param(
+"sissssssssi",
+$data['profile_picture'],
+$data['age'],
+$data['gender'],
+$data['location'],
+$data['self_summary'],
+$data['hobby'],
+$data['doing_with_life'],
+$data['good_at'],
+$data['ethnicity'],
+$data['height'],
+$userId
+);
+return $stmt->execute();
+} else {
+error_log("Error preparing update query: " . $this->dbConnection->error);
+return false;
+}
+}
 
-            // Execute the statement and return the result
-            return $stmt->execute();
-        } else {
-            error_log("Error preparing update query: " . $this->dbConnection->error);
-            return false;
-        }
-    }
+/**
+* Create a profile for a user.
+*
+* @param int $user_id - The user's ID
+* @param string $profile_picture - The profile picture URL
+* @param int $age - The user's age
+* @param string $gender - The user's gender
+* @param string $location - The user's location
+* @param string $self_summary - The user's self-summary
+* @param string $hobby - The user's hobby
+* @param string $doing_with_life - The user's life focus
+* @param string $good_at - The user's strengths
+* @param string $ethnicity - The user's ethnicity
+* @param float $height - The user's height
+* @return bool - Returns true if the profile was created successfully, false otherwise
+*/
+public function createProfile(int $user_id, string $profile_picture, int $age, string $gender, string $location, string $self_summary, string $hobby, string $doing_with_life, string $good_at, string $ethnicity, float $height): bool {
+$sql = "INSERT INTO profile (user_id, profile_picture, age, gender, location, self_summary, hobby, doing_with_life, good_at, ethnicity, height)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    /**
-     * Get user profile by user ID.
-     *
-     * @param int $userId - The user's ID
-     * @return array|null - Returns the user profile data or null if not found
-     */
-    public function getUserProfile(int $userId): ?array {
-        $query = "SELECT * FROM profile WHERE $userId = ?";
-
-        if ($stmt = $this->dbConnection->prepare($query)) {
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            if ($result->num_rows > 0) {
-                return $result->fetch_assoc();
-            } else {
-                return null;
-            }
-        } else {
-            error_log("Error preparing query: " . $this->dbConnection->error);
-            return null;
-        }
-    }
-
-    /**
-     * Update user profile information.
-     *
-     * @param int $userId - The user's ID
-     * @param array $data - The new profile data
-     * @return bool - Returns true if update is successful, false otherwise
-     */
-    public function updateUserProfile(int $userId, array $data): bool {
-        // Sanitize inputs
-        $sql = "UPDATE profile 
-            SET profile_picture = ?, age = ?, gender = ?, location = ?, self_summary = ?, hobby = ?, doing_with_life = ?, good_at = ?, ethnicity = ?, height = ?
-            WHERE user_id = ?";
-
-        // Prepare statement
-        $stmt = $this->dbConnection->prepare($sql);
-
-        // Bind parameters
-        $stmt->bind_param(
-            "sissssssssi", // Define parameter types: s = string, i = integer
-            $data['profile_picture'],
-            $data['age'],
-            $data['gender'],
-            $data['location'],
-            $data['self_summary'],
-            $data['hobby'],
-            $data['doing_with_life'],
-            $data['good_at'],
-            $data['ethnicity'],
-            $data['height'],
-            $userId // The user_id parameter
-        );
-
-        // Execute the query and check for success
-        return $stmt->execute();
-    }
-    function createProfile($user_id, $profile_picture, $age, $gender, $location, $self_summary, $hobby, $doing_with_life, $good_at, $ethnicity, $height) {
-
-        // Prepare the SQL statement
-        $sql = "INSERT INTO profile (user_id, profile_picture, age, gender, location, self_summary, hobby, doing_with_life, good_at, ethnicity, height) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        // Prepare the statement
-        $stmt = $this->dbConnection->prepare($sql);
-
-        if (!$stmt) {
-            die("Statement preparation failed: " . $this->dbConnection->error);
-        }
-
-        // Bind parameters
-        $stmt->bind_param("isisssssssd", $user_id, $profile_picture, $age, $gender, $location, $self_summary, $hobby, $doing_with_life, $good_at, $ethnicity, $height);
-
-        // Execute the statement
-        return $stmt->execute();
-    }
+if ($stmt = $this->dbConnection->prepare($sql)) {
+$stmt->bind_param(
+"isisssssssd",
+$user_id, $profile_picture, $age, $gender, $location, $self_summary, $hobby, $doing_with_life, $good_at, $ethnicity, $height
+);
+return $stmt->execute();
+} else {
+error_log("Error preparing insert query: " . $this->dbConnection->error);
+return false;
+}
+}
 }

@@ -1,3 +1,4 @@
+// Existing profile.js code
 // Elements on the profile page
 const profileName = document.getElementById('user-name');
 const profileBio = document.getElementById('profile-description').querySelector('p');
@@ -48,69 +49,95 @@ saveProfileBtn.addEventListener('click', () => {
     saveProfileBtn.style.display = 'none';
 });
 
-// Call updateProfile to display the initial data
-document.addEventListener('DOMContentLoaded', updateProfile);
-
-document.querySelector('.dropdown-arrow').addEventListener('click', function() {
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-    // Toggle the display property
-    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-});
-
+// Combine multiple DOMContentLoaded event listeners
 document.addEventListener("DOMContentLoaded", async () => {
-    const userId = 1; // Replace with the logged-in user's ID
+    updateProfile();
 
+    // Fetch user data for profile details
+    const userId = 1; // Replace with the logged-in user's ID
     try {
         const response = await fetch(`http://localhost/dating_app/get_profile.php?user_id=${userId}`);
         const result = await response.json();
 
         if (result.status === "success") {
             const user = result.data;
-
-            // Update profile details
             document.querySelector(".profile-name").textContent = user.username;
             document.querySelector(".location").textContent = `${user.age} • ${user.location}`;
             document.querySelector(".summary p").textContent = user.bio;
-
-            // Update profile picture
             const profilePic = user.profilePic || "default-avatar.jpeg";
             document.querySelector(".large-profile-pic").src = `../assets/img/${profilePic}`;
             document.querySelector(".profile-pic").src = `../assets/img/${profilePic}`;
+            document.getElementById("self-summary").textContent = user.self_summary || '';
         } else {
             console.error("Error:", result.message);
         }
     } catch (error) {
         console.error("Error fetching user data:", error);
     }
-});
 
-document.addEventListener("DOMContentLoaded", async () => {
-    const userId = 1; // Replace with the actual logged-in user's ID.
+    // Dropdown menu functionality
+    document.querySelector('.dropdown-arrow').addEventListener('click', function() {
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
 
-    try {
-        const response = await fetch(`http://localhost/dating_app/get_profile.php?user_id=${userId}`);
-        const result = await response.json();
+    // Upload form submission
+    document.getElementById('upload-input').addEventListener('change', function(event) {
+        const form = document.getElementById('upload-form');
+        form.submit();
+    });
 
-        if (result.status === "success") {
-            const user = result.data;
+    // Subscribe button functionality
+    const subscribeButton = document.getElementById('subscribeBtntn');
+    subscribeButton.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/payment/initiate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    itemName: 'Premium Subscription',
+                    itemPrice: 25.0,
+                    currency: 'EUR',
+                }),
+            });
 
-            // Populate the self-summary textarea with the user's current self-summary
-            document.getElementById("self-summary").textContent = user.self_summary || '';  // Ensure it's not null
-        } else {
-            console.error("Error:", result.message);
+            const data = await response.json();
+
+            if (data.clientSecret) {
+                stripe.confirmCardPayment(data.clientSecret, {
+                    payment_method: {
+                        card: cardElement, // From Stripe.js card input
+                        billing_details: {
+                            name: document.getElementById('name').value,
+                        },
+                    },
+                }).then((result) => {
+                    if (result.error) {
+                        console.error(result.error.message);
+                    } else if (result.paymentIntent.status === 'succeeded') {
+                        saveTransaction(result.paymentIntent);
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-    }
+    });
+
+    // Inactivity logout
+    inactivityTime();
 });
 
-document.getElementById('upload-input').addEventListener('change', function(event) {
-    const fileInput = event.target;
-    const form = document.getElementById('upload-form');
-
-    // Submit the form when files are selected
-    form.submit();
+// New event listener for the "Update Info" button
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('updateInfoBtn').addEventListener('click', function() {
+        alert('Update Info button clicked!');
+        document.querySelector('form').submit(); // Submit the form
+    });
 });
+
 function saveChanges() {
     let hobby = document.getElementById("hobby").value;
     let ethnicity = document.getElementById("ethnicity").value;
@@ -146,47 +173,6 @@ let inactivityTime = function () {
     document.onkeypress = resetTimer;
 };
 
-const subscribeButton = document.getElementById('subscribeBtntn');
-
-subscribeButton.addEventListener('click', async () => {
-    try {
-        const response = await fetch('/payment/initiate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                itemName: 'Premium Subscription',
-                itemPrice: 25.0,
-                currency: 'EUR',
-            }),
-        });
-
-        const data = await response.json();
-
-        if (data.clientSecret) {
-            // Pass the client secret to Stripe's frontend library
-            stripe.confirmCardPayment(data.clientSecret, {
-                payment_method: {
-                    card: cardElement, // From Stripe.js card input
-                    billing_details: {
-                        name: document.getElementById('name').value,
-                    },
-                },
-            }).then((result) => {
-                if (result.error) {
-                    console.error(result.error.message);
-                } else if (result.paymentIntent.status === 'succeeded') {
-                    // Call the backend to save the transaction
-                    saveTransaction(result.paymentIntent);
-                }
-            });
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-});
-
 async function saveTransaction(paymentIntent) {
     const response = await fetch('/payment/save', {
         method: 'POST',
@@ -206,8 +192,3 @@ async function saveTransaction(paymentIntent) {
         alert('Payment saving failed!');
     }
 }
-
-
-
-
-inactivityTime();

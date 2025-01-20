@@ -5,6 +5,7 @@ namespace App\controllers;
 use App\models\Admin;
 use App\models\User;
 use App\services\PasswordResetService;
+use EmailVerification;
 use JetBrains\PhpStorm\NoReturn;
 use Stripe\Terminal\Location;
 
@@ -122,7 +123,7 @@ class LogInController
         if ($this->user->insertResetToken($email, $verificationCode, $resetTokenExpiry)) {
 
             require_once __DIR__.'/../helpers/EmailHelpers.php';
-            \EmailVerification::sendVerificationEmail($email, $verificationCode,'reset-password');
+            EmailVerification::sendVerificationEmail($email, $verificationCode,'reset-password');
         } else {
             echo "Email-i është i zënë ose ka ndodhur një gabim gjatë regjistrimit!";
         }
@@ -141,7 +142,7 @@ class LogInController
             header('Location: /login');
         }else{
             header('Location: /reset-password');
-        };
+        }
         exit();
 
     }

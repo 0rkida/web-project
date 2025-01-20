@@ -87,7 +87,7 @@ $conn->close();
     <label for="height">Height:</label>
     <input type="text" id="height" name="height" value="<?php echo $user['height']; ?>">
 
-    <button type="submit">Update Profile</button>
+    <button type="submit">Update Info</button>
 </form>
 
 </body>

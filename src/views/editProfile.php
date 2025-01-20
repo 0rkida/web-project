@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+global$data; global$data; <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,41 +6,39 @@
 </head>
 <body>
 <h1>Profile Form</h1>
-<form action="/profil/update" method="post">
-    <label for="profile_picture">Profile Picture Path:</label>
-    <input type="text" id="profile_picture" name="profile_picture" value="<?=htmlspecialchars($data['profile_picture'])?>"><br><br>
+<form action="/profil/update" method="POST">
+    <label for="profile_picture">Profile Picture:</label>
+    <input type="text" id="profile_picture" name="profile_picture" value="<?= htmlspecialchars($data['profile_picture']) ?>">
 
     <label for="age">Age:</label>
-    <input type="number" id="age" name="age" value="<?=htmlspecialchars($data['age'])?>" required><br><br>
+    <input type="number" id="age" name="age" value="<?= htmlspecialchars($data['age']) ?>">
 
     <label for="gender">Gender:</label>
-    <select id="gender" name="gender" required>
-        <option value="male" <?=($data['gender'] === "male" ? "selected" : "")?>>Male</option>
-        <option value="female" <?=($data['gender'] === "female" ? "selected" : "")?>>Female</option>
-    </select><br><br>
+    <input type="text" id="gender" name="gender" value="<?= htmlspecialchars($data['gender']) ?>">
 
     <label for="location">Location:</label>
-    <input type="text" id="location" name="location" value="<?=htmlspecialchars($data['location'])?>"><br><br>
+    <input type="text" id="location" name="location" value="<?= htmlspecialchars($data['location']) ?>">
 
-    <label for="self_summary">Self Summary:</label><br>
-    <textarea id="self_summary" name="self_summary"><?=htmlspecialchars($data['self_summary'])?></textarea><br><br>
+    <label for="self_summary">Self Summary:</label>
+    <textarea id="self_summary" name="self_summary"><?= htmlspecialchars($data['self_summary']) ?></textarea>
 
-    <label for="hobby">Hobbies:</label><br>
-    <textarea id="hobby" name="hobby"><?=htmlspecialchars($data['hobby'])?></textarea><br><br>
+    <label for="hobby">Hobby:</label>
+    <input type="text" id="hobby" name="hobby" value="<?= htmlspecialchars($data['hobby']) ?>">
 
-    <label for="doing_with_life">Doing With Life:</label><br>
-    <textarea id="doing_with_life" name="doing_with_life"><?=htmlspecialchars($data['doing_with_life'])?></textarea><br><br>
+    <label for="doing_with_life">Doing with Life:</label>
+    <input type="text" id="doing_with_life" name="doing_with_life" value="<?= htmlspecialchars($data['doing_with_life']) ?>">
 
-    <label for="good_at">Good At:</label><br>
-    <textarea id="good_at" name="good_at"><?=htmlspecialchars($data['good_at'])?></textarea><br><br>
+    <label for="good_at">Good at:</label>
+    <input type="text" id="good_at" name="good_at" value="<?= htmlspecialchars($data['good_at']) ?>">
 
     <label for="ethnicity">Ethnicity:</label>
-    <input type="text" id="ethnicity" name="ethnicity" value="<?=htmlspecialchars($data['ethnicity'])?>"><br><br>
+    <input type="text" id="ethnicity" name="ethnicity" value="<?= htmlspecialchars($data['ethnicity']) ?>">
 
     <label for="height">Height:</label>
-    <input type="number" step="0.01" id="height" name="height" value="<?=htmlspecialchars($data['height'])?>"><br><br>
+    <input type="text" id="height" name="height" value="<?= htmlspecialchars($data['height']) ?>">
 
-    <button type="submit">Submit</button>
+    <button type="submit">Update Profile</button>
 </form>
+<button type="button" id="updateInfoBtn" class="profile-btn">Update Info</button>
 </body>
 </html>

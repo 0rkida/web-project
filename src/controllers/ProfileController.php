@@ -71,6 +71,7 @@ class ProfileController
         $this->checkSessionTimeout();
         $data = $this->profile->getProfileData($_SESSION['userId']);
         include __DIR__ . '/../views/editProfile.php';
+        header('Location: /profil/update');
     }
 
     public function postProfile(): void
@@ -103,24 +104,23 @@ class ProfileController
         }
     }
 
-    public function putProfile($data): void
+    public function putProfile(array $data): void
     {
         $this->checkSessionTimeout();
-
         if (!isset($_SESSION['userId'])) {
             header('Location: /login');
             exit();
         }
-
         $userId = $_SESSION['userId'];
+        // Add the profile data received in the POST request
         $updated = $this->profile->updateUserProfile($userId, $data);
-
         if ($updated) {
-            header('Location: /profil/update');
+            header('Location: /profil');  // Redirect after successful update
         } else {
             echo "Error updating profile.";
         }
     }
+
 
     public function uploadPictures($userId, $files): array
     {
