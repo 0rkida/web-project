@@ -31,35 +31,41 @@ class PasswordResetService
         $resetTokenExpiry = date("Y-m-d H:i:s", strtotime('+1 hour'));
 
         if ($this->user->saveResetToken($email, $resetToken, $resetTokenExpiry)) {
+            error_log("Password reset token has been sent to " . $email);
             return $this->sendResetEmail($email, $resetToken);
         } else {
+           error_log("Failed to send reset token to " . $email);
             return "Failed to save reset token.";
         }
     }
 
     public function sendResetEmail($email, $resetToken): string
     {
+        $info = require_once __DIR__ . "/../../emailkeys.php";
         try {
+            // Server settings
             $this->mailer->isSMTP();
-            $this->mailer->Host = 'smtp.gmail.com';
+            $this->mailer->Host = $info['host'];
             $this->mailer->SMTPAuth = true;
-            $this->mailer->Username = 'holtaozuni12@gmail.com';
-            $this->mailer->Password = 'your_password';
+            $this->mailer->Username = $info['username'];
+            $this->mailer->Password = $info['password'];
             $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $this->mailer->Port = 587;
+            $this->mailer->Port = $info['port'];
 
-            $this->mailer->setFrom('no-reply@yourdomain.com', 'Your App');
+            // Recipients
+            $this->mailer->setFrom($info['email'], $info['name']);
             $this->mailer->addAddress($email);
 
             $this->mailer->isHTML(true);
             $this->mailer->Subject = "Reset Your Password";
-            $this->mailer->Body = "<p>Click <a href='http://yourdomain.com/reset_password.php?token=$resetToken'>here</a> to reset your password.</p>";
+            $this->mailer->Body = "<p>Click <a href='http://{$_SERVER['HTTP_HOST']}/reset-password?token=$resetToken'>here</a> to reset your password.</p>";
 
             if ($this->mailer->send()) {
-                return "A password reset email has been sent to your email address.";
+                error_log("A password reset email has been sent to your email address.");
             } else {
-                return "Error sending email: " . $this->mailer->ErrorInfo;
+                error_log( "Error sending email: " . $this->mailer->ErrorInfo);
             }
+            return true;
         } catch (Exception $e) {
             return "Mailer Error: " . $e->getMessage();
         }

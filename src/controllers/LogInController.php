@@ -6,6 +6,7 @@ use App\models\Admin;
 use App\models\User;
 use App\services\PasswordResetService;
 use JetBrains\PhpStorm\NoReturn;
+use Stripe\Terminal\Location;
 
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Admin.php';
@@ -32,8 +33,12 @@ class LogInController
         }
         require_once 'C:/xampp/htdocs/web-project/public/login.html';
     }
-    public function getResetPasswordView(): void {
-        require_once 'C:\xampp\htdocs\web-project\src\views\reset_password.html'; }
+    public function getResetPasswordView(): void
+    {
+        require_once __DIR__ . '/../views/reset_password.php';
+        exit(); // It's good practice to exit after a header redirect.
+    }
+
     public function getForgetPasswordView(): void {
         require_once 'C:\xampp\htdocs\web-project\public\forgot_password.html';
     }
@@ -109,14 +114,36 @@ class LogInController
         }
     }
 
-    public function requestPasswordReset($email): string
+    public function passwordReset($email)
     {
-        return $this->passwordResetService->requestPasswordReset($email);
+        $verificationCode = $this->user->generateVerificationCode();
+        // Provoni të regjistroni përdoruesin
+        $resetTokenExpiry = date("Y-m-d H:i:s", strtotime('+1 hour'));
+        if ($this->user->insertResetToken($email, $verificationCode, $resetTokenExpiry)) {
+
+            require_once __DIR__.'/../helpers/EmailHelpers.php';
+            \EmailVerification::sendVerificationEmail($email, $verificationCode,'reset-password');
+        } else {
+            echo "Email-i është i zënë ose ka ndodhur një gabim gjatë regjistrimit!";
+        }
+
     }
 
-    public function resetPassword($token, $newPassword): string
+    public function resetPassword($token, $email, $newPassword): string
     {
-        return $this->passwordResetService->resetPassword($token, $newPassword);
+        if(!$this->user->verifyResetToken($token)){
+            echo 'wrong token';
+            exit();
+        }
+        $hashed_password= password_hash($newPassword, PASSWORD_BCRYPT);
+        if($this->user->updatePassword($token, $email, $hashed_password)){
+
+            header('Location: /login');
+        }else{
+            header('Location: /reset-password');
+        };
+        exit();
+
     }
 }
 

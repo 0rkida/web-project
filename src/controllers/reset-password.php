@@ -2,10 +2,7 @@
 
 // Database connection function
 function getDbConnection() {
-    $conn = new mysqli('localhost', 'username', 'password', 'database');
-    if ($conn->connect_error) {
-        die('Connection failed: ' . $conn->connect_error);
-    }
+    global $conn;
     return $conn;
 }
 
@@ -32,12 +29,14 @@ function insertResetToken($conn, $user_id, $token, $expiry) {
 
 // Function to send reset email
 function sendResetEmail($email, $resetLink) {
-    $subject = 'Password Reset';
-    $message = 'Click the following link to reset your password: ' . $resetLink;
-    $headers = 'From: holtaozuni12@gmail.com' . "\r\n" .
-        'Reply-To: no-reply@yourdomain.com' . "\r\n" .
-        'X-Mailer: PHP/' . phpversion();
-    mail($email, $subject, $message, $headers);
+//    $subject = 'Password Reset';
+//    $message = 'Click the following link to reset your password: ' . $resetLink;
+//    $headers = 'From: holtaozuni12@gmail.com' . "\r\n" .
+//        'Reply-To: no-reply@yourdomain.com' . "\r\n" .
+//        'X-Mailer: PHP/' . phpversion();
+//    mail($email, $subject, $message, $headers);
+    require_once  __DIR__.'/../helpers/EmailHelpers.php';
+    EmailVerification::sendVerificationEmail($email, $resetLink,'reset-password');
 }
 
 // Main logic
