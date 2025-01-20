@@ -17,10 +17,10 @@ class MatchController
     {
         if ($type === 'matches') {
             $matches = $this->matchesModel->getMatchesForUser($userId);
-            require 'views/matches.php';
+            require 'src/views/matches.php';
         } elseif ($type === 'notifications') {
             $notifications = $this->matchesModel->getNotificationsForUser($userId);
-            require 'views/notifications.php';
+            require 'src/views/notifications.php';
         } else {
             echo "Invalid type.";
         }
