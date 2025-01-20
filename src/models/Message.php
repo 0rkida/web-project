@@ -34,7 +34,7 @@ class Message
     {
         $query = "SELECT m.sender_id, m.receiver_id, u.username 
                   FROM messages m 
-                  JOIN users u ON m.user_id = u.id 
+                  JOIN users u ON m.id = u.id 
                   ORDER BY m.created_at ";
 
         $stmt = $this->dbConnection->prepare($query);
@@ -43,5 +43,31 @@ class Message
         // Get the result and return it as an associative array
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Search users based on a search term
+    public function searchUsers($outgoingId, $searchTerm): string
+    {
+        $searchTerm = $this->dbConnection->real_escape_string($searchTerm);
+        $query = "SELECT * FROM users WHERE NOT id = ? AND (full_name LIKE ?)";
+
+        $stmt = $this->dbConnection->prepare($query);
+        $searchTerm = "%{$searchTerm}%";
+        $stmt->bind_param('iss', $outgoingId, $searchTerm, $searchTerm);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $output = "";
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                // Generate output using the user data (adapt as needed)
+                $output .= "<div>{$row['full_name']}</div>";
+            }
+        } else {
+            $output .= 'No user found related to your search term';
+        }
+
+        return $output;
     }
 }
