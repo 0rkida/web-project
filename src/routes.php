@@ -150,9 +150,9 @@ switch (strtolower($request_path)) {
             $email = trim($_POST['email']);
             header('Location: /reset-password');
             exit();
-
         }
         break;
+
     case '/reset-password':
         require 'controllers/LogInController.php';
         $LogInController = new LogInController($conn);

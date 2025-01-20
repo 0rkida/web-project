@@ -35,7 +35,7 @@ class LogInController
     public function getResetPasswordView(): void {
         require_once 'C:\xampp\htdocs\web-project\src\views\reset_password.html'; }
     public function getForgetPasswordView(): void {
-        require_once 'C:\xampp\htdocs\web-project\src\views\forgot_password.html';
+        require_once 'C:\xampp\htdocs\web-project\public\forgot_password.html';
     }
     public function handleLogin(array $data): void
     {
