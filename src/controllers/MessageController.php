@@ -36,7 +36,17 @@ class MessageController {
                 echo "Message cannot be empty.";
             }
         }
+    public function searchUsers(): void
+    {
+        $outgoingId = $_SESSION['unique_id']; // Assuming unique_id is stored in session
+        $searchTerm = $_POST['searchTerm'] ?? '';
 
-
+        if (!empty($searchTerm)) {
+            $output = $this->message->searchUsers($outgoingId, $searchTerm);
+            echo $output;
+        } else {
+            echo "Search term cannot be empty.";
+        }
+    }
 
 }

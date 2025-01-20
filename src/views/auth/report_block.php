@@ -9,35 +9,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Get form data
-    $reportedUserId = htmlspecialchars($_POST['reported_user_id']);
-    $action = htmlspecialchars($_POST['action']);
-    $reason = htmlspecialchars($_POST['reason']);
-    $reportingUserId = $_SESSION['user_id']; // Logged-in user's ID
+    $reportedUserId = filter_var($_POST['reported_user_id'], FILTER_VALIDATE_INT);
+    $action = filter_var($_POST['action'], FILTER_SANITIZE_STRING);
+    $reason = isset($_POST['reason']) ? htmlspecialchars($_POST['reason']) : null;
+    $reportingUserId = $_SESSION['user_id'];
 
+    if(!$reportedUserId || !$action|| ($action === 'report' && empty($reason))){
+        die("Invalid or missing from data.");
+    }
     // Establish database connection
     $conn = Database::getConnection();
 
     try {
         if ($action === 'report') {
-            // Insert report into the database
-            $stmt = $conn->prepare("INSERT INTO reports (reporting_user_id, reported_user_id, reason, created_at) VALUES (?, ?, ?, NOW())");
-            $stmt->bind_param("iis", $reportingUserId, $reportedUserId, $reason);
+            $stmt = $conn->prepare("SELECT COUNT(*) FROM reports WHERE reported_id = ? AND id = ?");
+            $stmt->bind_param("ii", $reportedUserId, $reportingUserId);
             $stmt->execute();
+            $stmt->bind_result($count);
+            $stmt->fetch();
+            $stmt->close();
+
+            if ($count > 0) {
+                die("You have already reported this user.");
+            }
+
+            insertRecord($conn, 'reports', ['id', 'reported_id', 'reason', 'created_at'], [$reportingUserId, $reportedUserId, $reason, date('Y-m-d H:i:s')], 'iis');
             echo "User has been reported.";
-        } elseif ($action === 'block') {
-            // Insert block into the database
-            $stmt = $conn->prepare("INSERT INTO blocks (blocking_user_id, blocked_user_id, created_at) VALUES (?, ?, NOW())");
+        } else if ($action === 'block') {
+            $stmt = $conn->prepare("SELECT COUNT(*) FROM blocks WHERE blocking_user_id = ? AND blocked_user_id = ?");
             $stmt->bind_param("ii", $reportingUserId, $reportedUserId);
             $stmt->execute();
+            $stmt->bind_result($count);
+            $stmt->fetch();
+            $stmt->close();
+
+            if ($count > 0) {
+                die("You have already blocked this user.");
+            }
+
+            insertRecord($conn, 'blocks', ['blocking_user_id', 'blocked_user_id', 'created_at'], [$reportingUserId, $reportedUserId, date('Y-m-d H:i:s')], 'iis');
             echo "User has been blocked.";
         } else {
             echo "Invalid action.";
         }
     } catch (Exception $e) {
         // Handle database errors
-        echo "An error occurred: " . $e->getMessage();
+        error_log("Error occurred: " . $e->getMessage());
+        echo "An error occurred. Please try again later. ";
     } finally {
-        $stmt->close();
         $conn->close();
     }
 } else {
