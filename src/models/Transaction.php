@@ -1,7 +1,9 @@
 <?php
 
-namespace models;
-use Database;
+namespace src\models;
+use mysqli;
+require_once __DIR__ . '/../../database/PaymentDatabase.php';
+use PaymentDatabase;
 
 class Transaction
 {
@@ -9,7 +11,7 @@ class Transaction
 
     public function __construct()
     {
-        $this->db = new Database;
+        $this->db = new PaymentDatabase;
     }
 
     public function addTransaction($data)
@@ -40,5 +42,25 @@ class Transaction
         $results = $this->db->resultset();
 
         return $results;
+    }
+
+    public static function create($data) {
+        $db = new PaymentDatabase();
+
+        // Prepare SQL query to insert transaction data
+        $db->query("INSERT INTO transactions (id, customer_id, product, amount, currency, status) VALUES (?, ?, ?, ?, ?, ?)");
+        $db->bind(1, $data['id']);
+        $db->bind(2, $data['customer_id']);
+        $db->bind(3, $data['product']);
+        $db->bind(4, $data['amount']);
+        $db->bind(5, $data['currency']);
+        $db->bind(6, $data['status']);
+
+        // Execute the query
+        if ($db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
