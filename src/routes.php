@@ -150,9 +150,9 @@ switch (strtolower($request_path)) {
             $email = trim($_POST['email']);
             header('Location: /reset-password');
             exit();
-
         }
         break;
+
     case '/reset-password':
         require 'controllers/LogInController.php';
         $LogInController = new LogInController($conn);
@@ -252,6 +252,39 @@ switch (strtolower($request_path)) {
             $SearchController->postSearch($_POST);
         }
         break;
+
+    case '/match/view':
+        require 'controllers/MatchController.php';
+        $matchController = new \App\controllers\MatchController($conn);
+
+        if ($requestMethod === 'GET') {
+            $type = $_GET['type'] ?? null; // 'matches' or 'notifications'
+            $userId = $_SESSION['user_id'] ?? null; // Assuming user ID is stored in session
+
+            if ($type && $userId) {
+                $matchController->getView($type, $userId);
+            } else {
+                echo "Invalid request parameters.";
+            }
+        }
+        break;
+
+    case '/match/like':
+        require 'controllers/MatchController.php';
+        $matchController = new \App\controllers\MatchController($conn);
+
+        if ($requestMethod === 'POST') {
+            $likedByUserId = $_SESSION['user_id'] ?? null; // Assuming user ID is stored in session
+            $likedUserId = $_POST['liked_user_id'] ?? null;
+
+            if ($likedByUserId && $likedUserId) {
+                $matchController->postLike($likedByUserId, $likedUserId);
+            } else {
+                echo "Invalid request parameters.";
+            }
+        }
+        break;
+
 
 
 

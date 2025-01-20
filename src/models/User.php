@@ -324,5 +324,32 @@ class User
     }
 
 
+    public function getUserByResetToken($token)
+    {
+        $stmt = $this->db->prepare("SELECT users.id, users.email FROM users JOIN password_resets ON users.id = password_resets.user_id WHERE password_resets.reset_token = ?");
+        $stmt->bind_param('s', $token);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        return $user;
+    }
+        public function updateUserPassword($userId, $newPassword): bool
+        {
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $stmt = $this->db->prepare("UPDATE users SET password = ? WHERE id = ?");
+        $stmt->bind_param('si', $hashedPassword, $userId);
+        $stmt->execute(); $stmt->close();
+        return $stmt->affected_rows > 0;
+    }
+    public function deleteResetToken($token): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM password_resets WHERE reset_token = ?");
+        $stmt->bind_param('s', $token);
+        $stmt->execute();
+        $stmt->close();
+        return $stmt->affected_rows > 0;
+    }
+
 
 }

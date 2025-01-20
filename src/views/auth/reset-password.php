@@ -1,36 +1,65 @@
 <?php
-// Include necessary files
-global $db;
-global $conn;
-require '../../db.php';  // Ensure your DB connection is correctly set here
-require '../../models/User.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $token = $_POST['token'];
-    $newPassword = $_POST['new_password'];
-    // Validate the token
-    // TODO: Add your database connection code here
-
-    $sql = "SELECT * FROM password_resets WHERE token='$token'";
-    $result = mysqli_query($conn, $sql);
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $email = $row['email'];
-
-        // Update the user's password
-        $newPasswordHash = password_hash($newPassword, PASSWORD_BCRYPT);
-        $sql = "UPDATE users SET password='$newPasswordHash' WHERE email='$email'";
-        if (mysqli_query($conn, $sql)) {
-            // Delete the reset token
-            $sql = "DELETE FROM password_resets WHERE token='$token'";
-            mysqli_query($conn, $sql);
-            echo "Your password has been successfully reset.";
-        }
-    } else {
-        echo "Invalid or expired token.";
+// Database connection function
+function getDbConnection() {
+    $conn = new mysqli('localhost', 'username', 'password', 'database');
+    if ($conn->connect_error) {
+        die('Connection failed: ' . $conn->connect_error);
     }
-} else {
-    $token = $_GET['token'];
+    return $conn;
 }
 
+// Function to fetch user ID by email
+function getUserIdByEmail($conn, $email) {
 
+    global $user_id;
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $stmt->bind_result($user_id); // Corrected variable name here
+    $stmt->fetch();
+    $stmt->close();
+    return $user_id;
+}
+
+// Function to insert reset token
+function insertResetToken($conn, $user_id, $token, $expiry) {
+    $stmt = $conn->prepare("INSERT INTO password_resets (user_id, reset_token, reset_token_expiry, remember_token) VALUES (?, ?, ?, '')");
+    $stmt->bind_param('iss', $user_id, $token, $expiry);
+    $stmt->execute();
+    $stmt->close();
+}
+
+// Function to send reset email
+function sendResetEmail($email, $resetLink) {
+    $subject = 'Password Reset';
+    $message = 'Click the following link to reset your password: ' . $resetLink;
+    $headers = 'From: holtaozuni12@gmail.com' . "\r\n" .
+        'Reply-To: no-reply@yourdomain.com' . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
+    mail($email, $subject, $message, $headers);
+}
+
+// Main logic
+if (isset($_POST['email'])) {
+    $email = $_POST['email'];
+    echo 'Email received: ' . $email . '<br>';
+
+    $token = bin2hex(random_bytes(50));
+    $expiry = date("Y-m-d H:i:s", strtotime('+1 hour'));
+    $conn = getDbConnection();
+
+    $user_id = getUserIdByEmail($conn, $email);
+    echo 'User ID fetched: ' . $user_id . '<br>';
+
+    if ($user_id !== null) {
+        insertResetToken($conn, $user_id, $token, $expiry);
+        $resetLink = 'http://yourdomain.com/reset-password.php?token=' . $token;
+        sendResetEmail($email, $resetLink);
+        echo 'Password reset link has been sent to your email.';
+    } else {
+        echo 'No user found with that email address.';
+    }
+
+    $conn->close();
+}

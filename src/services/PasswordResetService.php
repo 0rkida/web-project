@@ -43,7 +43,7 @@ class PasswordResetService
             $this->mailer->isSMTP();
             $this->mailer->Host = 'smtp.gmail.com';
             $this->mailer->SMTPAuth = true;
-            $this->mailer->Username = 'your_email@gmail.com';
+            $this->mailer->Username = 'holtaozuni12@gmail.com';
             $this->mailer->Password = 'your_password';
             $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $this->mailer->Port = 587;
