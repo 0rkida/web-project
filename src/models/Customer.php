@@ -2,7 +2,7 @@
 
 namespace src\models;
 use mysqli;
-
+require_once ('C:\xampp\htdocs\web-project\config\paymentsConfig.php');
 require_once __DIR__ . '/../../database/PaymentDatabase.php';
 use PaymentDatabase;
 

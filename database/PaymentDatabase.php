@@ -1,10 +1,10 @@
 <?php
 
-
+require_once ('C:\xampp\htdocs\web-project\config\paymentsConfig.php');
 class PaymentDatabase {
     private $host = DB_HOST;
-    private $user = DB_USER;
-    private $pass = DB_PASS;
+    private $user = DB_USERNAME; // Changed from DB_USER to DB_USERNAME
+    private $pass = DB_PASSWORD; // Changed from DB_PASS to DB_PASSWORD
     private $dbname = DB_NAME;
 
     private $conn;
