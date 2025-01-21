@@ -2,8 +2,8 @@ function initChat() {
     const chatInput = document.querySelector('main footer textarea');
     const chatMessages = document.querySelector('#chat');
     const sendButton = document.querySelector('main footer a');
-    const chatBox = document.getElementById('chat_message_area');
-    const owenerProfileBio = document.getElementById('owner_profile_bio');
+    //const chatBox = document.getElementById('chat_message_area');
+    //const owenerProfileBio = document.getElementById('owner_profile_bio');
     const menuButton = document.querySelector('.menu-button');
     const menu = document.querySelector('.menu');
     let unique_id;
@@ -79,7 +79,7 @@ function initChat() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Function to send the message to the server (optional)
+    // Function to send the message to the server
     function sendMessageToServer(message) {
         $.post('Message/send', { message: message }, function (data) {
             //Handle server response (e.g., confirmation, error handling)
@@ -99,72 +99,6 @@ function initChat() {
             }
         });
     }
-
-    // Fetch and display individual user details
-    function getUserDetails(uniq_id) {
-        $.post('Message/getIndividual', { data: uniq_id }, function (data) {
-            const res_data = JSON.parse(data);
-            setUserDetails(res_data);
-        });
-    }
-
-    // Set user details (profile bio, email, etc.)
-    function setUserDetails(data) {
-        const user_name = `${data[0]['user_fname']} ${data[0]['user_lname']}`;
-        const avtar = `../upload/${data[0]['user_avtar']}`;
-        $('#name_last_seen h6').html(user_name);
-        $('#chat_profile_image').css('background-image', `url(${avtar})`);
-        $('#new_message_avtar').css('background-image', `url(${avtar})`);
-        $('#user_details_container_avtar').css('background-image', `url(${avtar})`);
-        $('#details_of_user h5').html(user_name);
-        $('#details_of_bio').html(data[0]['bio'] || "--Not Given--");
-    }
-
-    // Block/Unblock functionality
-    function getBlockUserData() {
-        $.post('Message/getBlockUserData', { uniq: unique_id }, function (data) {
-            const jsonData = JSON.parse(data);
-            if (jsonData.length > 0) {
-                $('#messageText').attr('disabled', true);
-                $('#messageText').attr('placeholder', 'This user is not receiving messages at this time.');
-                $('#send_message').attr('disabled', true);
-            } else {
-                $('#messageText').removeAttr('disabled');
-                $('#messageText').attr('placeholder', 'Start Typing...');
-                $('#send_message').removeAttr('disabled');
-            }
-        });
-    }
-
-    // Update profile bio (edit bio)
-    $('#edit_icon').click(function () {
-        $('#main').addClass('blur');
-        $('#update_container').show();
-        $('#update_bio').focus();
-    });
-
-    // Event listeners for the user list and user profile
-    $('#user_list').on('click', '.innerBox', function () {
-        unique_id = $(this).find('#user_avtar').children('#hidden_id').val();
-        getUserDetails(unique_id);
-        getBlockUserData();
-        setInterval(getBlockUserData, 1000);
-    });
-
-    // Show/Hide menu on hover
-    menuButton.addEventListener('mouseover', () => {
-        menu.classList.add('open');
-    });
-    menuButton.addEventListener('mouseout', () => {
-        menu.classList.remove('open');
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!menu.contains(e.target)) {
-            menu.classList.remove('open');
-        }
-    });
 
     // Initialize chat and user list
     getUserList();
