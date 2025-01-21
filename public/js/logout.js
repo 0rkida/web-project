@@ -10,7 +10,7 @@ function logout() {
         body: JSON.stringify({ message: 'User inactive for 15 minutes' })
     }).then(response => {
         if (response.ok) {
-            window.location.href = '/logout'; // Redirect to login page
+            window.location.href = '/login'; // Redirect to login page
         } else {
             console.error('Logout failed');
         }

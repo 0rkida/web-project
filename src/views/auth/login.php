@@ -37,10 +37,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Handle "Remember Me" for admin
         if ($rememberMe) {
-            $token = bin2hex(random_bytes(16)); // Generate a random token
-            setcookie("remember_me", $token, time() + (86400 * 30), "/");
-            $this ->admin ->saveRememberMeToken($adminModel['id'], $token);
+            // Generate a random token
+            $token = bin2hex(random_bytes(16));
+
+            // Cookie parameters
+            $cookie_name = "remember_me";
+            $cookie_value = $token;
+
+            $path = "/";
+            $domain = ""; // Adjust if needed, e.g., ".example.com"
+            $secure = true; // Set to true for HTTPS
+            $httponly = true; // Prevent JavaScript access
+            $samesite = "Strict"; // Options: Strict, Lax, None
+
+            // Set the cookie
+            setcookie(
+                $cookie_name,
+                $cookie_value,
+                [
+
+
+                    'path' => $path,
+                    'domain' => $domain,
+                    'secure' => $secure,
+                    'httponly' => $httponly,
+                    'samesite' => $samesite
+                ]
+            );
+
+            // Save the token in the database
+            $this->admin->saveRememberMeToken($adminModel['id'], $token);
         }
+
 
         // Redirect to the admin dashboard
         header("Location: /admin/dashboard.php");
@@ -62,9 +90,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Handle "Remember Me" for user
             if ($rememberMe) {
                 $token = bin2hex(random_bytes(16)); // Generate a random token
-                setcookie("remember_me", $token, time() + (86400 * 30), "/");
-                $this->user ->saveRememberMeToken($userModel['id'], $token);
+                $cookie_name = "remember_me";
+                $cookie_value = $token;
+                $path = "/";
+                $domain = ""; // Set to your domain if needed, e.g., ".example.com"
+                $secure = true; // Set to true for HTTPS
+                $httponly = true; // Prevent access via JavaScript
+                $samesite = "Strict"; // Options: Strict, Lax, None (None requires HTTPS)
+
+                // Set the cookie with all options
+                setcookie(
+                    $cookie_name,
+                    $cookie_value,
+                    [
+
+                        'path' => $path,
+                        'domain' => $domain,
+                        'secure' => $secure,
+                        'httponly' => $httponly,
+                        'samesite' => $samesite
+                    ]
+                );
+
+                // Save the token in the database
+                $this->user->saveRememberMeToken($userModel['id'], $token);
             }
+
 
             // Redirect to the user dashboard
             header("Location: /home");
@@ -76,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Insert failed login attempt into login_attempts table
             $user_id = User::getUserIdByEmail($email); // Assuming a method to get user ID by email
-            $sql = "INSERT INTO login_attempts (user_id, is_successful) VALUES (?, false)";
+            $sql = "INSERT INTO login_attempts (user_id) VALUES (?)";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $user_id);
             $stmt->execute();

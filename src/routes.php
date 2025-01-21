@@ -44,6 +44,7 @@ $mailer = new PHPMailer(true);
 $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 error_log("$request_path");
+require 'remember_me.php';
 
 switch (strtolower($request_path)) {
     case '/profil':
@@ -198,6 +199,13 @@ switch (strtolower($request_path)) {
         require_once 'controllers/LogInController.php';
         $logInController = new LogInController($conn);
         $logInController->Logout();
+        setcookie("remember_me", "", [
+            'path' => '/',
+            'domain' => '', // Match the domain used in the cookie
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'String',
+        ]);
         break;
 
     case '/verify':
