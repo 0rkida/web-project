@@ -1,20 +1,31 @@
-<!-- matches.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matches</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <script src="js/matches.js" defer></script>
 </head>
 <body>
 <header>
     <h1>Your Matches</h1>
 </header>
 <main>
-    <section>
-        <h2>Suggested Matches</h2>
-        <p>Like or Dislike to find your perfect match.</p>
+    <!-- Liked Section -->
+    <section class="matches-section">
+        <h2>Liked You</h2>
+        <div id="liked-users" class="profile-grid">
+            <!-- Users who liked you will appear here -->
+        </div>
+    </section>
+
+    <!-- Match Section -->
+    <section class="matches-section">
+        <h2>Matches</h2>
+        <div id="mutual-matches" class="profile-grid">
+            <!-- Mutual matches will appear here -->
+        </div>
     </section>
 </main>
 </body>
