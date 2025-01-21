@@ -1,9 +1,10 @@
-include 'sessionManager.php';
+
   <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Profile Form</title>
+    <script src="/js/logout.js"></script>
 </head>
 <body>
 <h1>Profile Form</h1>

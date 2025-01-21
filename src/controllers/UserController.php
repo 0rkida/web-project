@@ -1,60 +1,59 @@
 <?php
 namespace App\controllers;
-use AllowDynamicProperties;
+
 use App\models\User;
-use Database;
-use PDO;
-use SessionController;
 
-require_once 'C:\xampp\htdocs\web-project\src\db.php';
-require_once '../models/User.php';
-require_once '../controllers/SessionController.php';
-include 'sessionManager.php';
+class UserController
+{
+    private user $user;
 
-#[AllowDynamicProperties] class UserController {
-    public User $user;
-    private SessionController $sessionController;
-    public function __construct() {
-        $database = new Database();
-        $this->db = $database->getConnection();
-        $this->user = new User($this->db);
-        $this->sessionController = new SessionController($this->db);
-
+    public function __construct($dbConnection)
+    {
+        $this->user = new User($dbConnection);
     }
 
-    public function register($data)  {
-        global $email, $password;
-        $this->user->full_name = $data['full_name'];
-        $this->user->email = $data['email'];
-        $this->user->password = password_hash($data['password'], PASSWORD_BCRYPT);
-        $this->user->role = 'user';
-        $this->user->created_at = date('Y-m-d H:i:s');
+    // Handles user login
+    public function login($email, $password)
+    {
+        // Check if the user is blocked
+        if ($this->user->isBlocked($email)) {
+            return [
+                'success' => false,
+                'message' => 'Your account is temporarily blocked due to multiple failed login attempts. Please try again later.'
+            ];
+        }
 
-        if ($this->user->register($email, $password)) {
-            return ['status' => true, 'message' => 'User registered successfully.'];
+        // Authenticate the user
+        $userId = $this->user->authenticateUser($email, $password);
+
+        if ($userId) {
+            // Reset failed attempts on successful login
+            $this->user->resetFailedAttempts($email);
+
+            // Start the session and store user info
+            session_start();
+            $_SESSION['user_id'] = $userId;
+
+            return [
+                'success' => true,
+                'message' => 'Login successful.'
+            ];
         } else {
-            return ['status' => false, 'message' => 'User registration failed.'];
+            // Increment failed attempts
+            $this->user->incrementFailedAttempts($email);
+
+            // Get the current number of failed attempts
+            $failedAttempts = $this->user->getFailedAttempts($email);
+
+            $remainingAttempts = max(0, 7 - $failedAttempts);
+            $blockMessage = $remainingAttempts === 0
+                ? 'Your account is now blocked for 30 minutes.'
+                : "You have $remainingAttempts more attempts before your account is blocked.";
+
+            return [
+                'success' => false,
+                'message' => "Invalid email or password. $blockMessage"
+            ];
         }
     }
-
-    public function login($email, $password) {
-        $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":email", $email);
-        $stmt->execute();
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password'])) {
-            // Start session and insert session data into the database
-            $sessionController = new SessionController($this->db);
-            $sessionController->startSession($user['id']);
-
-            return ['status' => true, 'message' => 'Login successful.'];
-        } else {
-            return ['status' => false, 'message' => 'Invalid email or password.'];
-        }
-    }
-
-
 }
