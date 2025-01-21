@@ -17,9 +17,11 @@ use App\controllers\MessageController;
 use App\controllers\NotificationController;
 use App\controllers\ProfileController;
 use App\controllers\RegisterController;
+use App\controllers\SessionController;
 use App\controllers\VerifyController;
 use App\services\PasswordResetService;
 use PHPMailer\PHPMailer\PHPMailer;
+use src\controllers\PaymentController;
 
 //$uri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -176,6 +178,12 @@ switch (strtolower($request_path)) {
         }
 
         break;
+        case '/check-session';
+        require 'controllers/SessionController.php';
+        $SessionController = new SessionController($conn);
+        $SessionController->checkSession();
+        break;
+
 
     case '/admin/dashboard':
                 require 'controllers/AdminController.php';
@@ -184,7 +192,6 @@ switch (strtolower($request_path)) {
                     $AdminController->getView(); // Show the admin dashboard
                 }
                 break;
-
 
 
     case '/logout':
@@ -209,7 +216,6 @@ switch (strtolower($request_path)) {
             }
             break;
     // Ensures no further code is executed after logout
-
 
 
     case '/messages':
@@ -295,7 +301,16 @@ switch (strtolower($request_path)) {
         }
         break;
 
+    case '/payment':
+        require 'controllers/PaymentController.php';
+        $PaymentController = new PaymentController();
 
+        if ($requestMethod === 'GET') {
+            $PaymentController->getView(); // Render the payment page
+        } else if ($requestMethod === 'POST') {
+            $PaymentController->postPayment(); // Handle payment form submission
+        }
+        break;
 
 
     default:

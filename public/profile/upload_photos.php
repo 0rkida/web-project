@@ -1,5 +1,5 @@
 <?php
-include 'session_check.php';
+include 'sessionManager.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['photos'])) {
     $uploadsDir = 'public/assets/img/user-uploads/albums/';  // Make sure this ends with a slash
