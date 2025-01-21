@@ -5,23 +5,30 @@ namespace App\controllers;
 use App\models\Admin;
 use App\models\User;
 use App\services\PasswordResetService;
+use EmailVerification;
 use JetBrains\PhpStorm\NoReturn;
+
+use Stripe\Terminal\Location;
+
 
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Admin.php';
 require_once __DIR__ . '/../services/PasswordResetService.php';
+require_once __DIR__ . '/../controllers/SessionController.php';
 
 class LogInController
 {
     private User $user;
     private Admin $admin;
     private PasswordResetService $passwordResetService;
+    private SessionController $sessionController;
 
     public function __construct($dbConnection)
     {
         $this->user = new User($dbConnection);
         $this->admin = new Admin($dbConnection);
         $this->passwordResetService = new PasswordResetService($dbConnection);
+        $this->sessionController = new SessionController($dbConnection);
     }
 
     public function getView(): void
@@ -32,8 +39,12 @@ class LogInController
         }
         require_once 'C:/xampp/htdocs/web-project/public/login.html';
     }
-    public function getResetPasswordView(): void {
-        require_once 'C:\xampp\htdocs\web-project\src\views\reset_password.html'; }
+    public function getResetPasswordView(): void
+    {
+        require_once __DIR__ . '/../views/reset_password.php';
+        exit(); // It's good practice to exit after a header redirect.
+    }
+
     public function getForgetPasswordView(): void {
         require_once 'C:\xampp\htdocs\web-project\public\forgot_password.html';
     }
@@ -87,6 +98,9 @@ class LogInController
         session_start();
         session_unset();
         session_destroy();
+        // Clear the remember me cookie
+        setcookie('remember_me', '', time() - 900, '/'); // Expire the cookie
+
         header('Location: /login');
         exit();
     }
@@ -109,14 +123,36 @@ class LogInController
         }
     }
 
-    public function requestPasswordReset($email): string
+    public function passwordReset($email)
     {
-        return $this->passwordResetService->requestPasswordReset($email);
+        $verificationCode = $this->user->generateVerificationCode();
+        // Provoni të regjistroni përdoruesin
+        $resetTokenExpiry = date("Y-m-d H:i:s", strtotime('+1 hour'));
+        if ($this->user->insertResetToken($email, $verificationCode, $resetTokenExpiry)) {
+
+            require_once __DIR__.'/../helpers/EmailHelpers.php';
+            EmailVerification::sendVerificationEmail($email, $verificationCode,'reset-password');
+        } else {
+            echo "Email-i është i zënë ose ka ndodhur një gabim gjatë regjistrimit!";
+        }
+
     }
 
-    public function resetPassword($token, $newPassword): string
+    public function resetPassword($token, $email, $newPassword): string
     {
-        return $this->passwordResetService->resetPassword($token, $newPassword);
+        if(!$this->user->verifyResetToken($token)){
+            echo 'wrong token';
+            exit();
+        }
+        $hashed_password= password_hash($newPassword, PASSWORD_BCRYPT);
+        if($this->user->updatePassword($token, $email, $hashed_password)){
+
+            header('Location: /login');
+        }else{
+            header('Location: /reset-password');
+        }
+        exit();
+
     }
 }
 

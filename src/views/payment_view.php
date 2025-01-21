@@ -1,4 +1,5 @@
 <?php
+include 'sessionManager.php';
 // payment_form.php
 require_once 'C:\xampp\htdocs\web-project\config\paymentsConfig.php';
 ?>

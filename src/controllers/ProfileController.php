@@ -5,6 +5,7 @@ use AllowDynamicProperties;
 require_once __DIR__.'/../models/Profile.php';
 require_once __DIR__.'/../models/User.php';
 require_once __DIR__.'/../models/UserPhotos.php';
+
 use App\models\Profile;
 use App\models\User;
 use App\models\UserPhotos;
@@ -21,11 +22,14 @@ class ProfileController
     public UserPhotos $userPhotos;
 
 
+
+
     public function __construct($dbConnection)
     {
         $this->checkSessionTimeout(); // Check session timeout on every instantiation
         $this->profile = new Profile($dbConnection);
         $this->user = new User($dbConnection);
+
         $this->userPhotos = new UserPhotos($dbConnection);
     }
 
@@ -55,6 +59,7 @@ class ProfileController
         $user = $this->user->getUserById($userId);
         $userProfile = $this->profile->getProfileData($userId);
 
+
         if ($userProfile) {
             $full_name = $user['full_name'];
             $location = $userProfile['location'];
@@ -71,6 +76,7 @@ class ProfileController
         $this->checkSessionTimeout();
         $data = $this->profile->getProfileData($_SESSION['userId']);
         include __DIR__ . '/../views/editProfile.php';
+        header('Location: /profil/update');
     }
 
     public function postProfile(): void
@@ -103,24 +109,23 @@ class ProfileController
         }
     }
 
-    public function putProfile($data): void
+    public function putProfile(array $data): void
     {
         $this->checkSessionTimeout();
-
         if (!isset($_SESSION['userId'])) {
             header('Location: /login');
             exit();
         }
-
         $userId = $_SESSION['userId'];
+        // Add the profile data received in the POST request
         $updated = $this->profile->updateUserProfile($userId, $data);
-
         if ($updated) {
-            header('Location: /profil/update');
+            header('Location: /profil');  // Redirect after successful update
         } else {
             echo "Error updating profile.";
         }
     }
+
 
     public function uploadPictures($userId, $files): array
     {

@@ -17,7 +17,9 @@ use App\controllers\MessageController;
 use App\controllers\NotificationController;
 use App\controllers\ProfileController;
 use App\controllers\RegisterController;
+use App\controllers\SessionController;
 use App\controllers\VerifyController;
+use App\services\PasswordResetService;
 use PHPMailer\PHPMailer\PHPMailer;
 use src\controllers\PaymentController;
 
@@ -149,7 +151,15 @@ switch (strtolower($request_path)) {
             $LogInController->getForgetPasswordView(); // Render the forgot password form
         } elseif ($requestMethod === 'POST') {
             $email = trim($_POST['email']);
-            header('Location: /reset-password');
+//            header('Location: /reset-password');
+//            require 'C:/xampp/htdocs/web-project/src/controllers/reset-password.php'
+            require_once __DIR__ . '/controllers/LoginController.php';
+            $logInController = new LogInController($conn);
+            $logInController->passwordReset($email);
+//            require_once __DIR__ . '/services/PasswordResetService.php';
+//            $PasswordResetService = new PasswordResetService($conn);
+//            $PasswordResetService->requestPasswordReset($email);
+            echo 'Email sent to: ' . $email;
             exit();
         }
         break;
@@ -162,11 +172,18 @@ switch (strtolower($request_path)) {
         }
         elseif ($requestMethod === 'POST') {
             $token = $_POST['token'];
+            $email = $_POST['email'];
             $newPassword = $_POST['new_password'];
-            echo $LogInController->resetPassword($token, $newPassword); // Handle password reset
+            $LogInController->resetPassword($token, $email, $newPassword); // Handle password reset
         }
 
         break;
+        case '/check-session';
+        require 'controllers/SessionController.php';
+        $SessionController = new SessionController($conn);
+        $SessionController->checkSession();
+        break;
+
 
     case '/admin/dashboard':
                 require 'controllers/AdminController.php';

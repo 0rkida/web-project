@@ -92,11 +92,14 @@
 </head>
 <body>
 <div class="container">
-    <form method="POST" action="/reset-password.php">
+    <form method="post" action="/reset-password">
         <h1>Reset Password</h1>
-        <input type="hidden" name="token" value="<?php echo $_GET['token']; ?>">
+        <input type="hidden" name="token" value="<?php echo $_GET['code']; ?>">
         <label>
             <input type="password" name="new_password" placeholder="New Password" required>
+        </label>
+        <label>
+        <input  type="email" name="email" placeholder="email" required>
         </label>
         <button type="submit">Reset</button>
     </form>

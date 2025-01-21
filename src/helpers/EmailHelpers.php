@@ -15,7 +15,7 @@ class EmailVerification {
         return bin2hex(random_bytes($length / 2));
     }
 
-    public static function sendVerificationEmail($userEmail, $verificationCode): void
+    public static function sendVerificationEmail($userEmail, $verificationCode, ?string $action = 'verify'): void
     {
         $mail = new PHPMailer(true);
        $info = require_once __DIR__ . "/../../emailkeys.php";
@@ -36,7 +36,7 @@ class EmailVerification {
             // Content
             $mail->isHTML();
             $mail->Subject = 'Email Verification';
-            $mail->Body    = "Please verify your email by clicking the link: <a href=http://{$_SERVER['HTTP_HOST']}/verify?code=$verificationCode'>Verify Email</a>";
+            $mail->Body    = "Please verify your email by clicking the link: <a href=\"http://{$_SERVER['HTTP_HOST']}/$action?code=$verificationCode\">Verify Email</a>";
 
             $mail->send();
             echo 'Verification email has been sent';
@@ -44,4 +44,6 @@ class EmailVerification {
             echo "Message could not be sent. Mailer Error: $mail->ErrorInfo";
         }
     }
+
+
 }

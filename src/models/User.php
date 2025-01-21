@@ -121,22 +121,45 @@ class User
 
     public function saveResetToken($email, $token, $expiry)
     {
-        $stmt = $this->db->prepare("UPDATE password_resets SET reset_token = ?, reset_token_expiry = ? WHERE user_id = ?");
+        $stmt = $this->db->prepare("UPDATE password_resets SET reset_token = ?, reset_token_expiry = ? WHERE email = ?");
         $stmt->bind_param("sss", $token, $expiry, $email);
         return $stmt->execute();
     }
+    public function insertResetToken($email, $token, $expiry)
+    {
+        $stmt = $this->db->prepare("INSERT INTO password_resets (email, reset_token, reset_token_expiry) VALUES (?, ?, ?)");
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $this->db->error);
+        }
+
+        $stmt->bind_param("sss", $email, $token, $expiry);
+
+        if (!$stmt->execute()) {
+            throw new Exception("Execute failed: " . $stmt->error);
+        }
+
+        $stmt->close();
+        return true;
+    }
+
+
 
     public function verifyResetToken($token): bool
     {
-        $stmt = $this->db->prepare("SELECT * FROM password_resets where reset_token_expiry =? ");
+        $stmt = $this->db->prepare("SELECT * FROM password_resets where reset_token =? ");
         $stmt->bind_param("s", $token);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->num_rows > 0;
     }
 
-    public function updatePassword($token, $hashedPassword)
+    public function updatePassword($token, $email, $hashedPassword)
     {
+        $passUpdateStmt = $this->db->prepare("UPDATE users SET password = ? WHERE email = ?");
+        $passUpdateStmt->bind_param("ss", $hashedPassword, $email);
+        if($passUpdateStmt->execute())
+            return true;
+        $passUpdateStmt->close();
         $stmt = $this->db->prepare("UPDATE password_resets SET reset_token = NULL, reset_token_expiry = NULL WHERE reset_token = ?");
         $stmt->bind_param("ss", $hashedPassword, $token);
         return $stmt->execute();

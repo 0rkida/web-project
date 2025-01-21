@@ -1,5 +1,5 @@
 <?php
-include 'session_check.php';
+include 'sessionManager.php';
 
 $host = "localhost";
 $db_name = "dating_app";

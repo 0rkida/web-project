@@ -1,5 +1,5 @@
 <?php
-include 'session_check.php';
+include 'sessionManager.php';
 session_start();
 
 // Check if the user is logged in
@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$conn = new mysqli("localhost", "root", "", "your_database_name");
+$conn = new mysqli("localhost", "root", "", "datting_app");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -52,7 +52,7 @@ $conn->close();
 <p>Ethnicity: <?php echo $user['ethnicity']; ?></p>
 <p>Height: <?php echo $user['height']; ?></p>
 
-<a href="edit_profile.php">Edit Profile</a>
+<a href="profil/update/">Update Info</a>
 
 </body>
 </html>
