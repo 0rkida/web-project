@@ -1,5 +1,5 @@
 <?php
-
+include 'sessionManager.php';
 // Include your controller or database connection
 require_once 'src/controllers/ProfileController.php';
 

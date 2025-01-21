@@ -5,6 +5,7 @@ use AllowDynamicProperties;
 require_once __DIR__.'/../models/Profile.php';
 require_once __DIR__.'/../models/User.php';
 require_once __DIR__.'/../models/UserPhotos.php';
+
 use App\models\Profile;
 use App\models\User;
 use App\models\UserPhotos;
@@ -21,11 +22,14 @@ class ProfileController
     public UserPhotos $userPhotos;
 
 
+
+
     public function __construct($dbConnection)
     {
         $this->checkSessionTimeout(); // Check session timeout on every instantiation
         $this->profile = new Profile($dbConnection);
         $this->user = new User($dbConnection);
+
         $this->userPhotos = new UserPhotos($dbConnection);
     }
 
@@ -54,6 +58,7 @@ class ProfileController
         $userId = $_SESSION['userId'];
         $user = $this->user->getUserById($userId);
         $userProfile = $this->profile->getProfileData($userId);
+
 
         if ($userProfile) {
             $full_name = $user['full_name'];

@@ -7,23 +7,28 @@ use App\models\User;
 use App\services\PasswordResetService;
 use EmailVerification;
 use JetBrains\PhpStorm\NoReturn;
+
 use Stripe\Terminal\Location;
+
 
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Admin.php';
 require_once __DIR__ . '/../services/PasswordResetService.php';
+require_once __DIR__ . '/../controllers/SessionController.php';
 
 class LogInController
 {
     private User $user;
     private Admin $admin;
     private PasswordResetService $passwordResetService;
+    private SessionController $sessionController;
 
     public function __construct($dbConnection)
     {
         $this->user = new User($dbConnection);
         $this->admin = new Admin($dbConnection);
         $this->passwordResetService = new PasswordResetService($dbConnection);
+        $this->sessionController = new SessionController($dbConnection);
     }
 
     public function getView(): void
@@ -93,6 +98,9 @@ class LogInController
         session_start();
         session_unset();
         session_destroy();
+        // Clear the remember me cookie
+        setcookie('remember_me', '', time() - 900, '/'); // Expire the cookie
+
         header('Location: /login');
         exit();
     }

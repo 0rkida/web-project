@@ -80,6 +80,6 @@
     <p>User profile not found.</p>
 <?php endif; ?>
 
-<script src="profile.js"></script>
+<script src="/public/js/profile.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'sessionManager.php';
 include 'config/db_connection.php'; // Include your database connection
 
 // Check if the user is logged in

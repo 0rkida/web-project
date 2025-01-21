@@ -1,4 +1,5 @@
-global$data; global$data; <!DOCTYPE html>
+include 'sessionManager.php';
+  <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">

@@ -17,6 +17,7 @@ use App\controllers\MessageController;
 use App\controllers\NotificationController;
 use App\controllers\ProfileController;
 use App\controllers\RegisterController;
+use App\controllers\SessionController;
 use App\controllers\VerifyController;
 use App\services\PasswordResetService;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -176,6 +177,12 @@ switch (strtolower($request_path)) {
         }
 
         break;
+        case '/check-session';
+        require 'controllers/SessionController.php';
+        $SessionController = new SessionController($conn);
+        $SessionController->checkSession();
+        break;
+
 
     case '/admin/dashboard':
                 require 'controllers/AdminController.php';
