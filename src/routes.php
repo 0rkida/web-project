@@ -301,18 +301,6 @@ switch (strtolower($request_path)) {
         }
         break;
 
-    case '/payment':
-        require 'controllers/PaymentController.php';
-        $PaymentController = new PaymentController();
-
-        if ($requestMethod === 'GET') {
-            $PaymentController->getView(); // Render the payment page
-        } else if ($requestMethod === 'POST') {
-            $PaymentController->postPayment(); // Handle payment form submission
-        }
-        break;
-
-
     default:
         http_response_code(404);
         echo "404 Not Found";
