@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Create Profile</title>
     <link rel="stylesheet" href="../css/index.css">
 </head>
 <body>
 <h1>Create Profile</h1>
-<form id="profile-form" action="/profil" method="POST" enctype="multipart/form-data">
-    <!-- Profile Picture Upload -->
-    <label for="profile_picture">Choose Profile Picture:</label>
-    <input type="file" id="profile_picture" name="profile_picture" accept="image/*"><br><br>
+<!--<form id="profile-photo" action="/profile/upload" method="post" enctype="multipart/form-data">-->
+<!--    <label for="profile_picture">Choose Profile Picture:</label>-->
+<!--    <input type="file" id="profile_picture" name="profile_picture" accept="image/*">-->
+<!--    <img id="profile_pic_preview" src="" alt="Profile Preview" style="display: none; width: 200px; height: 200px;">-->
+<!--    <button type="submit">Upload</button>-->
+<!--</form>-->
 
-    <!-- Profile Data Fields -->
-    <label for="age">Age:</label>
+<form id="profile-form" action="/profile/update" method="post">
     <input type="number" id="age" name="age" required><br><br>
 
     <label for="gender">Gender:</label>
