@@ -6,9 +6,8 @@ use App\models\Admin;
 use App\models\User;
 use App\services\PasswordResetService;
 use EmailVerification;
+use Exception;
 use JetBrains\PhpStorm\NoReturn;
-
-use Stripe\Terminal\Location;
 
 
 require_once __DIR__ . '/../models/User.php';
@@ -25,7 +24,11 @@ class LogInController
 
     public function __construct($dbConnection)
     {
-        $this->user = new User($dbConnection);
+        try {
+            $this->user = new User($dbConnection);
+        } catch (Exception) {
+
+        }
         $this->admin = new Admin($dbConnection);
         $this->passwordResetService = new PasswordResetService($dbConnection);
         $this->sessionController = new SessionController($dbConnection);

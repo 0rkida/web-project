@@ -39,13 +39,13 @@ return null;
 */
 public function updateUserProfile(int $userId, array $data): bool {
 $sql = "UPDATE profile
-SET profile_picture = ?, age = ?, gender = ?, location = ?, self_summary = ?, hobby = ?, doing_with_life = ?, good_at = ?, ethnicity = ?, height = ?
+SET  age = ?, gender = ?, location = ?, self_summary = ?, hobby = ?, doing_with_life = ?, good_at = ?, ethnicity = ?, height = ?
 WHERE user_id = ?";
 
 if ($stmt = $this->dbConnection->prepare($sql)) {
 $stmt->bind_param(
 "sissssssssi",
-$data['profile_picture'],
+
 $data['age'],
 $data['gender'],
 $data['location'],
@@ -68,7 +68,6 @@ return false;
 * Create a profile for a user.
 *
 * @param int $user_id - The user's ID
-* @param string $profile_picture - The profile picture URL
 * @param int $age - The user's age
 * @param string $gender - The user's gender
 * @param string $location - The user's location
@@ -80,15 +79,14 @@ return false;
 * @param float $height - The user's height
 * @return bool - Returns true if the profile was created successfully, false otherwise
 */
-public function createProfile(int $user_id, string $profile_picture, int $age, string $gender, string $location, string $self_summary, string $hobby, string $doing_with_life, string $good_at, string $ethnicity, float $height): bool {
-$sql = "INSERT INTO profile (user_id, profile_picture, age, gender, location, self_summary, hobby, doing_with_life, good_at, ethnicity, height)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+public function createProfile(int $user_id, int $age, string $gender, string $location, string $self_summary, string $hobby, string $doing_with_life, string $good_at, string $ethnicity, float $height): bool {
+$sql = "INSERT INTO profile (user_id, age, gender, location, self_summary, hobby, doing_with_life, good_at, ethnicity, height)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 if ($stmt = $this->dbConnection->prepare($sql)) {
 $stmt->bind_param(
-"isisssssssd",
-$user_id, $profile_picture, $age, $gender, $location, $self_summary, $hobby, $doing_with_life, $good_at, $ethnicity, $height
-);
+"iisssssssd",
+$user_id, $age, $gender, $location, $self_summary, $hobby, $doing_with_life, $good_at, $ethnicity, $height);
 return $stmt->execute();
 } else {
 error_log("Error preparing insert query: " . $this->dbConnection->error);

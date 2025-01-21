@@ -1,4 +1,5 @@
 <?php
+namespace App\controllers;
 class SessionController {
 
     private $db;
