@@ -3,6 +3,7 @@
 namespace App\controllers;
 
 use App\models\Admin;
+use App\models\LoginLog;
 use App\models\User;
 use App\services\PasswordResetService;
 use EmailVerification;
@@ -12,6 +13,7 @@ use JetBrains\PhpStorm\NoReturn;
 
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Admin.php';
+require_once __DIR__ . '/../models/LoginLog.php';
 require_once __DIR__ . '/../services/PasswordResetService.php';
 require_once __DIR__ . '/../controllers/SessionController.php';
 
@@ -19,8 +21,9 @@ class LogInController
 {
     private User $user;
     private Admin $admin;
+    private LoginLog $LoginLog;
     private PasswordResetService $passwordResetService;
-    private SessionController $sessionController;
+
 
     public function __construct($dbConnection)
     {
@@ -31,7 +34,7 @@ class LogInController
         }
         $this->admin = new Admin($dbConnection);
         $this->passwordResetService = new PasswordResetService($dbConnection);
-        $this->sessionController = new SessionController($dbConnection);
+        $this->LoginLog = new LoginLog($dbConnection);
     }
 
     public function getView(): void
@@ -51,13 +54,13 @@ class LogInController
     public function getForgetPasswordView(): void {
         require_once 'C:\xampp\htdocs\web-project\public\forgot_password.html';
     }
-    public function handleLogin(array $data): void
-    {
+    public function handleLogin(array $data): void {
         $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
         $password = $data['password'] ?? '';
 
         if (empty($email) || empty($password)) {
             echo "Email dhe fjalëkalimi janë të detyrueshëm.";
+            $this->insertEmail(null, $email, $_SERVER['REMOTE_ADDR'], false);
             return;
         }
 
@@ -65,6 +68,7 @@ class LogInController
         $admin = $this->admin->authenticateAdmin($email, $password);
         if ($admin) {
             $this->startSession($admin, 'admin');
+            $this->insertEmail($admin['id'], $email, $_SERVER['REMOTE_ADDR'], true);
             header("Location: /admin/dashboard");
             exit();
         }
@@ -72,6 +76,7 @@ class LogInController
         // Check if the user is a regular user
         if ($this->user->isBlocked($email)) {
             echo "Shumë përpjekje të dështuara. Ju lutemi prisni 30 minuta dhe provoni përsëri.";
+            $this->insertEmail(null, $email, $_SERVER['REMOTE_ADDR'], false);
             return;
         }
 
@@ -79,6 +84,7 @@ class LogInController
         if ($userId === false) {
             $this->user->incrementFailedAttempts($email);
             echo "Gabim! Email ose fjalëkalim i gabuar!";
+            $this->insertEmail(null, $email, $_SERVER['REMOTE_ADDR'], false);
             return;
         }
 
@@ -86,11 +92,13 @@ class LogInController
 
         if (!$this->user->isUserVerified($userId)) {
             echo "Përdoruesi nuk është verifikuar ende. Kontrolloni email-in tuaj.";
+            $this->insertEmail(null, $email, $_SERVER['REMOTE_ADDR'], false);
             return;
         }
 
         // Successful login for a regular user
         $this->startSession(['id' => $userId], 'user');
+        $this->insertEmail($userId, $email, $_SERVER['REMOTE_ADDR'], true);
         header("Location: /home");
         exit();
     }
@@ -157,5 +165,11 @@ class LogInController
         exit();
 
     }
+
+    private function insertEmail(null $null, mixed $param, mixed $REMOTE_ADDR, false $false)
+    {
+    }
+
+
 }
 
