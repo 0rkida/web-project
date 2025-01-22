@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings</title>
   <script src="/js/logout.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/settings.css">
 </head>
 <body>
 <header>
@@ -21,8 +21,13 @@
         <option value="public">Public</option>
         <option value="private">Private</option>
       </select>
-      <label for="distance">Search Distance:</label>
-      <input type="range" id="distance" name="distance" min="1" max="50">
+      <br>
+      <label for="online-status">Show Online Status:</label>
+      <select id="online-status" name="online-status">
+        <option value="show">Show</option>
+        <option value="hide">Hide</option>
+      </select>
+      <br>
       <button type="submit">Save Settings</button>
     </form>
   </section>
