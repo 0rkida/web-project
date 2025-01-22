@@ -1,0 +1,96 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+}
+
+/* Profile container */
+.profile-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+}
+
+/* Title of the page */
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Styling for the buttons */
+button {
+    background-color: #ff334b;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+    width: 100%; /* Ensure the button spans the full width of the form */
+}
+
+button:hover {
+    background-color: #ff334b;
+}
+
+/* Label and input styling */
+label {
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 5px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Styling for the form rows */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+/* Styling for individual form groups */
+.form-group {
+    width: 48%; /* 2 items per row */
+}
+
+@media (max-width: 768px) {
+    .form-group {
+        width: 100%; /* Stack the form groups on smaller screens */
+    }
+}
+
+/* Form layout for smaller screens */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 24px;
+    }
+
+    button {
+        width: 100%; /* Make the button full-width on smaller screens */
+    }
+}
