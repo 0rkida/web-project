@@ -5,9 +5,11 @@ use App\models\Admin;
 require_once __DIR__.'/../models/Admin.php';
 class AdminController {
     private Admin $admin;
+    private User $user;
 
     public function __construct($dbConnection) {
         $this->admin = new Admin($dbConnection);
+        $this->user = new User ($dbConnection);
     }
 
     // Render the admin dashboard page
@@ -17,40 +19,15 @@ class AdminController {
             header('Location: /dashboard');
             exit();
         }
-        require_once __DIR__ . "/../views/admin-dashboard.html";
+        require_once __DIR__.'/../models/User.php';
+
+       $users = $this->user->getAllUsers();
+    }
+        require_once __DIR__ . "/../views/admin-dashboard.php";
     }
 
-//    // Handle admin creation (registration)
-//    public function createAdmin($data): void
-//    {
-//        if ($this->admin->createAdmin($data)) {
-//            // Admin created successfully
-//            header("Location: /admin-dashboard.html");
-//        } else {
-//            // Handle error (admin already exists, etc.)
-//            echo "Error: Admin already exists.";
-//        }
-//    }
-
-    // Handle admin login
 
 
-    // Handle admin update
-    public function updateAdmin($data) {
-        if ($this->admin->updateAdmin($data)) {
-            // Admin updated successfully
-            header("Location: /admin-dashboard.html");
-        } else {
-            // Handle error
-            echo "Error updating admin.";
-        }
-    }
-
-    // Method to load views (you can customize this method as needed)
-    private function loadView($viewName, $data = []) {
-        extract($data); // Extract data into variables for the view
-        include 'views/' . $viewName . '.php'; // Include the view file
-    }
 
     public function checkIfLoggedIn(): bool
     {

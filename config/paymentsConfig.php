@@ -12,5 +12,16 @@ const DB_USERNAME = 'root';
 const DB_PASSWORD = '';
 const DB_NAME = 'datting_app';
 
+function getDbConnection() {
+    $conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+
+    if ($conn->connect_error) {
+        die("Database connection failed: " . $conn->connect_error);
+    }
+
+    return $conn;
+}
+?>
+
 
 
