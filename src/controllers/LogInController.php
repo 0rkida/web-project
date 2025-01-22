@@ -98,7 +98,7 @@ class LogInController
 
         // Successful login for a regular user
         $this->startSession(['id' => $userId], 'user');
-        $this->insertEmail($userId, $email, $_SERVER['REMOTE_ADDR'], true);
+        //$this->insertEmail($userId, $email, $_SERVER['REMOTE_ADDR'], true);
         header("Location: /home");
         exit();
     }
@@ -166,9 +166,9 @@ class LogInController
 
     }
 
-//    private function insertEmail(null $null, mixed $param, mixed $REMOTE_ADDR, false $false)
-//    {
-//    }
+    private function insertEmail(null $null, mixed $param, mixed $REMOTE_ADDR, false $false)
+    {
+    }
 
 
 }

@@ -13,14 +13,14 @@
     <!-- Left Sidebar -->
     <div class="sidebar left-sidebar">
         <div class="profile-section">
-            <img src="/public/assets/img/user-uploads/albums/ " height="736" width="736" alt=" " class="profile-pic">
+            <img src="<?=$profile_photo?>" style="height: 100px !important; width: 100px !important;" alt=" " class="profile-pic">
             <div class="username-dropdown">
                 <h3 class="username">
                     <?php echo $full_name; ?>
                     <span class="dropdown-arrow">▼</span>
                 </h3>
                 <ul class="dropdown-menu">
-                    <li><a href="/profile/update">Edit Profile</a></li>
+                    <li><a href="/profil/update">Edit Profile</a></li>
                     <li><a href="/account/settings">Account Settings</a></li>
                     <li><a href="/logout" class="logout-btn">Log Out</a></li>
                 </ul>
@@ -44,9 +44,6 @@
                     <a href="../matches.html">
                         <button class="menu-btn">Matchers</button>
                     </a>
-                </li>
-                <li><button class="menu-btn">Favorites</button></li>
-            </ul>
         </nav>
 
         <div class="recently-visited">
@@ -63,14 +60,17 @@
     <div class="profile-container">
         <header class="profile-header">
             <div class="profile-info">
-                <img src="/assets/img/user-uploads/albums/<?= $imageName ?>" alt="Uploaded photo">
+<!--                <img src="--><?php //= $profile_photo ?><!--" alt="Uploaded photo" style="height: 50px !important; width: 100px !important;">-->
 
                 <div class="profile-text">
                     <h1 class="profile-name"><?php echo $full_name; ?></h1>
                     <span class="location"><?php echo $location; ?></span>
                 </div>
             </div>
-            <button class="update-btn">Update Info</button>
+            <form action="/profil/update" method="get">
+                <button class="update-btn" type="submit">Update Info</button>
+            </form>
+
         </header>
         <div class="content">
             <section class="summary">
@@ -82,25 +82,13 @@
             <section class="photos">
                 <h2>Photos</h2>
                 <div class="photo-grid">
-                    <img src="photo1.jpg" alt="Photo 1">
-                    <img src="photo2.jpg" alt="Photo 2">
-                    <img src="photo3.jpg" alt="Photo 3">
-                    <img src="photo4.jpg" alt="Photo 4">
+                    <img src="<?=$photos[0]?>" alt="Photo 1">
+                    <img src="<?=$photos[1]?>" alt="Photo 2">
+                    <img src="<?=$photos[2]?>" alt="Photo 3">
+                    <img src="<?=$photos[3]?>" alt="Photo 4">
                 </div>
-
-                <!-- Form for uploading profile picture -->
-                <form action="/upload_profile_picture" method="POST" enctype="multipart/form-data">
-                    <label for="profile_picture">Upload Profile Picture:</label>
-                    <input type="file" name="profile_picture[]" id="profile_picture" accept="image/*" required>
-                    <button type="submit">Upload Profile Picture</button>
-                </form>
-
                 <!-- Form for uploading additional pictures -->
-                <form action="/upload_additional_pictures" method="POST" enctype="multipart/form-data">
-                    <label for="additional_pictures">Upload Additional Pictures:</label>
-                    <input type="file" name="additional_pictures[]" id="additional_pictures" accept="image/*" multiple>
-                    <button type="submit">Upload Additional Photos</button>
-                </form>
+
             </section>
 
             <section class="details">
