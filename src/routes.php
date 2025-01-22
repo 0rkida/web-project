@@ -13,15 +13,13 @@ require_once __DIR__.'/../vendor/autoload.php';
 use App\controllers\AdminController;
 use App\Controllers\LogInController;
 use App\controllers\MatchController;
-use App\controllers\MessageController;
 use App\controllers\NotificationController;
 use App\controllers\ProfileController;
 use App\controllers\RegisterController;
 use App\controllers\SessionController;
 use App\controllers\VerifyController;
-use App\services\PasswordResetService;
+use App\views\chat\MessageController;
 use PHPMailer\PHPMailer\PHPMailer;
-use src\controllers\PaymentController;
 
 //$uri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];

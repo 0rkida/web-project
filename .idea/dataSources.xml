@@ -8,12 +8,5 @@
       <jdbc-url>jdbc:mariadb://localhost:3306/datting_app</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="datting_app@localhost [2]" uuid="97b9c4e0-91bd-4baa-9997-23f6724bbc8e">
-      <driver-ref>mariadb</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mariadb://localhost:3306/datting_app</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
   </component>
 </project>

@@ -1,6 +1,5 @@
 <?php
-namespace App\controllers;
-use  App\models\Message;
+namespace App\views\chat;
 
 session_start();
 require_once "C:\xampp\htdocs\web-project\src\models\Message.php";
