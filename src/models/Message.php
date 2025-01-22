@@ -1,5 +1,5 @@
 <?php
-namespace App\views\chat;
+namespace App\models;
 
 class Message
 {
