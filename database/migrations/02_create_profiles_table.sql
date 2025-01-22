@@ -1,5 +1,5 @@
 CREATE TABLE profile (
-    user_id INT PRIMARY KEY, -- Unique ID for the profile
+    user_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- Unique ID for the profile
 #     full_name VARCHAR(100) NOT NULL,   -- User's full name
 #     email VARCHAR(255) NOT NULL UNIQUE, -- User's email (unique)
 #     password VARCHAR(255) NOT NULL,    -- User's password (hashed)

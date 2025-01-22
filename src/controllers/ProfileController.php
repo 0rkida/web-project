@@ -87,7 +87,6 @@ class ProfileController
         }
 
         $result = $this->profile->createProfile(
-            $_SESSION['userId'],
             $_POST['age'],
             $_POST['gender'],
             $_POST['location'],
