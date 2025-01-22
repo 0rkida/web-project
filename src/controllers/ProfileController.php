@@ -63,6 +63,16 @@ class ProfileController
             $location = $userProfile['location'];
             $summary = $userProfile['self_summary'];
             $height = $userProfile['height'];
+            $profile_photos = $this->userPhotos->getPhotosByUserId($_SESSION['userId']);
+
+            error_log(json_encode($profile_photos));
+            $profile_photo = $profile_photos[count($profile_photos)-1]['picture_path'];
+            error_log($profile_photo);
+            $photos = [];
+            for ($i =count($profile_photos)-2, $count=0; 0<$i && $count<4; $i--, $count++) {
+                $photos[] = $profile_photos[$i]['picture_path'];
+            }
+            error_log(json_encode($photos));
             include __DIR__ . '/../views/profile.php';
         } else {
             include __DIR__ . '/../../public/profile/initialProfile.html';
@@ -74,7 +84,7 @@ class ProfileController
         $this->checkSessionTimeout();
         $data = $this->profile->getProfileData($_SESSION['userId']);
         include __DIR__ . '/../views/editProfile.php';
-        header('Location: /profil/update');
+//        header('Location: /profil/update');
     }
 
     public function postProfile(): void
@@ -113,8 +123,13 @@ class ProfileController
             exit();
         }
         $userId = $_SESSION['userId'];
+
         // Add the profile data received in the POST request
         $updated = $this->profile->updateUserProfile($userId, $data);
+        if(isset($_FILES['profile_picture'])) {
+            $filename = $this->uploadPicture($_FILES['profile_picture']);
+            $this->userPhotos->savePicture($userId, $filename);
+        }
         if ($updated) {
             header('Location: /profil');  // Redirect after successful update
         } else {
@@ -123,59 +138,62 @@ class ProfileController
     }
 
 
-//    public function uploadPicture(array $file): string
-//    {
-//        $uploadsDir = __DIR__ . '/../../public/assets/img/user-uploads/albums/';
-//        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-//
-//        // Ensure the uploads directory exists
-//        if (!is_dir($uploadsDir)) {
-//            if (!mkdir($uploadsDir, 0755, true)) {
-//                throw new Exception("Failed to create the upload directory.");
-//            }
-//        }
-//
-//        // Process the file
-//        $fileName = $file['name'];
-//        $fileTmp = $file['tmp_name'];
-//        $fileSize = $file['size'];
-//        $fileError = $file['error'];
-//
-//        if ($fileError === UPLOAD_ERR_OK) {
-//            if ($fileSize < 5000000) { // 5MB limit
-//                $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-//
-//                if (in_array($fileExtension, $allowedExtensions)) {
-//                    $newFileName = uniqid('photo_') . '.' . $fileExtension;
-//                    $filePath = $uploadsDir . $newFileName;
-//
-//                    // Move the file to the uploads directory
-//                    if (move_uploaded_file($fileTmp, $filePath)) {
-//                        return $filePath; // Return the file path
-//                    } else {
-//                        throw new Exception("Error moving the uploaded file.");
-//                    }
-//                } else {
-//                    throw new Exception("Invalid file type: $fileName");
-//                }
-//            } else {
-//                throw new Exception("$fileName exceeds the file size limit.");
-//            }
-//        } else {
-//            throw new Exception("Error uploading $fileName.");
-//        }
-//    }
-//
-//
-//
-//    public function getPictures($userId): array
-//    {
-//        try {
-//            return $this->userPhotos->getPhotosByUserId($userId);
-//        } catch (Exception $e) {
-//            error_log("Error fetching pictures for user ID $userId: " . $e->getMessage());
-//            return [];
-//        }
-//    }
+    private function uploadPicture(array $file): string
+    {
+        $uploadsDir = __DIR__ . '/../../public/assets/img/user-uploads/albums/';
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
+        // Ensure the uploads directory exists
+        if (!is_dir($uploadsDir)) {
+            if (!mkdir($uploadsDir, 0755, true)) {
+                throw new Exception("Failed to create the upload directory.");
+            }
+        }
+
+        // Process the file
+        $fileName = $file['name'];
+        $fileTmp = $file['tmp_name'];
+        $fileSize = $file['size'];
+        $fileError = $file['error'];
+
+        if ($fileError === UPLOAD_ERR_OK) {
+            if ($fileSize < 5000000) { // 5MB limit
+                $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+                if (in_array($fileExtension, $allowedExtensions)) {
+                    $newFileName = uniqid('photo_') . '.' . $fileExtension;
+                    $filePath = $uploadsDir . $newFileName;
+//                    $filePath = '/assets/img/user-uploads/albums/' . $newFileName;
+                    // Move the file to the uploads directory
+                    if (move_uploaded_file($fileTmp, $filePath)) {
+
+                        return '/assets/img/user-uploads/albums/' . $newFileName; // Return the file path
+                    } else {
+                        throw new Exception("Error moving the uploaded file.");
+                    }
+                } else {
+                    throw new Exception("Invalid file type: $fileName");
+                }
+            } else {
+                throw new Exception("$fileName exceeds the file size limit.");
+            }
+        } else {
+            throw new Exception("Error uploading $fileName.");
+        }
+    }
+
+
+
+    public function getPictures($userId): array
+    {
+        try {
+            return $this->userPhotos->getPhotosByUserId($userId);
+        } catch (Exception $e) {
+            error_log("Error fetching pictures for user ID $userId: " . $e->getMessage());
+            return [];
+        }
+    }
+//    private function convertPictureString(string $pic){
+//        return '/assets/img/user-uploads/albums/'. $pic;
+//    }
 }

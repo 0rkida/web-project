@@ -46,9 +46,9 @@ class UserPhotos
 
         return $result->fetch_all(MYSQLI_ASSOC);
 
-        $pictures = $result->fetch_all(MYSQLI_ASSOC);
-
-        return $pictures;
+//        $pictures = $result->fetch_all(MYSQLI_ASSOC);
+//
+//        return $pictures;
 
     }
 }
