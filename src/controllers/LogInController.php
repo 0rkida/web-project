@@ -166,7 +166,7 @@ class LogInController
 
     }
 
-    private function insertEmail(mixed $param, mixed $REMOTE_ADDR, $false)
+    private function insertEmail(null $null, mixed $param, mixed $REMOTE_ADDR, false $false)
     {
     }
 
