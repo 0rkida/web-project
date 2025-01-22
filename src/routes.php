@@ -19,9 +19,7 @@ use App\controllers\ProfileController;
 use App\controllers\RegisterController;
 use App\controllers\SessionController;
 use App\controllers\VerifyController;
-use App\services\PasswordResetService;
 use PHPMailer\PHPMailer\PHPMailer;
-use src\controllers\PaymentController;
 
 //$uri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
