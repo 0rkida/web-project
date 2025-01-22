@@ -79,13 +79,13 @@ return false;
 * @param float $height - The user's height
 * @return bool - Returns true if the profile was created successfully, false otherwise
 */
-public function createProfile( int $age, string $gender, string $location, string $self_summary, string $hobby, string $doing_with_life, string $good_at, string $ethnicity, float $height): bool {
-$sql = "INSERT INTO profile (age, gender, location, self_summary, hobby, doing_with_life, good_at, ethnicity, height)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+public function createProfile(int $user_id , int $age, string $gender, string $location, string $self_summary, string $hobby, string $doing_with_life, string $good_at, string $ethnicity, float $height): bool {
+$sql = "INSERT INTO profile (user_id, age, gender, location, self_summary, hobby, doing_with_life, good_at, ethnicity, height)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 if ($stmt = $this->dbConnection->prepare($sql)) {
 $stmt->bind_param(
-"isssssssd",
+"iisssssssd", $user_id,
  $age, $gender, $location, $self_summary, $hobby, $doing_with_life, $good_at, $ethnicity, $height);
 return $stmt->execute();
 } else {

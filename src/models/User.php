@@ -354,5 +354,29 @@ class User
         return $stmt->affected_rows > 0;
     }
 
+    function getAllUsers()
+    {
+        // SQL query to get all users
+        global $db;
+        $sql = "SELECT * FROM users";
+        $result = $this->dbConnection->query($sql);
+
+        // Check if there are results
+        if ($result->num_rows > 0) {
+            // Fetch all rows as an associative array
+            $users = $result->fetch_all(MYSQLI_ASSOC);
+        } else {
+            $users = [];
+        }
+
+        // Close the connection
+        $db ->close();
+
+        return $users;
+    }
+
+
+
+
 
 }
