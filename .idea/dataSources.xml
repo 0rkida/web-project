@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="datting_app@localhost" uuid="8fc86e6a-852e-4ced-8084-96bb502ac0f4">
+    <data-source source="LOCAL" name="datting_app@localhost" uuid="46e114c8-cf07-435a-93f9-e1f652e3fd9e">
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
