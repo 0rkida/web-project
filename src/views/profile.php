@@ -121,8 +121,8 @@
             <button class="premium-btn">Go Premium</button>
         </div>
     </div>
-
 </div>
+
 <script src="<?php echo dirname(__DIR__, 2) . '/profile.js'; ?>"></script>
 </body>
 </html>
