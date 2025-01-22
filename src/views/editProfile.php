@@ -8,9 +8,10 @@
 </head>
 <body>
 <h1>Profile Form</h1>
-<form action="/profil/update" method="POST">
+<form action="/profil/update" method="POST" enctype="multipart/form-data">
+
     <label for="profile_picture">Profile Picture:</label>
-    <input type="text" id="profile_picture" name="profile_picture" value="<?= htmlspecialchars($data['profile_picture']) ?>">
+    <input type="file" id="profile_picture" name="profile_picture">
 
     <label for="age">Age:</label>
     <input type="number" id="age" name="age" value="<?= htmlspecialchars($data['age']) ?>">
