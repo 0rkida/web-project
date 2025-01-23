@@ -106,11 +106,57 @@
         <div class="premium-section">
             <h2 class="premium-title">You're Invisible</h2>
             <p>In order to increase your visibility and remove ads, go Premium!</p>
-            <button class="premium-btn">Go Premium</button>
+            <div class="text-center mt-4">
+                <button class="btn btn-primary premium-btn" data-toggle="modal" data-target="#goPremiumModal">Go Premium</button>
+            </div>
+
+            <div class="modal fade" id="goPremiumModal" tabindex="-1" role="dialog" aria-labelledby="goPremiumLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="goPremiumLabel">Bëhu Premium</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h2>Kalimi në Premium</h2>
+                            <p>Përfitimet e Premium përfshijnë:</p>
+                            <ul>
+                                <li>Rritje të vizibilitetit</li>
+                                <li>Heqje të reklamave</li>
+                                <li>Shumë funksione të tjera ekskluzive</li>
+                            </ul>
+                            <form id="goPremiumForm">
+                                <div class="form-group">
+                                    <label for="premiumCardHolderName">Mbajtësi i Kartës</label>
+                                    <input type="text" id="premiumCardHolderName" class="form-control" placeholder="Emri dhe Mbiemri" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="premiumCardElement">Vendosni Kartën</label>
+                                    <div id="premiumCardElement" class="form-control">
+                                        <!-- Stripe card element will be mounted here -->
+                                    </div>
+                                </div>
+                                <div id="premiumCardErrors"></div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Mbyll</button>
+                            <button id="goPremiumButton" class="btn btn-primary">Paguaj</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script src="<?php echo dirname(__DIR__, 2) . '/profile.js'; ?>"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
 </body>
 </html>

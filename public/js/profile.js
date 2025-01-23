@@ -192,3 +192,33 @@ async function saveTransaction(paymentIntent) {
         alert('Payment saving failed!');
     }
 }
+
+var stripe = Stripe("pk_test_51QdZaOIA6j8AgjdoONN2YmHKTojcogE82ZcF8ntm0l1YwdZNUKNnlDgxb62vZ7IBVbS1NfyGQoRNxjWn6o0bvJxE00alHhiENc");
+var elements = stripe.elements();
+var cardElement = elements.create('card');
+cardElement.mount('#premiumCardElement');
+
+document.getElementById('goPremiumButton').addEventListener('click', function (ev) {
+    ev.preventDefault();
+    var cardholderName = document.getElementById('premiumCardHolderName').value;
+
+    if (!cardholderName.trim()) {
+        document.getElementById('premiumCardErrors').textContent = "Ju lutem vendosni emrin e mbajtësit të kartës.";
+        return;
+    }
+
+    stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+            name: cardholderName,
+        },
+    }).then(function (result) {
+        if (result.error) {
+            document.getElementById('premiumCardErrors').textContent = result.error.message;
+        } else {
+            alert("Paguajta me sukses për Premium! Payment Method ID: " + result.paymentMethod.id);
+            $('#goPremiumModal').modal('hide');
+        }
+    });
+});
