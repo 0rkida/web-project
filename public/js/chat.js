@@ -10,7 +10,7 @@ function initChat() {
         const message = chatInput.value.trim();
         if (message) {
             const messageData = {
-                sender: "Me",
+                sender: ", Me",
                 content: message,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             };
