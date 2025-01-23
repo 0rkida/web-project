@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
 /* General body styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #ff725d;
     margin: 0;
     padding: 0;
     display: flex;
@@ -54,7 +56,7 @@ label {
 input, textarea {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;

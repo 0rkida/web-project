@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Profile Form</title>
     <script src="/js/logout.js"></script>
-    <link rel="stylesheet" href="/css/editProfile.css">
+    <link rel="stylesheet" href="\css\editProfile.css">
 </head>
 <body>
 <div class="profile-container">
