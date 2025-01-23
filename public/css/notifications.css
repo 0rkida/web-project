@@ -1,0 +1,111 @@
+/* Stili i përgjithshëm */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: #f57760;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Kontejneri i njoftimeve */
+.notifications-container {
+    max-width: 800px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Titulli */
+h2 {
+    font-size: 28px;
+    color: #322525;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Elementi i njoftimit */
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: rgba(251, 180, 183, 0.78);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Lloji i njoftimit */
+.notification-type {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 16px;
+    color: #fff;
+}
+
+.like {
+    background-color: #e63946;
+}
+
+.match {
+    background-color: #f4a261;
+}
+
+.message {
+    background-color: #8e44ad;
+}
+
+/* Përmbajtja e njoftimit */
+.notification-content {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.notification-title {
+    font-weight: bold;
+    margin: 0;
+    color: #264653;
+}
+
+.notification-message {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.notification-meta {
+    font-size: 12px;
+    color: #555;
+}
+
+/* Butoni për mbyllje */
+.close-btn {
+    background-color: #f57760;
+    border: none;
+    color: white;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+}
+
+.close-btn:hover {
+    background-color: #e63946;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(230, 57, 70, 0.4);
+}
+
+.close-btn:active {
+    background-color: #c0392b;
+    transform: scale(0.95);
+    box-shadow: none;
+}

@@ -140,7 +140,7 @@ class User
     {
         $stmt = $this->dbConnection->prepare("INSERT INTO password_resets (email, reset_token, reset_token_expiry) VALUES (?, ?, ?)");
         if (!$stmt) {
-            throw new Exception("Prepare failed: " . $this->db->error);
+            throw new Exception("Prepare failed: " . $this->dbConnection->error);
         }
 
         $stmt->bind_param("sss", $email, $token, $expiry);
@@ -312,18 +312,25 @@ class User
 
     public function getNotifications($userId)
     {
-        $stmt = $this->dbConnection->prepare("
-        SELECT u.* 
-        FROM users u
-        JOIN likes l ON l.user_id = u.id
-        WHERE l.liked_user_id = ? AND NOT EXISTS (
-            SELECT 1 FROM matches m
-            WHERE (m.user1_id = l.user_id AND m.user2_id = l.liked_user_id) 
-               OR (m.user2_id = l.user_id AND m.user1_id = l.liked_user_id)
-        )");
+        error_log("Fetching notifications for user ID: $userId"); // Add log to verify the user ID
+        $query = "SELECT id, type, message, is_read, created_at FROM notifications WHERE user_id = ? ORDER BY created_at DESC";
+        $stmt = $this->dbConnection->prepare($query);
+
+        if (!$stmt) {
+            throw new Exception("Database error: " . $this->dbConnection->error);
+        }
+
         $stmt->bind_param("i", $userId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        $result = $stmt->get_result();
+        $notifications = $result->fetch_all(MYSQLI_ASSOC);
+
+        if (empty($notifications)) {
+            error_log("No notifications found for user ID: $userId"); // Log if no notifications are found
+        }
+
+        return $notifications;
     }
 
 
@@ -353,28 +360,36 @@ class User
         $stmt->close();
         return $stmt->affected_rows > 0;
     }
-
-    function getAllUsers()
-    {
-        // SQL query to get all users
-        global $db;
-        $sql = "SELECT * FROM users";
+    public function getUserCount() {
+        $sql = "SELECT COUNT(*) as count FROM users";
         $result = $this->dbConnection->query($sql);
-
-        // Check if there are results
-        if ($result->num_rows > 0) {
-            // Fetch all rows as an associative array
-            $users = $result->fetch_all(MYSQLI_ASSOC);
-        } else {
-            $users = [];
-        }
-
-        // Close the connection
-        $db ->close();
-
-        return $users;
+        return $result->fetch_assoc()['count'];
     }
 
+    public function getLikesCount() {
+        $sql = "SELECT COUNT(*) as count FROM likes";
+        $result = $this->dbConnection->query($sql);
+        return $result->fetch_assoc()['count'];
+    }
+
+
+    public function getMatchesCount() {
+        $sql = "SELECT COUNT(*) as count FROM matches";
+        $result = $this->dbConnection->query($sql);
+        return $result->fetch_assoc()['count'];
+    }
+
+    public function getAllUsers() {
+        $sql = "SELECT users.full_name, users.email, profile.created_at 
+                FROM users 
+                JOIN profile ON users.id = profile.user_id";
+        $result = $this->dbConnection->query($sql);
+        if ($result->num_rows > 0) {
+            return $result->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return [];
+        }
+    }
 
 
 

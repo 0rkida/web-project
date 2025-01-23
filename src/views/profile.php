@@ -36,7 +36,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="../notifications.html">
+                    <a href="/notifications">
                         <button class="menu-btn">Notifications</button>
                     </a>
                 </li>
