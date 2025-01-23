@@ -2,12 +2,6 @@ function initChat() {
     const chatInput = document.querySelector('main footer textarea');
     const chatMessages = document.querySelector('#chat');
     const sendButton = document.querySelector('main footer a');
-    //const chatBox = document.getElementById('chat_message_area');
-    //const owenerProfileBio = document.getElementById('owner_profile_bio');
-    const menuButton = document.querySelector('.menu-button');
-    const menu = document.querySelector('.menu');
-    let unique_id;
-    let inter;
 
     // Function to send messages
     sendButton.addEventListener('click', () => {
@@ -21,8 +15,6 @@ function initChat() {
 
             displayMessage(messageData, "me");
 
-            // Send the message to the server or save it
-            sendMessageToServer(message);
             chatInput.value = ''; // Clear input field
         }
     });
@@ -79,23 +71,12 @@ function initChat() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Function to send the message to the server
-    function sendMessageToServer(message) {
-        $.post('Message/send', { message: message }, function (data) {
-            //Handle server response (e.g., confirmation, error handling)
-            console.log('Message sent to the server:', data);
-        });
-    }
 
     // Fetch user list and details
     function getUserList() {
-        $.ajax({
-            url: 'Message/allUser',
-            type: 'get',
-            success: function (data) {
-                if (data != "") {
-                    document.getElementById('user_list').innerHTML = data;
-                }
+        $.get('Message/allUser', function(data) {
+            if (data != "") {
+                $('#user_list').html(data);
             }
         });
     }

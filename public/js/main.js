@@ -1,14 +1,3 @@
-function showError(message) {
-    let errorDiv = document.getElementById("dynamic-error");
-    if (!errorDiv) {
-        errorDiv = document.createElement("div");
-        errorDiv.id = "dynamic-error";
-        errorDiv.style.color = "red";
-        document.getElementById("loginForm").prepend(errorDiv);
-    }
-    errorDiv.textContent = message;
-}
-
 // Retrieve the error message from PHP (if set) and show it in the modal
 var errorMessage = "Gabim! Email ose fjalëkalim i gabuar!";
 
