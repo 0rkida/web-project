@@ -13,41 +13,66 @@ class MessageController {
         $this->message= new message($dbConnection);
     }
     public function getView(): void {
-        require "C:\xampp\htdocs\web-project\public\chat.html";
-    }
-    public function postMessage($data): void {
-            // Check if message data is provided
-            if (!empty($data['message'])) {
-                // Clean and sanitize the input data
-                $message = htmlspecialchars(trim($data['message']));
-                $userId = $_SESSION['user_id'];  // Assuming the user is logged in and user_id is in session
-
-                // Save the message to the database
-                $this->message->saveMessage($userId, $message);
-
-                $messages = $this->message->getMessages();
-                foreach ($messages as $message) {
-                    echo $message['username'] . ': ' . $message['message'] . '<br>';
-                }
-
-
-                // Optionally, return a response or redirect
-                echo "Message sent successfully.";
-            } else {
-                echo "Message cannot be empty.";
-            }
+        $viewPath = dirname(__DIR__, 2) . '/public/chat.html';
+        if (file_exists($viewPath)) {
+            require $viewPath;
+        } else {
+            echo "View not found.";
         }
-    public function searchUsers(): void
-    {
-        $outgoingId = $_SESSION['unique_id']; // Assuming unique_id is stored in session
+    }
+
+    public function postMessage(array $data): void {
+        header('Content-Type: application/json');
+
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(['error' => 'User not authenticated.']);
+            return;
+        }
+
+        $senderId = $_SESSION['user_id'];
+        $receiverId = $data['receiver_id'] ?? null;
+        $message = $data['message'] ?? '';
+
+        if (empty($receiverId) || empty($message)) {
+            echo json_encode(['error' => 'Receiver ID and message content are required.']);
+            return;
+        }
+
+        $message = htmlspecialchars(trim($message));
+
+        // Save the message in the database
+        if ($this->message->saveMessage($senderId, $receiverId, $message)) {
+            echo json_encode(['success' => true, 'message' => 'Message sent successfully.']);
+        } else {
+            echo json_encode(['error' => 'Failed to send the message.']);
+        }
+    }
+
+
+
+    public function searchUsers(): void {
+        header('Content-Type: application/json');
+
+        if (!isset($_SESSION['unique_id'])) {
+            echo json_encode(['error' => 'User not authenticated.']);
+            return;
+        }
+
+        $outgoingId = $_SESSION['unique_id'];
         $searchTerm = $_POST['searchTerm'] ?? '';
 
         if (!empty($searchTerm)) {
-            $output = $this->message->searchUsers($outgoingId, $searchTerm);
-            echo $output;
+            $users = $this->message->searchUsers($outgoingId, $searchTerm);
+
+            if (!empty($users)) {
+                echo json_encode(['success' => true, 'users' => $users]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'No users found.']);
+            }
         } else {
-            echo "Search term cannot be empty.";
+            echo json_encode(['success' => false, 'error' => 'Search term cannot be empty.']);
         }
     }
+
 
 }
