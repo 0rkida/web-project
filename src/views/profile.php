@@ -25,7 +25,6 @@
                 </h3>
                 <ul class="dropdown-menu">
                     <li><a href="/profil/update">Edit Profile</a></li>
-                    <li><a href="/account/settings">Account Settings</a></li>
                     <li><a href="/logout" class="logout-btn">Log Out</a></li>
                 </ul>
 

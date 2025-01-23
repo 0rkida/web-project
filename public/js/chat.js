@@ -2,28 +2,56 @@ function initChat() {
     const chatInput = document.querySelector('main footer textarea');
     const chatMessages = document.querySelector('#chat');
     const sendButton = document.querySelector('main footer a');
+    const userList = document.querySelector('aside ul'); // The user list container
+    const searchInput = document.querySelector('aside header input'); // The search input field
 
     // Function to send messages
-    sendButton.addEventListener('click', () => {
+    const sendMessage = () => {
         const message = chatInput.value.trim();
         if (message) {
             const messageData = {
-                sender: "Me",
+                sender: ", Me",
                 content: message,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             };
 
             displayMessage(messageData, "me");
-
             chatInput.value = ''; // Clear input field
         }
+    };
+
+    sendButton.addEventListener('click', () => {
+        const message = chatInput.value.trim();
+        const receiverId = document.querySelector('main header').dataset.receiverId; // Add a data attribute for receiver_id
+
+        if (message && receiverId) {
+            fetch('/Message/postMessage', {
+                method: 'POST',
+                body: JSON.stringify({ message: message, receiver_id: receiverId }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data.message);
+                        displayMessage({ sender: "Me", content: message, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }, "me");
+                        chatInput.value = ''; // Clear the input
+                    } else {
+                        console.error(data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            console.error('Message content or receiver ID is missing.');
+        }
     });
+
 
     // Allow sending message by pressing Enter
     chatInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
-            sendButton.click();
+            sendMessage();
         }
     });
 
@@ -71,16 +99,54 @@ function initChat() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
+    // Function to fetch user list and update UI
+    // const getUserList = () => {
+    //     fetch('/message')
+    //         .then((response) => response.text())
+    //         .then((data) => {
+    //             if (data && userList) {
+    //                 userList.innerHTML = data;
+    //             }
+    //         })
+    //         //.catch((error) => console.error('Error fetching user list:', error));
+    // };
 
-    // Fetch user list and details
-    function getUserList() {
-        $.get('Message/allUser', function(data) {
-            if (data != "") {
-                $('#user_list').html(data);
-            }
-        });
-    }
+    // Search functionality
+    searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.trim();
 
+        if (searchTerm) {
+            fetch('/Message/searchUsers', {
+                method: 'POST',
+                body: JSON.stringify({ searchTerm: searchTerm }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Populate user list with search results
+                        userList.innerHTML = '';
+                        data.users.forEach(user => {
+                            const listItem = document.createElement('li');
+                            listItem.innerHTML = `
+                                <img src="${user.avatar}" alt="">
+                                <div>
+                                    <h2>${user.username}</h2>
+                                    <h3><span class="status ${user.status}"></span> ${user.status}</h3>
+                                </div>
+                            `;
+                            userList.appendChild(listItem);
+                        });
+                    } else {
+                        console.error(data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            // Clear search and reload the full user list
+            getUserList();
+        }
+    });
     // Initialize chat and user list
     getUserList();
     setInterval(getUserList, 1000);
