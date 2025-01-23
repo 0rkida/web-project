@@ -1,5 +1,5 @@
 document.getElementById("registrationForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Parandalon dërgimin e formës
+    event.preventDefault(); // Prevents form submission
 
     let isValid = true;
 
@@ -9,44 +9,44 @@ document.getElementById("registrationForm").addEventListener("submit", function 
     const password = document.getElementById("password").value.trim();
     const dob = document.getElementById("dob").value.trim();
 
-    // Pastron mesazhet e mëparshme të gabimeve
+    // Clears previous error messages
     document.querySelectorAll(".error").forEach(el => el.remove());
 
-    // Validimi i emrit
+    // Name validation
     if (name.length < 2) {
         showError("name", "Emri duhet të ketë të paktën 2 karaktere.");
         isValid = false;
     }
 
-    // Validimi i email-it
+    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         showError("email", "Ju lutem futni një email të vlefshëm.");
         isValid = false;
     }
 
-    // Validimi i emrit të përdoruesit
+    // Username validation
     const usernameRegex = /^[a-z0-9_]{3,15}$/;
     if (!usernameRegex.test(username)) {
         showError("username", "Ju lutem futni një emër përdoruesi të vlefshëm. (Vetëm shkronja të vogla, numra, nënvizime, 3-15 karaktere.)");
         isValid = false;
     }
 
-    // Validimi i fjalëkalimit
+    // Password validation
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
         showError("password", "Passwordi duhet të përmbajë të paktën një shkronjë të madhe, një numër dhe një simbol.");
         isValid = false;
     }
 
-    // Validimi i datëlindjes
+    // Date of birth validation
     const today = new Date().toISOString().split("T")[0];
     if (!dob || dob > today) {
         showError("dob", "Ju lutem zgjidhni një datë të vlefshme lindjeje.");
         isValid = false;
     }
 
-    // Nëse të gjitha fushat janë të vlefshme
+    // If all fields are valid
     if (isValid) {
         alert("Regjistrimi u krye me sukses!");
         document.querySelector("button[type='submit']").disabled = true; // Parandalon dërgime të dyfishta
@@ -57,72 +57,14 @@ document.getElementById("registrationForm").addEventListener("submit", function 
 function showError(inputId, message) {
     const inputField = document.getElementById(inputId);
 
-    // Kontrollo dhe fshi gabimin ekzistues për këtë fushë
-    const existingError = inputField.parentNode.querySelector(".error");
+    // Check and remove existing error for this fieldconst existingError = inputField.parentNode.querySelector(".error");
     if (existingError) {
         existingError.remove();
     }
 
-    // Krijo dhe shto gabimin e ri
+    // Create and add new error
     const errorDiv = document.createElement("div");
     errorDiv.className = "error";
     errorDiv.textContent = message;
     inputField.parentNode.insertBefore(errorDiv, inputField.nextSibling);
-}
-
-// Validimi në eventin "blur" për secilën fushë
-document.getElementById("name").addEventListener("blur", function () {
-    const name = this.value.trim();
-    if (name.length < 2) {
-        showError("name", "Emri duhet të ketë të paktën 2 karaktere.");
-    } else {
-        removeError(this);
-    }
-});
-
-document.getElementById("email").addEventListener("blur", function () {
-    const email = this.value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        showError("email", "Ju lutem futni një email të vlefshëm.");
-    } else {
-        removeError(this);
-    }
-});
-
-document.getElementById("username").addEventListener("blur", function () {
-    const username = this.value.trim();
-    const usernameRegex = /^[a-z0-9_]{3,15}$/;
-    if (!usernameRegex.test(username)) {
-        showError("username", "Ju lutem futni një emër përdoruesi të vlefshëm. (Vetëm shkronja të vogla, numra, nënvizime, 3-15 karaktere.)");
-    } else {
-        removeError(this);
-    }
-});
-
-document.getElementById("password").addEventListener("blur", function () {
-    const password = this.value.trim();
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!passwordRegex.test(password)) {
-        showError("password", "Passwordi duhet të përmbajë të paktën një shkronjë të madhe, një numër dhe një simbol.");
-    } else {
-        removeError(this);
-    }
-});
-
-document.getElementById("dob").addEventListener("blur", function () {
-    const dob = this.value.trim();
-    const today = new Date().toISOString().split("T")[0];
-    if (!dob || dob > today) {
-        showError("dob", "Ju lutem zgjidhni një datë të vlefshme lindjeje.");
-    } else {
-        removeError(this);
-    }
-});
-
-function removeError(inputField) {
-    const existingError = inputField.parentNode.querySelector(".error");
-    if (existingError) {
-        existingError.remove();
-    }
 }

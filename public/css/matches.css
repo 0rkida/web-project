@@ -1,14 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
 /* General Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Body Styling */
 body {
-    background-color: #f9f9f9;
+    background-color: #ff725d;
     color: #333;
     padding: 20px;
 }

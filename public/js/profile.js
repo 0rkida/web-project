@@ -173,22 +173,4 @@ let inactivityTime = function () {
     document.onkeypress = resetTimer;
 };
 
-async function saveTransaction(paymentIntent) {
-    const response = await fetch('/payment/save', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            paymentIntent,
-        }),
-    });
 
-    const result = await response.json();
-
-    if (result.success) {
-        alert('Payment successful!');
-    } else {
-        alert('Payment saving failed!');
-    }
-}

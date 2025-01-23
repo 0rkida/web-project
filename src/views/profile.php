@@ -7,6 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/css/payment.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 <div class="main-container">
@@ -21,7 +25,6 @@
                 </h3>
                 <ul class="dropdown-menu">
                     <li><a href="/profil/update">Edit Profile</a></li>
-                    <li><a href="/account/settings">Account Settings</a></li>
                     <li><a href="/logout" class="logout-btn">Log Out</a></li>
                 </ul>
 
@@ -106,11 +109,129 @@
         <div class="premium-section">
             <h2 class="premium-title">You're Invisible</h2>
             <p>In order to increase your visibility and remove ads, go Premium!</p>
-            <button class="premium-btn">Go Premium</button>
+            <div class="text-center mt-4">
+                <button class="btn btn-primary premium-btn" data-toggle="modal" data-target="#addNewCard">Go Premium</button>
+            </div>
+
+            <div class="modal fade" id="addNewCard" tabindex="-1" role="dialog" aria-labelledby="goPremiumLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="goPremiumLabel">Bëhu Premium</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h2>Permbledhje</h2>
+                                    <strong>Premium Membership:</strong><br/>
+                                </div>
+                                <div class="col-md-8">
+                                    <!-- Used to display form errors -->
+                                    <div id="card-errors" role="alert"></div>
+                                    <br>
+                                    <form action="process_payment.php" method="POST" id="payment-form">
+                                        <input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
+                                        <div class="form-group">
+                                            <label for="cardholder_name">Mbajtësi i Kartës</label>
+                                            <input type="text" class="form-control" id="cardholder_name" name="cardholder_name" placeholder="Emri dhe Mbiemri" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="card-element">Vendosni Kartën</label>
+                                            <div id="card-element" class="form-control">
+                                                <!-- a Stripe Element will be inserted here. -->
+                                            </div>
+                                        </div>
+                                        <span class="text-danger" id="card_error"></span>
+                                        <button id="card-button" class="ladda-button btn btn-primary" data-style="expand-right">Paguaj</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Modal -->
+            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="successModalLabel">Sukses</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Pagesa juaj ka përfunduar me sukses!</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Mbyll</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script src="<?php echo dirname(__DIR__, 2) . '/profile.js'; ?>"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize Stripe
+        var stripe = Stripe("pk_test_51QdZaOIA6j8AgjdoONN2YmHKTojcogE82ZcF8ntm0l1YwdZNUKNnlDgxb62vZ7IBVbS1NfyGQoRNxjWn6o0bvJxE00alHhiENc");
+        var elements = stripe.elements();
+        var cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function (ev) {
+            ev.preventDefault();
+            stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: { name: document.getElementById('cardholder_name').value }
+            }).then(function (result) {
+                if (result.error) {
+                    document.getElementById('card_error').textContent = result.error.message;
+                } else {
+                    // Add the payment method ID to the form
+                    var hiddenInput = document.createElement('input');
+                    hiddenInput.setAttribute('type', 'hidden');
+                    hiddenInput.setAttribute('name', 'payment_method');
+                    hiddenInput.setAttribute('value', result.paymentMethod.id);
+                    form.appendChild(hiddenInput);
+
+                    // Submit the form via AJAX
+                    var formData = new FormData(form);
+                    fetch('payment.php', {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => response.json()).then(data => {
+                        if (data.status === 200) {
+                            // Hide the payment modal
+                            $('#addNewCard').modal('hide');
+                            // Show the success modal
+                            $('#successModal').modal('show');
+                        } else {
+                            document.getElementById('card_error').textContent = data.message;
+                        }
+                    }).catch(error => {
+                        document.getElementById('card_error').textContent = 'Something went wrong. Please try again.';
+                    });
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

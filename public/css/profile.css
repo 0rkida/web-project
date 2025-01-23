@@ -1,4 +1,6 @@
 /* General Styles */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
@@ -307,3 +309,6 @@ button{
 .plus {
     font-size: 24px;
 }
+
+
+

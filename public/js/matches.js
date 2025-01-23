@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Retrieve data from localStorage
     const likedUsers = JSON.parse(localStorage.getItem("likedYou")) || [
-        { name: "Alice", age: 25, image: "images/alice.jpg" },
-        { name: "Bob", age: 28, image: "images/bob.jpg" },
-        { name: "Charlie", age: 30, image: "images/charlie.jpg" }
+        { name: "Stive", age: 25, image: "img/stive.jpg" },
+        { name: "Bob", age: 23, image: "img/bob.jpg" },
+        { name: "James", age: 21, image: "img/james.jpg" }
     ];
     const mutualMatches = JSON.parse(localStorage.getItem("mutualMatches")) || [];
 
