@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+
 
 .container {
     margin-top: 100px;
@@ -14,11 +19,13 @@ h1 {
     background: linear-gradient(90deg, #ff6bcb, #ff3b3b);
     border: none;
     color: white;
+    font-family: 'Montserrat' , sans-serif;
     font-size: 18px;
     padding: 12px 24px;
     border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    display: block;
 }
 
 .premium-btn:hover {
