@@ -117,29 +117,25 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="goPremiumLabel">Bëhu Premium</h5>
+                            <h5 class="modal-title" id="goPremiumLabel">Go Premium</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <h2>Permbledhje</h2>
-                                    <strong>Premium Membership:</strong><br/>
-                                </div>
                                 <div class="col-md-8">
                                     <!-- Used to display form errors -->
                                     <div id="card-errors" role="alert"></div>
                                     <br>
-                                    <form action="process_payment.php" method="POST" id="payment-form">
+                                    <form action = "public\payment.php" method="POST" id="payment-form">
                                         <input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
                                         <div class="form-group">
-                                            <label for="cardholder_name">Mbajtësi i Kartës</label>
+                                            <label for="cardholder_name">Cardholder Name</label>
                                             <input type="text" class="form-control" id="cardholder_name" name="cardholder_name" placeholder="Emri dhe Mbiemri" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="card-element">Vendosni Kartën</label>
+                                            <label for="card-element">Put the card</label>
                                             <div id="card-element" class="form-control">
                                                 <!-- a Stripe Element will be inserted here. -->
                                             </div>
@@ -210,7 +206,7 @@
                     hiddenInput.setAttribute('value', result.paymentMethod.id);
                     form.appendChild(hiddenInput);
 
-                    // Submit the form via AJAX
+
                     var formData = new FormData(form);
                     fetch('payment.php', {
                         method: 'POST',
