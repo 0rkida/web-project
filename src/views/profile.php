@@ -34,7 +34,7 @@
         <nav>
             <ul class="menu">
                 <li>
-                    <a href="../chat.html">
+                    <a href="../chat.php">
                         <button class="menu-btn">Messages</button>
                     </a>
                 </li>

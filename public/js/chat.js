@@ -151,6 +151,128 @@ function initChat() {
     getUserList();
     setInterval(getUserList, 1000);
 }
+let currentUserId = null;
+let users = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('fetch_users.php')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // Log the fetched data
+            users = data;
+            displayUsers(users);
+        })
+        .catch(error => console.error('Error fetching user data:', error));
+
+    document.getElementById('search-input').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const filteredUsers = users.filter(user => user.full_name.toLowerCase().includes(searchTerm));
+        displayUsers(filteredUsers);
+    });
+});
+
+function displayUsers(users) {
+    const userList = document.getElementById('user-list');
+    userList.innerHTML = '';
+    users.forEach(user => {
+        const userItem = document.createElement('li');
+        userItem.innerHTML = `
+            <img src="${user.profile_picture}" alt="Profile Picture">
+            <div>
+                <h2>${user.full_name}</h2>
+                <h3>
+                    <span class="status ${new Date(user.last_online) > new Date(Date.now() - 5 * 60 * 1000) ? 'green' : 'orange'}"></span>
+                    ${new Date(user.last_online) > new Date(Date.now() - 5 * 60 * 1000) ? 'online' : 'offline'}
+                </h3>
+            </div>
+        `;
+        userItem.addEventListener('click', () => {
+            currentUserId = user.user_id;
+            const chatHeaderImg = document.querySelector('header#chat-header img');
+            chatHeaderImg.src = user.profile_picture;
+            chatHeaderImg.style.display = 'block';
+            document.querySelector('header#chat-header h2').textContent = `Chat with ${user.full_name}`;
+            document.querySelector('header#chat-header h3').textContent = `Status: ${new Date(user.last_online) > new Date(Date.now() - 5 * 60 * 1000) ? 'online' : 'offline'}`;
+            document.querySelector('header#chat-header .menu-dropdown a').href = `report_block.html?action=report&user=${user.user_id}`;
+            loadChatMessages(user.user_id);
+        });
+        userList.appendChild(userItem);
+    });
+}
+
+function loadChatMessages(userId) {
+    fetch(`fetch_messages.php?user_id=${userId}`)
+        .then(response => response.json())
+        .then(messages => {
+            const chat = document.getElementById('chat');
+            chat.innerHTML = '';
+            messages.forEach(message => {
+                const messageItem = document.createElement('li');
+                messageItem.className = message.sender === 'me' ? 'me' : 'you';
+                messageItem.innerHTML = `
+                    <div class="entete">
+                        <h2>${message.sender}</h2>
+                        <h3>${message.timestamp}</h3>
+                    </div>
+                    <div class="message">
+                        ${message.text}
+                    </div>
+                `;
+                chat.appendChild(messageItem);
+            });
+        })
+        .catch(error => console.error('Error fetching chat messages:', error));
+}
+
+document.getElementById('send-button').addEventListener('click', function(event) {
+    event.preventDefault();
+    sendMessage();
+});
+
+document.getElementById('message-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+
+function sendMessage() {
+    const messageInput = document.getElementById('message-input');
+    const messageText = messageInput.value.trim();
+    if (messageText === '' || currentUserId === null) return;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                // Add the message to the chat
+                const chat = document.getElementById('chat');
+                const messageItem = document.createElement('li');
+                messageItem.className = 'me';
+                messageItem.innerHTML = `
+                    <div class="entete">
+                        <h2>me</h2>
+                        <h3>${new Date().toLocaleString()}</h3>
+                    </div>
+                    <div class="message">
+                        ${messageText}
+                    </div>
+                `;
+                chat.appendChild(messageItem);
+                messageInput.value = '';
+            } else {
+                console.error('Error sending message:', response.error);
+            }
+        }
+    };
+    xhr.send(JSON.stringify({
+        receiver_id: currentUserId,
+        message: messageText
+    }));
+}
 
 // Initialize the chat after the DOM is fully loaded
 window.addEventListener('DOMContentLoaded', initChat);

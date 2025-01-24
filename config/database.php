@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$dbname = 'dating_app';
+$dbname = 'datting_app';
 $username = 'root';
 $password = ''; // Leave blank for XAMPP
 

@@ -1,26 +1,24 @@
 <?php
-// Database connection (adjust parameters as needed)
+// Database connection
 $host = 'localhost';
-$dbname = 'your_database_name';
-$username = 'your_database_username';
-$password = 'your_database_password';
-$conn = new mysqli($host, $username, $password, $dbname);
-
-include 'db.php';
+$dbname = 'datting_app';
+$username = 'root';
+$password = '';
+$conn = new mysqli($host, $dbname, $username, $password);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Function to fetch all reports
+// Function to fetch all pending reports
 function fetchReports($conn) {
-    $sql = "SELECT report_id, reported_user, reason, reporter_user FROM reports WHERE status = 'pending'";
+    $sql = "SELECT id, reported_id, reason, additional_info, status FROM reports WHERE status = 'pending'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $reports = [];
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             $reports[] = $row;
         }
         return $reports;
@@ -33,14 +31,14 @@ function fetchReports($conn) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action'];
     $report_id = $_POST['report_id'];
-    $reported_user = $_POST['reported_user'];
 
     if ($action === 'Warn') {
-        $sql = "UPDATE reports SET status = 'warned' WHERE report_id = ?";
+        $sql = "UPDATE reports SET status = 'reviewed' WHERE id = ?";
     } elseif ($action === 'Block') {
-        $sql = "UPDATE reports SET status = 'blocked' WHERE report_id = ?";
+        $sql = "UPDATE reports SET status = 'reviewed' WHERE id = ?";
+        // You might want to add logic to block the user in the users table here.
     } elseif ($action === 'Delete') {
-        $sql = "DELETE FROM reports WHERE report_id = ?";
+        $sql = "DELETE FROM reports WHERE id = ?";
     }
 
     // Prepare and execute the query
@@ -78,35 +76,36 @@ $conn->close();
         <table id="reports-table">
             <thead>
             <tr>
-                <th>Reported User</th>
+                <th>Report ID</th>
+                <th>Reported User ID</th>
                 <th>Reason</th>
-                <th>Reported By</th>
+                <th>Additional Info</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($reports as $report): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($report['reported_user']); ?></td>
+                    <td><?php echo htmlspecialchars($report['id']); ?></td>
+                    <td><?php echo htmlspecialchars($report['reported_id']); ?></td>
                     <td><?php echo htmlspecialchars($report['reason']); ?></td>
-                    <td><?php echo htmlspecialchars($report['reporter_user']); ?></td>
+                    <td><?php echo htmlspecialchars($report['additional_info']); ?></td>
+                    <td><?php echo htmlspecialchars($report['status']); ?></td>
                     <td>
                         <!-- Action Form for Warn -->
-                        <form action="report-management.php" method="POST" style="display:inline;">
-                            <input type="hidden" name="report_id" value="<?php echo $report['report_id']; ?>">
-                            <input type="hidden" name="reported_user" value="<?php echo $report['reported_user']; ?>">
+                        <form action="admin-reports.html" method="POST" style="display:inline;">
+                            <input type="hidden" name="report_id" value="<?php echo $report['id']; ?>">
                             <button type="submit" name="action" value="Warn">Warn</button>
                         </form>
                         <!-- Action Form for Block -->
-                        <form action="report-management.php" method="POST" style="display:inline;">
-                            <input type="hidden" name="report_id" value="<?php echo $report['report_id']; ?>">
-                            <input type="hidden" name="reported_user" value="<?php echo $report['reported_user']; ?>">
+                        <form action="admin-reports.html" method="POST" style="display:inline;">
+                            <input type="hidden" name="report_id" value="<?php echo $report['id']; ?>">
                             <button type="submit" name="action" value="Block">Block</button>
                         </form>
                         <!-- Action Form for Delete -->
-                        <form action="report-management.php" method="POST" style="display:inline;">
-                            <input type="hidden" name="report_id" value="<?php echo $report['report_id']; ?>">
-                            <input type="hidden" name="reported_user" value="<?php echo $report['reported_user']; ?>">
+                        <form action="admin-reports.html" method="POST" style="display:inline;">
+                            <input type="hidden" name="report_id" value="<?php echo $report['id']; ?>">
                             <button type="submit" name="action" value="Delete">Delete</button>
                         </form>
                     </td>
