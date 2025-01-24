@@ -86,4 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     echo json_encode(['status' => 200, 'message' => 'Payment successful']);
 }
+
+$is_premium = checkUserSubscription($user_id); // Replace with your subscription check logic.
+
 ?>
