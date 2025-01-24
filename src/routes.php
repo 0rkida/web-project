@@ -11,6 +11,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use App\controllers\AdminController;
+use App\controllers\HomeController;
 use App\Controllers\LogInController;
 use App\controllers\MatchController;
 use App\controllers\MessageController;
@@ -72,8 +73,11 @@ switch (strtolower($request_path)) {
         break;
 
     case '/home':
+        require 'controllers/HomeController.php';
+        $HomeController = new HomeController($conn);
       //  error_log("After home redirect:". $_SESSION['userId']);
-        require __DIR__.'/../public/home.html';
+        $HomeController->getAllUsersPictures();
+
         break;
 
     case '/register':
@@ -183,8 +187,6 @@ switch (strtolower($request_path)) {
                 exit();
             }
             break;
-    // Ensures no further code is executed after logout
-
 
     case '/messages':
         require 'controllers/MessageController.php';
@@ -213,18 +215,38 @@ switch (strtolower($request_path)) {
         break;
 
 
-    case '/notifications' :
-        require 'controllers/NotificationController.php';
-        $NotificationController = new NotificationController($conn);
-        if($requestMethod === 'GET'){
-            $NotificationController->getView();
+    case '/notifications':
+        require_once 'controllers/NotificationController.php'; // Make sure you are requiring NotificationController
+        $notificationController = new NotificationController($conn);
 
-        }else if ($requestMethod==='POST'){
-            $NotificationController->postNotification([]);
-            header('Location: /notification');
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            // Call the getView method to display the notifications
+            $notificationController->getView();
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Call the postNotification method to send a notification
+            $notificationController->postNotification($_POST);
+            header('Location: /notifications');
             exit();
         }
         break;
+
+    case '/like-picture':
+        require 'controllers/HomeController.php';
+        $HomeController = new HomeController($conn);
+        if (isset($_POST['liker_id'], $_POST['liked_user_id'], $_POST['picture_path'])) {
+            // Additional validation for IDs and path
+            $likerId = filter_var($_POST['liker_id'], FILTER_VALIDATE_INT);
+            $likedUserId = filter_var($_POST['liked_user_id'], FILTER_VALIDATE_INT);
+            $picturePath = filter_var($_POST['picture_path'], FILTER_SANITIZE_STRING);
+
+            if ($likerId && $likedUserId && !empty($picturePath)) {
+                $HomeController->likeUserPicture($likerId, $likedUserId, $picturePath);
+            } else {
+                echo "Invalid input data.";
+            }
+        } else {
+            echo "Invalid request.";
+        }
 
     case '/search':
         require 'controllers/SearchController.php';

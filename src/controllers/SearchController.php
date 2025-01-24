@@ -11,7 +11,7 @@ class SearchController
 
     public function getView()
     {
-        include 'public/home.html'; // Display the home page with the form
+        include 'public/home.php'; // Display the home page with the form
     }
 
     // Handle the search logic (POST request)

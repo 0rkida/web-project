@@ -1,64 +1,88 @@
 <?php
 
-
 namespace App\controllers;
+
+use App\Models\Notification;
+use mysqli;
+use Exception;
+require_once __DIR__ . '/../models/Notification.php';
 
 class NotificationController
 {
-    private \mysqli $conn;
+    private mysqli $conn;
+    private Notification $notification;
 
-    public function __construct(\mysqli $dbConnection)
+    public function __construct(mysqli $dbConnection)
     {
         $this->conn = $dbConnection;
+        $this->notification = new Notification($dbConnection);
     }
 
+    // Get notifications for the logged-in user
     public function getView(): void
     {
-        // Fetch notifications for the logged-in user
-        session_start();
-        if (!isset($_SESSION['userId'])) {
-            echo "You must be logged in to view notifications.";
-            return;
-        }
-
-        $userId = $_SESSION['userId'];
-        $stmt = $this->conn->prepare("SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC");
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        // Render notifications view
-        echo "<h2>Your Notifications</h2>";
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                echo "<p>{$row['message']} - <em>{$row['created_at']}</em></p>";
+        try {
+            // Start session and check user authentication
+            $this->startSession();
+            $userId = $this->getUserIdFromSession();
+            if (!$userId) {
+                throw new Exception("User must be logged in.");
             }
-        } else {
-            echo "<p>No notifications found.</p>";
-        }
 
-        $stmt->close();
+            // Fetch notifications from the model
+            $notifications = $this->notification->getNotifications($userId);
+
+            // Log the notifications to check if they're being retrieved
+            error_log(json_encode($notifications));
+
+            // Mark notifications as read
+            foreach ($notifications as $notification) {
+                $this->notification->markNotificationAsRead($notification['id']);
+            }
+
+            // Render the notifications view
+            include __DIR__ . '/../views/notifications.php';
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
 
+
+    // Send a new notification
     public function postNotification(array $data): void
     {
-        if (empty($data['user_id']) || empty($data['message'])) {
-            echo "User ID and message are required.";
-            return;
-        }
+        try {
+            // Validate input data
+            $this->validateNotificationData($data);
 
-        $userId = $data['user_id'];
-        $message = $data['message'];
+            // Add notification using the model
+            $this->notification->addNotification($data['user_id'], $data['type'], $data['message']);
 
-        $stmt = $this->conn->prepare("INSERT INTO notifications (user_id, message) VALUES (?, ?)");
-        $stmt->bind_param("is", $userId, $message);
-
-        if ($stmt->execute()) {
             echo "Notification sent successfully.";
-        } else {
-            echo "Failed to send notification.";
+        } catch (Exception $e) {
+            echo "Failed to send notification: " . $e->getMessage();
         }
+    }
 
-        $stmt->close();
+    // Start the session if not already started
+    private function startSession(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+
+    // Get user ID from the session
+    private function getUserIdFromSession(): ?int
+    {
+        return $_SESSION['userId'] ?? null;
+    }
+
+    // Validate the data for a new notification
+    private function validateNotificationData(array $data): void
+    {
+        if (empty($data['user_id']) || empty($data['message']) || empty($data['type'])) {
+            throw new Exception("User ID, type, and message are required.");
+        }
     }
 }

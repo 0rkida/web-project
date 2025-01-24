@@ -5,17 +5,17 @@ use Exception;
 
 class UserPhotos
 {
-    private $db;
+    private $dbConnection;
 
     public function __construct($dbConnection)
     {
-        $this->db = $dbConnection;
+        $this->dbConnection = $dbConnection;
     }
 
     public function savePicture($userId, $picturePath)
     {
         $query = "INSERT INTO user_pictures (user_id, picture_path) VALUES (?, ?)";
-        $stmt = $this->db->prepare($query);
+        $stmt = $this->dbConnection->prepare($query);
 
         if (!$stmt) {
             throw new Exception("Database error: " . $this->db->error);
@@ -33,10 +33,10 @@ class UserPhotos
     public function getPhotosByUserId($userId)
     {
         $query = "SELECT picture_path  FROM user_pictures WHERE user_id = ?";
-        $stmt = $this->db->prepare($query);
+        $stmt = $this->dbConnection->prepare($query);
 
         if (!$stmt) {
-            throw new Exception("Database error: " . $this->db->error);
+            throw new Exception("Database error: " . $this->dbConnection->error);
         }
 
         $stmt->bind_param("i", $userId);
@@ -49,6 +49,24 @@ class UserPhotos
 //        $pictures = $result->fetch_all(MYSQLI_ASSOC);
 //
 //        return $pictures;
+
+    }
+
+
+    public function getAllUsersPictures()
+    {
+        $sql = "SELECT users.username, user_pictures.picture_path 
+                FROM users 
+                JOIN user_pictures ON users.id = user_pictures.user_id";
+        $result = $this->dbConnection->query($sql);
+
+        $users = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $users[] = $row;
+            }
+        }
+        return $users;
 
     }
 }

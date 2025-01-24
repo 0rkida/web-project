@@ -9,6 +9,7 @@ require_once __DIR__.'/../models/UserPhotos.php';
 use App\models\Profile;
 use App\models\User;
 use App\models\UserPhotos;
+use App\models\Notification;
 use Exception;
 
 //session_start();
@@ -84,7 +85,7 @@ class ProfileController
         $this->checkSessionTimeout();
         $data = $this->profile->getProfileData($_SESSION['userId']);
         include __DIR__ . '/../views/editProfile.php';
-//        header('Location: /profil/update');
+
     }
 
     public function postProfile(): void
@@ -144,7 +145,6 @@ class ProfileController
         $uploadsDir = __DIR__ . '/../../public/assets/img/user-uploads/albums/';
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
-        // Ensure the uploads directory exists
         if (!is_dir($uploadsDir)) {
             if (!mkdir($uploadsDir, 0755, true)) {
                 throw new Exception("Failed to create the upload directory.");
@@ -164,10 +164,7 @@ class ProfileController
                 if (in_array($fileExtension, $allowedExtensions)) {
                     $newFileName = uniqid('photo_') . '.' . $fileExtension;
                     $filePath = $uploadsDir . $newFileName;
-//                    $filePath = '/assets/img/user-uploads/albums/' . $newFileName;
-                    // Move the file to the uploads directory
                     if (move_uploaded_file($fileTmp, $filePath)) {
-
                         return '/assets/img/user-uploads/albums/' . $newFileName; // Return the file path
                     } else {
                         throw new Exception("Error moving the uploaded file.");
@@ -194,7 +191,5 @@ class ProfileController
             return [];
         }
     }
-//    private function convertPictureString(string $pic){
-//        return '/assets/img/user-uploads/albums/'. $pic;
-//    }
+
 }
