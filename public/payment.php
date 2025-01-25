@@ -63,30 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $payment_net = '0.00'; // Default payment_net for this demo
     $status = 'success'; // Assuming status is success
 
-    $stmt = $conn->prepare("INSERT INTO transactions_details (user_id, payment_method, payment_intent_id, transaction_id, charge_id, amount, currency, converted_amount, converted_currency, balance_description, exchange_rate, available_on, payment_fee, payment_net, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssssssssssssss",
-        $user_id,
-        $paymentMethod,
-        $payment_intent_id,
-        $transaction_id,
-        $charge_id,
-        $amount,
-        $currency,
-        $converted_amount,
-        $converted_currency,
-        $balance_description,
-        $exchange_rate,
-        $available_on,
-        $payment_fee,
-        $payment_net,
-        $status,
-        $created_at
-    );
-    $stmt->execute();
 
-    echo json_encode(['status' => 200, 'message' => 'Payment successful']);
 }
 
 $is_premium = checkUserSubscription($user_id); // Replace with your subscription check logic.
 
 ?>
+
