@@ -54,7 +54,7 @@
 
 <?php
 // Function for time formatting (timeAgo)
-function timeAgo($datetime)
+function timeAgo($datetime): string
 {
     $time = strtotime($datetime);
     $diff = time() - $time;
@@ -70,5 +70,3 @@ function timeAgo($datetime)
     }
 }
 ?>
-</body>
-</html>
