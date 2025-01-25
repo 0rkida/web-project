@@ -262,7 +262,7 @@ footer nav a:hover {
     padding: 20px;
     background: #f8f9fa; /* Light background color */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a modern look */
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 20px; /* Rounded corners */
     font-family: Arial, sans-serif;
 }
 
@@ -292,9 +292,9 @@ footer nav a:hover {
     padding: 10px;
     font-size: 14px;
     color: #fff; /* White text */
-    background-color: #e74c3c;
-    border: none;
-    border-radius: 4px;
+    border-radius: 20px;
+    border: 1px solid #FF4B2B;
+    background-color: #ff334b;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }

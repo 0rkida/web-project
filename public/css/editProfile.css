@@ -31,13 +31,13 @@ h1 {
 
 /* Styling for the buttons */
 button {
+    border-radius: 20px;
+    border: 1px solid #FF4B2B;
     background-color: #ff334b;
     color: #fff;
-    border: none;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    border-radius: 4px;
     margin-top: 10px;
     width: 100%; /* Ensure the button spans the full width of the form */
 }

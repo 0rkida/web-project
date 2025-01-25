@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f57760;
     margin: 0;
     padding: 0;
     display: flex;
@@ -31,11 +33,11 @@ body {
 }
 
 .options-box button {
-    background-color: #d5013d;
+    border-radius: 20px;
+    border: 1px solid #FF4B2B;
+    background-color: #ff334b;
     color: white;
-    border: none;
     padding: 15px 30px;
-    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
     margin: 10px; /* Add horizontal margin between buttons */
@@ -86,10 +88,10 @@ body {
 /* Buttons */
 button {
     padding: 10px 20px;
-    background-color: #d5013d;
+    border-radius: 20px;
+    border: 1px solid #FF4B2B;
+    background-color: #ff334b;
     color: white;
-    border: none;
-    border-radius: 5px;
     cursor: pointer;
     margin: 10px;
 }
@@ -102,7 +104,7 @@ textarea {
     display: block;
     margin: 10px auto; /* This centers the textarea horizontally */
     width: 80%; /* Adjust the width as needed */
-    max-width: 400px; /* Set a maximum width */
+    max-width: 200px; /* Set a maximum width */
     padding: 10px;
     border-radius: 8px;
     font-size: 14px;
