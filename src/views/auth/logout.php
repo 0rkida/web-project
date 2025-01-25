@@ -12,7 +12,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 if (isset($_SESSION['user_id'])) {
-    $query = "UPDATE users SET remember_me_token = NULL WHERE id = :id";
+    $query = "UPDATE users SET remember_token = NULL WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(":id", $_SESSION['user_id']);
     $stmt->execute();

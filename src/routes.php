@@ -116,14 +116,9 @@ switch (strtolower($request_path)) {
             $LogInController->getForgetPasswordView(); // Render the forgot password form
         } elseif ($requestMethod === 'POST') {
             $email = trim($_POST['email']);
-//            header('Location: /reset-password');
-//            require 'C:/xampp/htdocs/web-project/src/controllers/reset-password.php'
             require_once __DIR__ . '/controllers/LoginController.php';
             $logInController = new LogInController($conn);
             $logInController->passwordReset($email);
-//            require_once __DIR__ . '/services/PasswordResetService.php';
-//            $PasswordResetService = new PasswordResetService($conn);
-//            $PasswordResetService->requestPasswordReset($email);
             echo 'Email sent to: ' . $email;
             exit();
         }

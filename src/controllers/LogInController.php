@@ -5,7 +5,6 @@ namespace App\controllers;
 use App\models\Admin;
 use App\models\LoginLog;
 use App\models\User;
-use App\services\PasswordResetService;
 use EmailVerification;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
@@ -14,7 +13,6 @@ use JetBrains\PhpStorm\NoReturn;
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Admin.php';
 require_once __DIR__ . '/../models/LoginLog.php';
-require_once __DIR__ . '/../services/PasswordResetService.php';
 require_once __DIR__ . '/../controllers/SessionController.php';
 
 class LogInController
@@ -22,7 +20,6 @@ class LogInController
     private User $user;
     private Admin $admin;
     private LoginLog $LoginLog;
-    private PasswordResetService $passwordResetService;
 
 
     public function __construct($dbConnection)
@@ -33,7 +30,6 @@ class LogInController
 
         }
         $this->admin = new Admin($dbConnection);
-        $this->passwordResetService = new PasswordResetService($dbConnection);
         $this->LoginLog = new LoginLog($dbConnection);
     }
 
