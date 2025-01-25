@@ -4,7 +4,7 @@ namespace App\controllers;
 use App\models\Message;
 
 session_start();
-require_once "C:\xampp\htdocs\web-project\src\models\Message.php";
+require_once "C:/xampp/htdocs/web-project/src/models/Message.php";
 
 class MessageController {
     public message $message;
@@ -13,7 +13,7 @@ class MessageController {
         $this->message= new message($dbConnection);
     }
     public function getView(): void {
-        $viewPath = dirname(__DIR__, 2) . '/public/chat.html';
+        $viewPath = dirname(__DIR__, 2) . '/public/chat.php';
         if (file_exists($viewPath)) {
             require $viewPath;
         } else {

@@ -34,7 +34,7 @@
         <nav>
             <ul class="menu">
                 <li>
-                    <a href="../chat.html">
+                    <a href="../chat.php">
                         <button class="menu-btn">Messages</button>
                     </a>
                 </li>
@@ -51,12 +51,27 @@
 
         <div class="recently-visited">
             <h4>Recently Visited</h4>
-            <div class="avatars">
-                <img src="user1.jpg" alt="User 1">
-                <img src="user2.jpg" alt="User 2">
-                <img src="user3.jpg" alt="User 3">
+            <button class="btn btn-primary premium-btn mt-3" data-toggle="modal" data-target="#recentVisitorsModal">View Visitors</button>
+        </div>
+
+        <!-- Recently Visited Modal -->
+        <div class="modal fade" id="recentVisitorsModal" tabindex="-1" role="dialog" aria-labelledby="recentVisitorsLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="recentVisitorsLabel">Recently Visited Your Profile</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <p>To view the visitors, you need to upgrade to Premium.</p>
+                        <button class="btn btn-primary premium-btn mt-3" data-toggle="modal" data-target="#addNewCard">Go Premium</button>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 
     <!-- Middle Section -->
@@ -155,17 +170,15 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="successModalLabel">Sukses</h5>
+                            <h5 class="modal-title" id="successModalLabel">Success ! </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Pagesa juaj ka përfunduar me sukses!</p>
+                            <p>Your payment was successful !</p>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Mbyll</button>
-                        </div>
+
                     </div>
                 </div>
             </div>
